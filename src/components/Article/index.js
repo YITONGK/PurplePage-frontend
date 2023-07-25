@@ -3,9 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ArticleContainer, ArticleH1 } from './ArticleElements';
 import Footer from '../../components/Footer';
 
-import { FilterContainer, MapElement, MapContainer, MapP, InfoContainer, InfoH1, InfoH2, InfoP, InfoWindowContainer, InfoWindowH1, InfoWindowP, SelectDiv, GroupHeader, GroupItems  } from './ArticleElements';
-import InfoIcon from '@mui/icons-material/Info';
-import { Grid } from '@mui/material';
+import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement } from './ArticleElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
@@ -15,6 +13,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
 import Map from '../Map';
+import MapInfo from '../MapInfo';
+import MapFilter from '../MapFilter';
 
 // article component
 const Article = () => {
@@ -25,21 +25,25 @@ const Article = () => {
 
   // useState hooks
   const [values, setValues] = useState({
-    prgm_type: '',
-    group_name: ''
+    prgm_type: 'All Program Types',
+    group_name: 'All Groups'
   })
   const [sites, setSites] = useState([]);
   const [filteredSites, setFilteredSites] = useState([]);
+  const [filteredProgramTypes, setFilteredProgramTypes] = useState([]);
   const [programList, setProgramList] = useState([]);
   const [programTypeList, setProgramTypeList] = useState([]);
   const [groupList, setGroupList] = useState([]);
-  const [selectedMarker, setSelectedMarker] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [serviceStreams, setServiceStreams] = useState([]);
+  const [divisions, setDivisions] = useState([]);
+
+  const [site, setSite] = useState(null);
 
   // styles
   const textFieldStyle = { minWidth: "400px" };
-  const gridStyle = { display: "flex", flexDirection: "row", alignItems: "center", marginBottom: "-1rem", color: "#A20066" }
-  const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", marginTop: "1.5rem" }
+  const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", marginTop: "1.5rem" };
 
   const getAllData = async () => {
 
@@ -55,7 +59,7 @@ const Article = () => {
       setGroupList(groups);
       setProgramList(programs);
       setSites(sites);
-      setFilteredSites(sites);
+
 
       setIsLoading(false);
 
@@ -69,9 +73,7 @@ const Article = () => {
   }
 
   useEffect(() => {
-
     getAllData();
-
   }, [])
 
   /* get a list of sites from the backend and display it */
@@ -80,13 +82,6 @@ const Article = () => {
 
     const result = await axios.get(BASE_URL+ '/site');
     return result.data;
-    // await axios.get(BASE_URL + '/site').then((res) => {
-    //   const data = res.data;
-    //   return (data);
-    //   // setSites(data);
-    //   // setFilteredSites(data);
-    //   // setIsLoading(false);
-    // });
   }
 
   /* get list of programs from the backend and display them */
@@ -95,11 +90,6 @@ const Article = () => {
 
     const result = await axios.get(BASE_URL + '/program');
     return result.data[0];
-    // await axios.get(BASE_URL + '/program').then(res => {
-    //   const list = res.data[0];
-    //   return (list);
-    //   // setProgramList(list);
-    // })
   }
 
   /* get list of program types from the backend and display them */
@@ -110,12 +100,6 @@ const Article = () => {
     result = result.data[0];
     result.sort ((a, b) => a.prgm_type.localeCompare(b.prgm_type));
     return result;
-    // await axios.get(BASE_URL + '/programtype').then(res => {
-    //   const list = res.data[0];
-    //   list.sort ((a, b) => a.prgm_type.localeCompare(b.prgm_type));
-    //   return (list);
-    //   // setProgramTypeList(list);
-    // })
   }
 
   /* get list of groups from the backend and display them */
@@ -126,19 +110,15 @@ const Article = () => {
     result = result.data[0];
     result.sort ((a, b) => a.group_name.localeCompare(b.group_name));
     return result;
-    // await axios.get(BASE_URL + '/group').then(res => {
-    //   const list = res.data[0];
-    //   list.sort ((a, b) => a.group_name.localeCompare(b.group_name));
-    //   // setGroupList(list);
-    //   return (list);
-    // })
   }
 
-   // handle the change for program type dropdown
-   const onChangeProgramType = (e) => {
+  // handle the change for program type dropdown
+  const onChangeProgramType = (e) => {
     const programTypes = programTypeList.filter((programType) => {
       return programType.prgm_type === e.target.value;
     }); // return program types in the program type list that match with the selected value
+
+    setFilteredProgramTypes(programTypes);
 
     // get the program type id from the match result 
     const programTypeIds = []
@@ -191,6 +171,17 @@ const Article = () => {
     const filteredProgramList = programList.filter((program) => {
       return groupIds.includes(program.group_id);
     });
+
+    const programTypeIds = []
+    for(let i=0; i< filteredProgramList.length; i++) {
+      programTypeIds.push(filteredProgramList[i].prgm_type_id)
+    }
+
+    const filteredProgramTypes = programTypeList.filter((type) => {
+      return programTypeIds.includes(type.prgm_type_id);
+    });
+
+    setFilteredProgramTypes(filteredProgramTypes);
 
     const siteIds = [];
     for (let i=0; i < filteredProgramList.length; i++) {
@@ -274,9 +265,11 @@ const Article = () => {
           size='small'
           style={textFieldStyle}
           value={values.prgm_type}
+          defaultValue='All Program Types'
           onChange={onChangeProgramType}
           required
         >
+          <MenuItem key={-1} value={'All Program Types'}> --All Programs Type-- </MenuItem>
           {programTypeList.map((programType, index) => (
             <MenuItem
               key={index}
@@ -300,9 +293,11 @@ const Article = () => {
           size='small'
           style={textFieldStyle}
           value={values.group_name}
+          defaultValue='All Groups'
           onChange={onChangeGroup}
           required
         >
+          <MenuItem key={-1} value={'All Groups'}> --All Group-- </MenuItem>
           {groupList.map((group, index) => (
             <MenuItem
               key={index}
@@ -315,6 +310,10 @@ const Article = () => {
       </SelectDiv>
     )
   }
+
+  const selectedSite = (site) => {
+    setSite(site);
+  }
   
   return (
     <ArticleContainer>
@@ -325,7 +324,16 @@ const Article = () => {
           <GroupSelect />
           <Button variant="Contained" style={buttonStyle} onClick={clear}>Clear</Button>
         </FilterContainer>
-      <Map sites={filteredSites}/>
+        <MapElement>
+          <MapFilter 
+            filteredProgramTypes={(values.prgm_type === 'All Program Types' || values.group_name === 'All Groups')? programTypeList: filteredProgramTypes} 
+            filteredSites={(values.prgm_type === 'All Program Types' || values.group_name === 'All Groups')? sites: filteredSites}
+          />
+          <Map 
+            sites={(values.prgm_type === 'All Program Types' || values.group_name === 'All Groups')? sites: filteredSites} exportSite={selectedSite}
+          />
+          <MapInfo site={site}/>
+        </MapElement>
       <Footer />
     </ArticleContainer>
   )

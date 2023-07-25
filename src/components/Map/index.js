@@ -1,17 +1,7 @@
-import axios from 'axios';
 import React, { useState, useEffect, useCallback } from 'react';
-import { FilterContainer, MapElement, MapContainer, MapP, InfoContainer, InfoH1, InfoH2, InfoP, InfoWindowContainer, InfoWindowH1, InfoWindowP, SelectDiv, GroupHeader, GroupItems  } from './MapElements';
-import InfoIcon from '@mui/icons-material/Info';
-import { Grid } from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from "@mui/material/MenuItem";
-import Button from '@mui/material/Button';
-import ReactMapGl, { Marker, Popup } from "react-map-gl";
+import { MapContainer, MapP, InfoWindowContainer, InfoWindowH1, InfoWindowP} from './MapElements';
+import ReactMapGl, { Marker, Popup} from "react-map-gl";
 import mapboxgl from 'mapbox-gl';
-
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
@@ -21,51 +11,85 @@ mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoidmhhcnRvbm8iLCJhIjoiY2xoc2l1Z2VzMDd0dTNlcGtwbXYwaGx2cyJ9.C77GVU3YPPgscvXrTGHWfg';
 
-const Map = ({sites}) => {
+const Map = ({sites, exportSite}) => {
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
   // useState hooks
   const [selectedMarker, setSelectedMarker] = useState(null);
 
+  const [markersInView, setMarkersInView] = useState([]);
+
+  const debounceDelay = 100; //delay amount
+
   const [viewPort, setViewPort] = useState({
     latitude: -37.80995133438894,
     longitude: 144.96871464972733,
     zoom: 10,
-    width: '100vw',
-    height: '100vh',
+    width: (20 * window.innerWidth) /100,
+    height: (20 * window.innerWidth) /100,
     transitionDuration: 200
   });
 
-  // styles
-  const textFieldStyle = { minWidth: "400px" };
-  const gridStyle = { display: "flex", flexDirection: "row", alignItems: "center", marginBottom: "-1rem", color: "#A20066" }
-  const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", marginTop: "1.5rem" }
+  useEffect(() => {
+    
+    const timerId = setTimeout(() => {
+      const zoom = viewPort.zoom;
+      const width = viewPort.width;
+      const height = viewPort.height;
+
+      const latitudeDelta = (height / width) * (360 / (2 ** zoom));
+      const longitudeDelta = (360 / width) * (360 / (2 ** zoom));
+
+      // console.log('Latitude Delta:', latitudeDelta);
+      // console.log('Longitude Delta:', longitudeDelta);
+
+      // Filter the markers that are within the current viewport
+      const markersWithinViewport = sites.filter((site) => {
+        return (
+          site.lat >= viewPort.latitude - latitudeDelta / 1.5 &&
+          site.lat <= viewPort.latitude + latitudeDelta / 1.5 &&
+          site.lng >= viewPort.longitude - longitudeDelta / 1.5 &&
+          site.lng <= viewPort.longitude + longitudeDelta / 1.5
+        );
+      });
+
+      // Update the markersInView state with the filtered markers
+      setMarkersInView(markersWithinViewport);
+    }, debounceDelay);
+
+    return () => clearTimeout(timerId);
+
+  }, [sites, viewPort]);
+
 
   // close popup
   const closePopup = () => {
     setSelectedMarker(null);
   }
 
-  const markersClick  = useCallback(
+  //performance increase only show marker that in the viewport if needed...
+
+  const markersClick = useCallback (
     (e, site) => {
       e.stopPropagation();
+      e.preventDefault();
       setSelectedMarker(site);
-    },
-    []
+      exportSite(site);
+    },[sites]
   );
 
   // display all the markers based on lat and lng of each site
   const Markers = () => {
     return (
       <>
-        {sites.map((site) => (
+        {markersInView.map((site, index) => (
           <Marker
-            key={site.site_id}
+            key={index}
             latitude={site.lat}
             longitude={site.lng}
           >
             <button
-              onClick={markersClick}
+              onClick={(e) => markersClick(e, site)}
               style={{background: "none", border: "none", cursor: "pointer"}}
             >
               <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
@@ -92,43 +116,26 @@ const Map = ({sites}) => {
 
   return (
     <>
-      <MapElement>
-        <MapContainer>
-          <ReactMapGl
-            {...viewPort}
-            mapboxAccessToken={MAPBOX_TOKEN}
-            mapStyle="mapbox://styles/vhartono/clhsoimq200o901q1ffkjg8ky?optimize=true"
-            onMove={(evt) => {
-              setViewPort(evt.viewport);
-            }}
-          >
-            <Markers />
-          </ReactMapGl>
-        </MapContainer>
-        <InfoContainer>
-          <Grid style={gridStyle}>
-            <InfoIcon fontSize="large" /> 
-            <InfoH1>Site Information</InfoH1>
-          </Grid>
-          {selectedMarker ? (
-            <>
-            <InfoH2>{selectedMarker.site_id}</InfoH2>
-            {selectedMarker.site_contact_name ? (
-              <InfoP><strong>Contact Name:</strong> {selectedMarker.site_contact_name.replace(".", " ")}</InfoP>
-            ) : (
-              <InfoP><strong>Contact Name:</strong>  -</InfoP>
-            )}
-            <InfoP><strong>Address:</strong> {selectedMarker.street_nbr} {selectedMarker.street_name}, {selectedMarker.suburb}, {selectedMarker.state} {selectedMarker.postcode}</InfoP>
-            <InfoP><strong>Latitude:</strong> {selectedMarker.lat}</InfoP>
-            <InfoP><strong>Langitude:</strong> {selectedMarker.lng}</InfoP>
-            <InfoP><strong>Local Government Area:</strong> {selectedMarker.lga}</InfoP>
-            <InfoP><strong>Department of Families, Fairness and Housing:</strong> {selectedMarker.dffh_area}</InfoP>
-            </>
-          ) : (
-            <InfoH2>No selected site.</InfoH2>
-          )}
-        </InfoContainer>
-      </MapElement>
+      <MapContainer>
+        <ReactMapGl
+          {...viewPort}
+          mapboxAccessToken={MAPBOX_TOKEN}
+          mapStyle="mapbox://styles/vhartono/clhsoimq200o901q1ffkjg8ky?optimize=true"
+          onMove={(evt) => {
+            setViewPort({
+              latitude: evt.viewState.latitude,
+              longitude: evt.viewState.longitude,
+              zoom: evt.viewState.zoom,
+              width: (20 * window.innerWidth) /100, //vh to px = (Viewport height unit (vh) * Viewport height) / 100
+              height: (20 * window.innerHeight) /100, //vh to px = (Viewport
+              transitionDuration: 200
+            });
+            setMarkersInView([]); // increase the performance when moving the map
+          }}
+        >
+          <Markers />
+        </ReactMapGl>
+      </MapContainer>
     </>
   )
 }
