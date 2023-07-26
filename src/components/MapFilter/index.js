@@ -1,16 +1,27 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import { MapFilterContainer } from './MapFilterElements';
-import { NativeSelect } from '@mui/material';
+import { MapFilterContainer, FilterContainer, SelectDiv} from './MapFilterElements';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from "@mui/material/MenuItem";
 
-const MapFilter = ({filteredProgramTypes, filteredSites}) => {
+const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList}) => {
+
+    // useState hooks
+    const [values, setValues] = useState({
+        ser_stream: '',
+        division_name: ''
+    })
 
     const [serviceStreams, setServiceStreams] = useState([]);
     const [serviceTypes, setServiceTypes] = useState([]);
     const [divisions, setDivisions] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const [availableServiceStreams, setAvailableServiceStreams] = useState([]);
+    const [filteredServiceStreams, setFilteredServiceStreams] = useState([]);
+    const [filteredDivisions, setFilteredDivisions] = useState([]);
+
+    const dropDownStyle = { minWidth: '16vw', maxWidth: '16vw', position: 'absolute'};
 
 
 
@@ -23,33 +34,13 @@ const MapFilter = ({filteredProgramTypes, filteredSites}) => {
 
         if(isLoading) return;
 
-        const filteredServicTypeIds = [];
-        for(let i = 0; i < filteredProgramTypes.length; i++)
-        {
-            filteredServicTypeIds.push(filteredProgramTypes[i].ser_type_id);
-        }
-
-        const filteredServiceTypes = serviceTypes.filter((type) => {
-            return filteredServicTypeIds.includes(type.ser_type_id);
-        })
-
-        const filteredServiceStreamIds = [];
-
-        for(let i = 0; i < filteredServiceTypes.length; i++){
-            filteredServiceStreamIds.push(filteredServiceTypes[i].ser_stream_id);
-        }
-
-        const filteredServiceStreams = serviceStreams.filter((stream) => {
-            return filteredServiceStreamIds.includes(stream.ser_stream_id);
-        });
-
-        setAvailableServiceStreams(filteredServiceStreams);
+        setFilteredServiceStreams(filteringServiceStreams());
+        setFilteredDivisions(filteringDivisions());
 
         console.log(filteredServiceStreams);
+        console.log(filteredDivisions);
 
-
-
-    },[filteredProgramTypes, filteredSites])
+    },[filteredPrograms])
 
     const getFilterData = async () => {
 
@@ -71,8 +62,7 @@ const MapFilter = ({filteredProgramTypes, filteredSites}) => {
         } catch (error) {
     
           console.log(error);
-        }
-        
+        } 
     
     }
 
@@ -103,11 +93,105 @@ const MapFilter = ({filteredProgramTypes, filteredSites}) => {
         return result;
     }
 
-    
+    const filteringServiceStreams= () => {
+
+        const programTypeIds = []
+        for(let i=0; i< filteredPrograms.length; i++) {
+            programTypeIds.push(filteredPrograms[i].prgm_type_id)
+        }
+
+        const filteredProgramTypes = programTypeList.filter((type) => {
+            return programTypeIds.includes(type.prgm_type_id);
+        });
+
+        const filteredServicTypeIds = [];
+        for(let i = 0; i < filteredProgramTypes.length; i++)
+        {
+            filteredServicTypeIds.push(filteredProgramTypes[i].ser_type_id);
+        }
+
+        const filteredServiceTypes = serviceTypes.filter((type) => {
+            return filteredServicTypeIds.includes(type.ser_type_id);
+        })
+
+        const filteredServiceStreamIds = [];
+
+        for(let i = 0; i < filteredServiceTypes.length; i++){
+            filteredServiceStreamIds.push(filteredServiceTypes[i].ser_stream_id);
+        }
+
+        const filteredServiceStreams = serviceStreams.filter((stream) => {
+            return filteredServiceStreamIds.includes(stream.ser_stream_id);
+        });
+
+        return filteredServiceStreams;
+    }
+
+    const filteringDivisions = () => {
+
+        const groupIds = [];
+        for(let i=0; i< filteredPrograms.length; i++) {
+            groupIds.push(filteredPrograms[i].group_id);
+        }
+        // console.log("groupIds: " + groupIds)
+
+       const filteredGroups = groupList.filter((group) => {
+            return groupIds.includes(group.group_id);
+       });
+
+
+       const divisionIds = [];
+       for(let i=0; i< filteredGroups.length; i++) {
+            divisionIds.push(filteredGroups[i].division_id);
+       }
+
+       const filteredDivisions = divisions.filter((division) => {
+            return divisionIds.includes(division.division_id);
+       })
+
+
+       
+       return filteredDivisions;
+
+    }
+
+    const ServiceStreamDropdown = () => {
+        return ( 
+        
+        <Select 
+            name="Service Stream"
+            size='small'
+            style={dropDownStyle}
+            value={values.ser_stream}
+            onChange={(e) => {setValues({ser_stream: e.target.value, division_name: ''})}}
+            required
+        >
+            {
+                filteredServiceStreams && filteredServiceStreams.map((serviceStream, index) => {
+                   return <MenuItem key={index} value={serviceStream.ser_stream}>{serviceStream.ser_stream} </MenuItem>
+                })
+            }
+
+        </Select>
+        )
+
+    }
+
+    const divisionDropdown = () => {
+
+    }
+
 
     return (
         <MapFilterContainer>
+            <FilterContainer>
+                <SelectDiv>
+                    <InputLabel>Service Stream</InputLabel>
+                    <ServiceStreamDropdown></ServiceStreamDropdown>
+                </SelectDiv> 
 
+            </FilterContainer>
+        
         </MapFilterContainer>
     )
 }

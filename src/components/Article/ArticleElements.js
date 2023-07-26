@@ -11,7 +11,6 @@ export const ArticleH1 = styled.h1`
   font-size: 40px;
 `;
 
-// New copy from map 
 export const FilterContainer = styled.div`
   display: flex;
   flex-direction: row;

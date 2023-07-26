@@ -30,6 +30,7 @@ const Map = ({sites, exportSite}) => {
     transitionDuration: 200
   });
 
+  //performance increase only show marker that in the viewport if needed...
   useEffect(() => {
     
     const timerId = setTimeout(() => {
@@ -67,7 +68,6 @@ const Map = ({sites, exportSite}) => {
     setSelectedMarker(null);
   }
 
-  //performance increase only show marker that in the viewport if needed...
 
   const markersClick = useCallback (
     (e, site) => {

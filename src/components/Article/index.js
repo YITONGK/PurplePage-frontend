@@ -28,16 +28,20 @@ const Article = () => {
     prgm_type: 'All Program Types',
     group_name: 'All Groups'
   })
+
+  const [searchValues, setSearchValues] = useState({
+    value: ' --All Program Types & Group--',
+    type: 'All',
+  })
+
   const [sites, setSites] = useState([]);
-  const [filteredSites, setFilteredSites] = useState([]);
-  const [filteredProgramTypes, setFilteredProgramTypes] = useState([]);
   const [programList, setProgramList] = useState([]);
   const [programTypeList, setProgramTypeList] = useState([]);
   const [groupList, setGroupList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [serviceStreams, setServiceStreams] = useState([]);
-  const [divisions, setDivisions] = useState([]);
+  const [filteredSites, setFilteredSites] = useState([]);
+  const [filteredPrograms, setFilteredPrograms] = useState([]);
 
   const [site, setSite] = useState(null);
 
@@ -59,6 +63,9 @@ const Article = () => {
       setGroupList(groups);
       setProgramList(programs);
       setSites(sites);
+
+      setFilteredSites(sites);
+      setFilteredPrograms(programs);
 
 
       setIsLoading(false);
@@ -112,24 +119,22 @@ const Article = () => {
     return result;
   }
 
-  // handle the change for program type dropdown
-  const onChangeProgramType = (e) => {
-    const programTypes = programTypeList.filter((programType) => {
-      return programType.prgm_type === e.target.value;
-    }); // return program types in the program type list that match with the selected value
+  //================================================================
 
-    setFilteredProgramTypes(programTypes);
+  const getSitesWithProgramType = (matchedProgramTypes) => {
 
     // get the program type id from the match result 
     const programTypeIds = []
-    for (let i=0; i < programTypes.length; i++) {
-      programTypeIds.push(programTypes[i].prgm_type_id)
+    for (let i=0; i < matchedProgramTypes.length; i++) {
+      programTypeIds.push(matchedProgramTypes[i].prgm_type_id)
     }
 
     // get the full detail program from the program list 
     const filteredProgramList = programList.filter((program) => {
       return programTypeIds.includes(program.prgm_type_id);
     });
+
+    setFilteredPrograms(filteredProgramList);
 
     // get the site ids from the filtered program list
     const siteIds = [];
@@ -144,44 +149,23 @@ const Article = () => {
         result.push(sites[i]);
       }
     }
-    setFilteredSites(result);
-    setValues({
-      prgm_type: e.target.value,
-      group_name: ''
-    });
-  }
 
-  // handle the change for group dropdown
-  const onChangeGroup = (e) => {
+    return result;
 
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value
-    });
+  };
 
-    const groups = groupList.filter((group) => {
-      return group.group_name === e.target.value;
-    });
+  const getSitesWithGroup = (matchedGroups) => {
 
     const groupIds = []
-    for (let i=0; i < groups.length; i++) {
-      groupIds.push(groups[i].group_id)
+    for (let i=0; i < matchedGroups.length; i++) {
+      groupIds.push(matchedGroups[i].group_id)
     }
 
     const filteredProgramList = programList.filter((program) => {
       return groupIds.includes(program.group_id);
     });
 
-    const programTypeIds = []
-    for(let i=0; i< filteredProgramList.length; i++) {
-      programTypeIds.push(filteredProgramList[i].prgm_type_id)
-    }
-
-    const filteredProgramTypes = programTypeList.filter((type) => {
-      return programTypeIds.includes(type.prgm_type_id);
-    });
-
-    setFilteredProgramTypes(filteredProgramTypes);
+    setFilteredPrograms(filteredProgramList);
 
     const siteIds = [];
     for (let i=0; i < filteredProgramList.length; i++) {
@@ -194,12 +178,161 @@ const Article = () => {
         result.push(sites[i]);
       }
     }
+    return result;
+  };
 
-    setFilteredSites(result);
+  //================================================================
+
+  // handle the change for program type dropdown
+  const onChangeProgramType = (e) => {
+
+    if(e.target.value === 'All Program Types') {
+      setFilteredSites(sites); 
+      setFilteredPrograms(programList); 
+      setValues({
+        prgm_type: 'All Program Types',
+        group_name: ''
+      });
+      setSearchValues ({value: '', type: ''});
+      return;
+    }
+
+    const programTypes = programTypeList.filter((programType) => {
+      return programType.prgm_type === e.target.value;
+    }); // return program types in the program type list that match with the selected value
+
+    setFilteredSites(getSitesWithProgramType(programTypes));
+
+    setValues({
+      prgm_type: e.target.value,
+      group_name: ''
+    });
+    setSearchValues ({value: '', type: ''});
+  }
+
+  // handle the change for group dropdown
+  const onChangeGroup = (e) => {
+
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value
+    });
+
+    if(e.target.value === 'All Groups') {
+      setFilteredSites(sites); 
+      setFilteredPrograms(programList);
+      setValues({
+        prgm_type: '',
+        group_name: 'All Groups'
+      }) 
+      setSearchValues ({value: '', type: ''});
+      return;
+    }
+
+    const groups = groupList.filter((group) => {
+      return group.group_name === e.target.value;
+    });
+
+    setFilteredSites(getSitesWithGroup(groups));
+
     setValues({
       prgm_type: '',
       group_name: e.target.value
     });
+    setSearchValues ({value: '', type: ''});
+  }
+
+  // handle the change for the search
+  const onChangeSearch = (event, value) => {
+
+    if(value)
+    {
+      console.log(value);
+      if(value.type === 'All')
+      {
+        setFilteredPrograms(programList);
+        setFilteredSites(sites);
+
+        setSearchValues(value);
+      }
+
+      if (value.type === 'Group') {
+
+        const groups = groupList.filter((group) => {
+          return group.group_name === value.value;
+        });
+  
+        setFilteredSites(getSitesWithGroup(groups));
+        setSearchValues (value);
+  
+      }
+  
+      if (value.type === 'Program Types') {
+  
+        const programTypes = programTypeList.filter((programType) => {
+          return programType.prgm_type === value.value;
+        }); // return program types in the program type list that match with the selected value
+    
+        setFilteredSites(getSitesWithProgramType(programTypes));
+    
+        setSearchValues(value);
+  
+      }
+
+      setValues({
+        prgm_type: '',
+        group_name: ''
+      });
+
+    }
+ 
+  }
+
+  const searchFilterOptions = (options, state) => {
+
+    const value = state.inputValue;
+    const pattern = new RegExp(value, 'i'); // pattern to search more accurately
+    const filterTypeGroup = options.filter((option) => pattern.test(option.value));
+
+    if(filterTypeGroup.length > 0) {
+      return filterTypeGroup;
+    }
+    else {
+
+      const filteredProgram = programList.filter((program) => {
+        
+        const programDesc = program.service_desc;
+        if(programDesc)
+        {
+          return pattern.test(program.service_desc);
+        }
+        return;
+      });
+
+      const programTypeIds = [];
+      const groupIds = [];
+
+      for(let i = 0; i < filteredProgram.length; i++) {
+        programTypeIds.push(filteredProgram[i].prgm_type_id);
+        groupIds.push(filteredProgram[i].group_id);
+      }
+
+      const filteredProgramType = programTypeList.map((type) => {
+        if(programTypeIds.includes(type.prgm_type_id)) { 
+          return type.prgm_type;
+        }
+      });
+
+      const filteredGroups = groupList.map((group) => {
+        if(groupIds.includes(group.group_id)) {
+          return group.group_name;
+        }
+      });
+
+      return options.filter((option) => (filteredProgramType.includes(option.value) || filteredGroups.includes(option.value)));
+
+    }
+
   }
 
   // reset the filters
@@ -213,6 +346,13 @@ const Article = () => {
 
   /* Option Available for the search */
   const groupedOptions = [
+    {
+      options: {
+        value: ' --All Program Types & Group--',
+        type: 'All',
+      }
+    },
+
     {
       options: programTypeList.map((program) => ({
         value: program.prgm_type,
@@ -231,6 +371,13 @@ const Article = () => {
 
   const allOptions = groupedOptions.flatMap((group) => group.options);
 
+  // const renderOption = (props, option) => (
+  //   <div key={option.key} {...props}>
+  //     <span style={{ marginRight: '10px' }}>{option.value}</span>
+  //     <span style={{ color: 'gray' }}>{option.type}</span>
+  //   </div>
+  // );
+
   const FreeTextSearch = () => {
     return (
       <SelectDiv>
@@ -241,8 +388,14 @@ const Article = () => {
           options={allOptions}
           groupBy={(option) => option.type}
           getOptionLabel={(option)=> option.value} // Use the label property as the option label
+          isOptionEqualToValue={(option) => option.value === searchValues.value}
+          filterOptions={searchFilterOptions}
+          onChange={onChangeSearch}
+          value={searchValues}
           style={textFieldStyle}
           size='small'
+          selectOnFocus
+          clearOnBlur
           renderInput={(params) => <TextField {...params} />}
           renderGroup={(params) => (
             <li key={params.key}>
@@ -326,11 +479,13 @@ const Article = () => {
         </FilterContainer>
         <MapElement>
           <MapFilter 
-            filteredProgramTypes={(values.prgm_type === 'All Program Types' || values.group_name === 'All Groups')? programTypeList: filteredProgramTypes} 
-            filteredSites={(values.prgm_type === 'All Program Types' || values.group_name === 'All Groups')? sites: filteredSites}
+            filteredPrograms={filteredPrograms} 
+            filteredSites={filteredSites}
+            programTypeList={programTypeList}
+            groupList={groupList}
           />
           <Map 
-            sites={(values.prgm_type === 'All Program Types' || values.group_name === 'All Groups')? sites: filteredSites} exportSite={selectedSite}
+            sites={filteredSites} exportSite={selectedSite}
           />
           <MapInfo site={site}/>
         </MapElement>
