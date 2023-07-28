@@ -47,10 +47,10 @@ const Map = ({sites, exportSite}) => {
       // Filter the markers that are within the current viewport
       const markersWithinViewport = sites.filter((site) => {
         return (
-          site.lat >= viewPort.latitude - latitudeDelta / 1.5 &&
-          site.lat <= viewPort.latitude + latitudeDelta / 1.5 &&
-          site.lng >= viewPort.longitude - longitudeDelta / 1.5 &&
-          site.lng <= viewPort.longitude + longitudeDelta / 1.5
+          site.lat >= viewPort.latitude - latitudeDelta / 1.5 && // left edge to center
+          site.lat <= viewPort.latitude + latitudeDelta / 1.5 && // right edge to center
+          site.lng >= viewPort.longitude - longitudeDelta / 1.5 && // bottom edge to center
+          site.lng <= viewPort.longitude + longitudeDelta / 1.5 // top edge to center
         );
       });
 

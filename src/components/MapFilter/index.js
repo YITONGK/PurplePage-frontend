@@ -1,9 +1,10 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import { MapFilterContainer, FilterContainer, SelectDiv} from './MapFilterElements';
+import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer} from './MapFilterElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
+import  Button from '@mui/material/Button';
 
 const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList}) => {
 
@@ -12,6 +13,9 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList}
         ser_stream: '',
         division_name: ''
     })
+
+    const [divisionValue, setDivisionValue] = useState('');
+    const [serviceStreamValue, setServiceStreamValue] = useState('');
 
     const [serviceStreams, setServiceStreams] = useState([]);
     const [serviceTypes, setServiceTypes] = useState([]);
@@ -22,6 +26,8 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList}
     const [filteredDivisions, setFilteredDivisions] = useState([]);
 
     const dropDownStyle = { minWidth: '16vw', maxWidth: '16vw', position: 'absolute'};
+
+    const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", width: 'fit-content', marginBottom: '0.5rem', marginTop: '0.5rem', marginLeft: '0.5rem'};
 
 
 
@@ -36,9 +42,6 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList}
 
         setFilteredServiceStreams(filteringServiceStreams());
         setFilteredDivisions(filteringDivisions());
-
-        console.log(filteredServiceStreams);
-        console.log(filteredDivisions);
 
     },[filteredPrograms])
 
@@ -158,41 +161,73 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList}
     const ServiceStreamDropdown = () => {
         return ( 
         
-        <Select 
-            name="Service Stream"
-            size='small'
-            style={dropDownStyle}
-            value={values.ser_stream}
-            onChange={(e) => {setValues({ser_stream: e.target.value, division_name: ''})}}
-            required
-        >
-            {
-                filteredServiceStreams && filteredServiceStreams.map((serviceStream, index) => {
-                   return <MenuItem key={index} value={serviceStream.ser_stream}>{serviceStream.ser_stream} </MenuItem>
-                })
-            }
+            <Select 
+                name="Service Stream"
+                size='small'
+                style={dropDownStyle}
+                value={serviceStreamValue}
+                onChange={(e) => {setServiceStreamValue(e.target.value)}}
+                required
+            >
+                {
+                    filteredServiceStreams && filteredServiceStreams.map((serviceStream, index) => {
+                    return <MenuItem key={index} value={serviceStream.ser_stream}>{serviceStream.ser_stream} </MenuItem>
+                    })
+                }
 
-        </Select>
+            </Select>
         )
 
     }
 
-    const divisionDropdown = () => {
+    const DivisionDropdown = () => {
+
+        return (
+
+            <Select 
+                name="Division"
+                size='small'
+                style={dropDownStyle}
+                value={divisionValue}
+                onChange={(e) => {setDivisionValue(e.target.value)}}
+                required
+            >
+                {
+                    filteredDivisions && filteredDivisions.map((division, index) => {
+                    return <MenuItem key={index} value={division.division_name}>{division.division_name} </MenuItem>
+                    })
+                }
+
+            </Select>
+        )
 
     }
 
 
     return (
-        <MapFilterContainer>
+         <MapFilterContainer>
             <FilterContainer>
                 <SelectDiv>
                     <InputLabel>Service Stream</InputLabel>
                     <ServiceStreamDropdown></ServiceStreamDropdown>
                 </SelectDiv> 
-
+                <SelectDiv>
+                    <InputLabel>Division</InputLabel>
+                    <DivisionDropdown></DivisionDropdown>
+                </SelectDiv> 
+                <ButtonContainer>
+                    <Button variant="contained" style={buttonStyle}>Apply Filter</Button>
+                </ButtonContainer>
             </FilterContainer>
+            <ResultContainer>
+                <InputLabel>Result</InputLabel>
+            </ResultContainer>
+            
         
         </MapFilterContainer>
+
+
+       
     )
 }
 

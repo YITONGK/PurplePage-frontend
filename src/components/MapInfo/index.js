@@ -11,8 +11,8 @@ const MapInfo = ({site}) => {
     return (
         <InfoContainer>
             <Grid style={gridStyle}>
-            <InfoIcon fontSize="large" /> 
-            <InfoH1>Site Information</InfoH1>
+                <InfoIcon fontSize="large" /> 
+                <InfoH1>Site Information</InfoH1>
             </Grid>
             {site ? (
             <>

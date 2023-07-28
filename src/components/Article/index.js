@@ -47,7 +47,7 @@ const Article = () => {
 
   // styles
   const textFieldStyle = { minWidth: "400px" };
-  const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", marginTop: "1.5rem" };
+  const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", marginTop: "1.5rem", display: "inline-flex"};
 
   const getAllData = async () => {
 
