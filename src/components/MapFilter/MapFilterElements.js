@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 export const MapFilterContainer = styled.div`
     margin-right: 2rem;
-    width: 25%;
+    max-width: 20%;
+    min-width: 20%;
     height: fit-content;
     display: flex;
     flex-direction: column;
@@ -24,7 +25,9 @@ export const ResultContainer = styled.div`
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    height: 30%
+    height: 30%;
+    z-index:1;
+    position: relative;
 `;
 
 export const ButtonContainer = styled.div`
@@ -39,4 +42,35 @@ export const SelectDiv = styled.div`
     margin-left: 1rem;
     margin-bottom: 1rem;
     align-items: center;
+`;
+
+export const SearchContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 0.2rem solid;
+    padding-bottom: 0.5rem;
+    padding-top: 0.2rem;
+    border-bottom-color: #A20066;
+`;
+
+export const SitesContainer = styled.div`
+    overflow-y: auto;
+    height: 20vh;
+`;
+
+export const SiteOption = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 10%;
+    transition: all 0.3s ease-in-out;
+    
+
+    &:hover {
+        transform: scale(1.1);
+        cursor: pointer;
+
+    }
 `;

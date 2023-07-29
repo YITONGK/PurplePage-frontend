@@ -1,10 +1,21 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer} from './MapFilterElements';
+import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption} from './MapFilterElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
-import  Button from '@mui/material/Button';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/Button';
+import ListItemText from '@mui/material/ListItemText';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+import { debounce } from '@mui/material';
 
 const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList}) => {
 
@@ -25,10 +36,23 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList}
     const [filteredServiceStreams, setFilteredServiceStreams] = useState([]);
     const [filteredDivisions, setFilteredDivisions] = useState([]);
 
+    const [advanceFilteredSites, setAdvanceFilteredSites] = useState([]);
+    const [availableSearchSites, setAvailableSearchSites] = useState([]);
+
     const dropDownStyle = { minWidth: '16vw', maxWidth: '16vw', position: 'absolute'};
 
     const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", width: 'fit-content', marginBottom: '0.5rem', marginTop: '0.5rem', marginLeft: '0.5rem'};
+    const textFieldStyle = { minWidth: "16vw", marginTop: '0.5rem', fontSize: '15px', borderRadius: '20px'};
+    const textStyle = { fontSize: '18px', fontWeight: 'bold', color: '#A20066'};
+    const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', maxWidth: '15vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
 
+    const listStyle = { marginTop: '0'};
+    const captionStyle = {
+        margin: 0,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+    }
 
 
     useEffect(() => {
@@ -44,6 +68,15 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList}
         setFilteredDivisions(filteringDivisions());
 
     },[filteredPrograms])
+
+    useEffect(() => {
+
+        if(isLoading) return;
+
+        setAdvanceFilteredSites(filteredSites);
+        setAvailableSearchSites(filteredSites);
+        
+    },[filteredSites])
 
     const getFilterData = async () => {
 
@@ -203,6 +236,51 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList}
 
     }
 
+    const AvailableSites = () => {
+        console.log(advanceFilteredSites)
+        return (
+            availableSearchSites && availableSearchSites.map((site, index) => {
+                return (
+                    <ListItem key= {index}>
+                        <Tooltip 
+                            title= {<Typography variant= 'body2' color="inherit">{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>} 
+                            style={toolTipsStyle}
+                        >
+                            <SiteOption>
+                                <Typography variant='body1'>
+                                    {site.site_id}
+                                </Typography>
+                                <Typography variant='caption' style={captionStyle}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>
+                            </SiteOption>
+                        </Tooltip>
+                    </ListItem>
+                )
+            })
+        )
+    }
+
+    const onChangeSiteSearch = debounce((e) => {
+        const inputValue = e.target.value.trim();
+
+        if(!inputValue) {
+            if(availableSearchSites.length !== advanceFilteredSites.length) {
+                setAvailableSearchSites(advanceFilteredSites);
+                return;
+            }
+        }
+
+        const pattern = new RegExp(inputValue, 'i'); // pattern to search more accurately
+        const filterSearchSite = availableSearchSites.filter((site) => pattern.test(site.site_id) 
+        || pattern.test(site.street_nbr) 
+        || pattern.test(site.street_name) 
+        || pattern.test(site.suburb) 
+        || pattern.test(site.state) 
+        || pattern.test(site.postcode));
+
+        setAvailableSearchSites(filterSearchSite);
+
+    },300);
+
 
     return (
          <MapFilterContainer>
@@ -220,9 +298,22 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList}
                 </ButtonContainer>
             </FilterContainer>
             <ResultContainer>
-                <InputLabel>Result</InputLabel>
+                <SearchContainer>
+                    <InputLabel style={textStyle}>Available Sites</InputLabel>
+                    <OutlinedInput style={textFieldStyle} size='small' placeholder='Search Sites...' onChange={onChangeSiteSearch}
+                        startAdornment= {
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        }
+                    ></OutlinedInput>
+                </SearchContainer>
+                <SitesContainer>
+                    <List sx={listStyle}>
+                        <AvailableSites></AvailableSites>
+                    </List>
+                </SitesContainer>      
             </ResultContainer>
-            
         
         </MapFilterContainer>
 

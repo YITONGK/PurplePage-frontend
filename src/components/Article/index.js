@@ -18,6 +18,7 @@ import MapFilter from '../MapFilter';
 
 // article component
 const Article = () => {
+  
   // useEffect
   useEffect(() => {
     document.title = 'Home';
