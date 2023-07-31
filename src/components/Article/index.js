@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { ArticleContainer, ArticleH1 } from './ArticleElements';
 import Footer from '../../components/Footer';
 
@@ -15,6 +15,7 @@ import TextField from '@mui/material/TextField';
 import Map from '../Map';
 import MapInfo from '../MapInfo';
 import MapFilter from '../MapFilter';
+import { useReducer } from 'react';
 
 // article component
 const Article = () => {
@@ -46,6 +47,8 @@ const Article = () => {
 
   const [site, setSite] = useState(null);
   const [advancefilteredSites, setAdvanceFilteredSites] = useState([]);
+
+  const mapRef = useRef();
 
   // styles
   const textFieldStyle = { minWidth: "400px" };
@@ -84,6 +87,12 @@ const Article = () => {
   useEffect(() => {
     getAllData();
   }, [])
+
+  useEffect(() => {
+
+    setAdvanceFilteredSites([]);
+
+  }, [filteredSites])
 
   /* get a list of sites from the backend and display it */
   const getSites = async () => {
@@ -493,9 +502,10 @@ const Article = () => {
             programTypeList={programTypeList}
             groupList={groupList}
             exportAdvanceFilteredSites={applyFilter}
+            importRef={mapRef}
           />
           <Map 
-            sites={filteredSites} exportSite={selectedSite}
+            sites={(advancefilteredSites.length > 0)? advancefilteredSites: filteredSites} exportSite={selectedSite} exportRef={mapRef}
           />
           <MapInfo site={site}/>
         </MapElement>

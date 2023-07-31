@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {memo, useEffect, useState} from 'react';
-import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption} from './MapFilterElements';
+import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption, ToolTips} from './MapFilterElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
@@ -17,7 +17,7 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
 
-const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList, exportAdvanceFilteredSites}) => {
+const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList, exportAdvanceFilteredSites, importRef}) => {
 
 
     const [divisionValue, setDivisionValue] = useState('');
@@ -34,8 +34,10 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
     const [advanceFilteredSites, setAdvanceFilteredSites] = useState([]);
     const [availableSearchSites, setAvailableSearchSites] = useState([]);
 
-    const [selectedProgramTypesIds, setSelectedProgramTypesIds] = useState([]);
+    const [selectedProgramTypeIds, setSelectedProgramTypeIds] = useState([]);
     const [selectedGroupIds, setSelectedGroupIds] = useState([]);
+
+    const [clickedSiteId, setClickedSiteId] = useState('');
 
     const dropDownStyle = { minWidth: '16vw', maxWidth: '16vw', position: 'absolute'};
 
@@ -43,6 +45,7 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
     const textFieldStyle = { minWidth: "16vw", marginTop: '0.5rem', fontSize: '15px', borderRadius: '20px'};
     const textStyle = { fontSize: '18px', fontWeight: 'bold', color: '#A20066'};
     const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
+    const toolTipsStyleClicked = {backgroundColor: '#A20066',  color: 'white', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
 
     const listStyle = { marginTop: '0'};
     const captionStyle = {
@@ -192,6 +195,21 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
 
     }
 
+    const filteringSites = (selectedGroupIds, selectedProgramTypeIds) => {
+
+        const tmpFilteredPrograms = filteredPrograms.filter((program) => 
+                selectedGroupIds.includes(program.group_id) && selectedProgramTypeIds.includes(program.prgm_type_id)
+        );
+
+        const sitesIds = [];
+        for(let i = 0; i < tmpFilteredPrograms.length; i++) {
+            sitesIds.push(tmpFilteredPrograms[i].site_id);
+        }
+
+        const advanceFilteredSites = filteredSites.filter((site) => sitesIds.includes(site.site_id));
+        return advanceFilteredSites;
+    }
+
     const ServiceStreamDropdown = () => {
         return ( 
         
@@ -241,12 +259,12 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
         return (
             availableSearchSites && availableSearchSites.map((site, index) => {
                 return (
-                    <ListItem key= {index}>
+                    <ListItem key={index}>
                         <Tooltip 
                             title= {<Typography variant= 'body2' color="inherit">{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>} 
-                            style={toolTipsStyle}
+                            style={(site.site_id === clickedSiteId)? toolTipsStyleClicked: toolTipsStyle}
                         >
-                            <SiteOption>
+                            <SiteOption onClick={() => {setClickedSiteId(site.site_id); flyingToLocation(site.lat, site.lng);}}>
                                 <Typography variant='body1'>
                                     {site.site_id}
                                 </Typography>
@@ -257,6 +275,12 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
                 )
             })
         )
+    }
+
+    const flyingToLocation = (lat, lng) => {
+        if(importRef.current) {
+            importRef.current.getMap().flyTo({ center: [lng, lat], zoom: 15 });
+        }
     }
 
     const onChangeServiceStream = (e) => {
@@ -291,7 +315,7 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
             programTypeIds.push(tmpFilteredProgramType[i].prgm_type_id);
         }
 
-        setSelectedProgramTypesIds(programTypeIds);
+        setSelectedProgramTypeIds(programTypeIds);
 
         const tmpFilteredPrograms = filteredPrograms.filter((program) => programTypeIds.includes(program.prgm_type_id));
 
@@ -377,19 +401,86 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
 
     const applyingFilter = () => {
 
-        const tmpFilteredPrograms = filteredPrograms.filter((program) => 
-            selectedGroupIds.includes(program.group_id) && selectedProgramTypesIds.includes(program.prgm_type_id)
-        );
 
-        const sitesIds = [];
-        for(let i = 0; i < tmpFilteredPrograms.length; i++) {
-            sitesIds.push(tmpFilteredPrograms[i].site_id);
+        // setServiceStreamValue ('All Service Stream');
+        // setDivisionValue('All Divisions');
+
+        // In the case of both is all we need to run through the filtered list of ss and d
+        if(divisionValue === 'All Divisions' && serviceStreamValue === 'All Service Stream') {
+
+            setAvailableSearchSites(filteredSites);
+            exportAdvanceFilteredSites([]);            
+
         }
 
-        const advanceFilteredSites = filteredSites.filter((site) => sitesIds.includes(site.site_id));
+        if((divisionValue === 'All Divisions' && serviceStreamValue !== 'All Service Stream')
+            || (divisionValue !== 'All Divivsions' && serviceStreamValue === 'All Service Stream')) {
 
-        setAvailableSearchSites(advanceFilteredSites);
-        exportAdvanceFilteredSites(advanceFilteredSites);
+                let groupIds = [];
+                let programTypeIds = [];
+
+                if(divisionValue === 'All Divisions') {
+                    const divisionIds = [];
+                    for(let i = 0; i < filteredDivisions.length; i++) {
+                            divisionIds.push(filteredDivisions[i].division_id);
+                    }
+
+                    const tmpFilteredGroup = groupList.filter((group) => divisionIds.includes(group.division_id));
+
+                    for(let i = 0; i < tmpFilteredGroup.length; i++) {
+                        groupIds.push(tmpFilteredGroup[i].group_id);
+                    }
+                }
+
+                if(serviceStreamValue === 'All Service Stream') {
+
+                    const serviceStreamIds = [];
+                    for(let i = 0; i < filteredServiceStreams.length; i++) {
+                    
+                        serviceStreamIds.push(filteredServiceStreams[i].ser_stream_id);
+                    }
+        
+                    const tmpFilteredServiceType = serviceTypes.filter((serviceType) => serviceStreamIds.includes(serviceType.ser_stream_id));
+        
+                    const serviceTypeIds = [];
+                    for(let i = 0; i < tmpFilteredServiceType.length; i++) {
+                        serviceTypeIds.push(tmpFilteredServiceType[i].ser_type_id);
+                    }
+        
+                    const tmpFilteredProgramType = programTypeList.filter((programType) => serviceTypeIds.includes(programType.ser_type_id));
+        
+                    for(let i = 0; i < tmpFilteredProgramType.length; i++) {
+                        programTypeIds.push(tmpFilteredProgramType[i].prgm_type_id);
+                    }
+
+                }
+
+                if(!groupIds.length > 0) {
+                    groupIds = selectedGroupIds;
+                }
+
+                if(!programTypeIds.length > 0) {
+                    programTypeIds = selectedProgramTypeIds;
+                }
+                
+                const advanceFilteredSites = filteringSites(groupIds, programTypeIds);
+
+
+                setAvailableSearchSites(advanceFilteredSites);
+                exportAdvanceFilteredSites(advanceFilteredSites);
+
+        }
+
+        if(divisionValue !== 'All Divisions' && serviceStreamValue !== 'All Service Stream') {
+
+            const advanceFilteredSites = filteringSites(selectedGroupIds, selectedProgramTypeIds);
+
+            setAvailableSearchSites(advanceFilteredSites);
+            exportAdvanceFilteredSites(advanceFilteredSites);
+
+        }
+        // If one of them are selected for example we need to run through filtered list of eithers and d or ss.
+        // if both of them are selected we just need to run through selected groupids and programtypes ids.
 
     }
 

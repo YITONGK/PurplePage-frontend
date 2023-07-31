@@ -74,3 +74,14 @@ export const SiteOption = styled.div`
 
     }
 `;
+
+export const ToolTips = styled.div`
+    background-color: white;
+    color: rgba(0, 0, 0, 0.87);
+    max-width: 13.5vw;
+    font-size: 12rem;
+    border: 1px solid #A20066;
+    border-radius: 15px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+`;
