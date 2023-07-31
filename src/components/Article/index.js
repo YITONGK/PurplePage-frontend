@@ -18,7 +18,7 @@ import MapFilter from '../MapFilter';
 
 // article component
 const Article = () => {
-  
+
   // useEffect
   useEffect(() => {
     document.title = 'Home';
@@ -45,6 +45,7 @@ const Article = () => {
   const [filteredPrograms, setFilteredPrograms] = useState([]);
 
   const [site, setSite] = useState(null);
+  const [advancefilteredSites, setAdvanceFilteredSites] = useState([]);
 
   // styles
   const textFieldStyle = { minWidth: "400px" };
@@ -465,9 +466,16 @@ const Article = () => {
     )
   }
 
+  //===================== Export Function ===========================================
   const selectedSite = (site) => {
     setSite(site);
   }
+
+  const applyFilter = (advanceFilteredSites) => {
+    setAdvanceFilteredSites(advanceFilteredSites);
+  }
+
+
   
   return (
     <ArticleContainer>
@@ -484,6 +492,7 @@ const Article = () => {
             filteredSites={filteredSites}
             programTypeList={programTypeList}
             groupList={groupList}
+            exportAdvanceFilteredSites={applyFilter}
           />
           <Map 
             sites={filteredSites} exportSite={selectedSite}

@@ -19,7 +19,7 @@ const Map = ({sites, exportSite}) => {
 
   const [markersInView, setMarkersInView] = useState([]);
 
-  const debounceDelay = 100; //delay amount
+  const debounceDelay = 300; //delay amount
 
   const [viewPort, setViewPort] = useState({
     latitude: -37.80995133438894,
