@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes }from 'styled-components';
 
 export const MapContainer = styled.div`
   width: 55vw;
@@ -22,3 +22,27 @@ export const InfoWindowH1 = styled.h1`
 export const InfoWindowP = styled.p`
   font-size: 14px;
 `;
+
+const moveUpAndBack = keyframes`
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px); /* Move up by 20px */
+  }
+`;
+
+export const MarkerAnimation = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  animation: ${moveUpAndBack} 1s ease infinite;
+`;
+
+export const BasicMarker = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+`;
+
+

@@ -17,6 +17,21 @@ export const FilterContainer = styled.div`
   align-items: center;
 `;
 
+export const ColSearchContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+`;
+
+export const SearchContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: fit-content;
+  border: 0.5px solid grey;
+  border-radius: 5px;
+`;
+
 export const MapElement = styled.div`
   display: flex;
   flex-direction: row;
@@ -31,7 +46,7 @@ export const MapP = styled.p`
 `;
 
 export const SelectDiv = styled.div`
-  margin-right: 1.5rem;
+  margin-right: 0.1rem;
 `;
 
 export const GroupHeader = styled.div`

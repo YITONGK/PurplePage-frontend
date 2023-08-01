@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { MapContainer, MapP, InfoWindowContainer, InfoWindowH1, InfoWindowP} from './MapElements';
+import { MapContainer, MapP, InfoWindowContainer, InfoWindowH1, InfoWindowP, MarkerAnimation, BasicMarker} from './MapElements';
 import ReactMapGl, { Marker, Popup} from "react-map-gl";
 import mapboxgl from 'mapbox-gl';
 
@@ -16,6 +16,7 @@ const Map = ({sites, exportSite, exportRef}) => {
 
   // useState hooks
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [popUpMarker, setPopUpMarker] = useState(null);
 
   const [markersInView, setMarkersInView] = useState([]);
 
@@ -65,7 +66,7 @@ const Map = ({sites, exportSite, exportRef}) => {
 
   // close popup
   const closePopup = () => {
-    setSelectedMarker(null);
+    setPopUpMarker(null);
   }
 
 
@@ -74,6 +75,7 @@ const Map = ({sites, exportSite, exportRef}) => {
       e.stopPropagation();
       e.preventDefault();
       setSelectedMarker(site);
+      setPopUpMarker(site);
       exportSite(site);
     },[sites]
   );
@@ -88,25 +90,46 @@ const Map = ({sites, exportSite, exportRef}) => {
             latitude={site.lat}
             longitude={site.lng}
           >
-            <button
-              onClick={(e) => markersClick(e, site)}
-              style={{background: "none", border: "none", cursor: "pointer"}}
-            >
-              <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
-            </button>
+          {
+
+            (selectedMarker) ?
+
+              (site.site_id === selectedMarker.site_id) ? (
+                <MarkerAnimation
+                  onClick={(e) => markersClick(e, site)}
+                >
+                  <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
+                </MarkerAnimation> )    
+                : (
+                <BasicMarker
+                  onClick={(e) => markersClick(e, site)}
+                >
+                  <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
+                </BasicMarker>
+
+              ) : (
+
+                <BasicMarker
+                  onClick={(e) => markersClick(e, site)}
+                >
+                  <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
+                </BasicMarker>
+              )
+
+          }
           </Marker>
         ))}
-        {selectedMarker ? (
+        {popUpMarker? (
           <Popup
-            latitude={selectedMarker.lat}
-            longitude={selectedMarker.lng}
+            latitude={popUpMarker.lat}
+            longitude={popUpMarker.lng}
             onClose={closePopup}
           >
              <InfoWindowContainer>
-                <InfoWindowH1>{selectedMarker.site_id}</InfoWindowH1>
-                <InfoWindowP><strong>Address:</strong> {selectedMarker.street_nbr} {selectedMarker.street_name}, {selectedMarker.suburb}, {selectedMarker.state} {selectedMarker.postcode}</InfoWindowP>
-                <InfoWindowP><strong>Latitude:</strong> {selectedMarker.lat}</InfoWindowP>
-                <InfoWindowP><strong>Langitude:</strong> {selectedMarker.lng}</InfoWindowP>
+                <InfoWindowH1>{popUpMarker.site_id}</InfoWindowH1>
+                <InfoWindowP><strong>Address:</strong> {popUpMarker.street_nbr} {popUpMarker.street_name}, {popUpMarker.suburb}, {popUpMarker.state} {popUpMarker.postcode}</InfoWindowP>
+                <InfoWindowP><strong>Latitude:</strong> {popUpMarker.lat}</InfoWindowP>
+                <InfoWindowP><strong>Langitude:</strong> {popUpMarker.lng}</InfoWindowP>
               </InfoWindowContainer>
           </Popup>
         ) : null}

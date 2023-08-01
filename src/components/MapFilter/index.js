@@ -55,7 +55,6 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
         whiteSpace: 'nowrap',
     }
 
-
     useEffect(() => {
         getFilterData();
 
@@ -219,8 +218,18 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
                 style={dropDownStyle}
                 value={serviceStreamValue}
                 onChange={onChangeServiceStream}
+                MenuProps={{
+                    anchorOrigin: {
+                        vertical: 2,
+                        horizontal: 0,
+                    },
+                    transformOrigin: {
+                        vertical: -40,
+                        horizontal: 0,
+                    },
+                }}
             >
-                <MenuItem key={-1} value={'All Service Stream'}> ==All Service Stream== </MenuItem>
+                <MenuItem key={-1} value={'All Service Stream'}> --All Service Stream-- </MenuItem>
                 {
                     filteredServiceStreams && filteredServiceStreams.map((serviceStream, index) => {
                     return <MenuItem key={index} value={serviceStream.ser_stream}>{serviceStream.ser_stream} </MenuItem>
@@ -242,8 +251,18 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
                 style={dropDownStyle}
                 value={divisionValue}
                 onChange={onChangeDivision}
+                MenuProps={{
+                    anchorOrigin: {
+                        vertical: 2,
+                        horizontal: 0,
+                    },
+                    transformOrigin: {
+                        vertical: -40,
+                        horizontal: 0,
+                    },
+                }}
             >
-                <MenuItem key={-1} value={'All Divisions'}> ==All Divisions== </MenuItem>
+                <MenuItem key={-1} value={'All Divisions'}> --All Divisions-- </MenuItem>
                 {
                     filteredDivisions && filteredDivisions.map((division, index) => {
                     return <MenuItem key={index} value={division.division_name}> {division.division_name} </MenuItem>
@@ -279,7 +298,7 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
 
     const flyingToLocation = (lat, lng) => {
         if(importRef.current) {
-            importRef.current.getMap().flyTo({ center: [lng, lat], zoom: 15 });
+            importRef.current.getMap().flyTo({ center: [lng, lat], zoom: 20 });
         }
     }
 
@@ -387,13 +406,11 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
             }
         }
 
-        const pattern = new RegExp(inputValue, 'i'); // pattern to search more accurately
-        const filterSearchSite = availableSearchSites.filter((site) => pattern.test(site.site_id) 
-        || pattern.test(site.street_nbr) 
-        || pattern.test(site.street_name) 
-        || pattern.test(site.suburb) 
-        || pattern.test(site.state) 
-        || pattern.test(site.postcode));
+        const pattern = new RegExp(inputValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'); // pattern to search more accurately
+        const filterSearchSite = availableSearchSites.filter((site) => {
+            const fullAddress = `${site.site_id} ${site.street_nbr} ${site.street_name} ${site.suburb} ${site.state} ${site.postcode}`;
+            return pattern.test(fullAddress);
+        })
 
         setAvailableSearchSites(filterSearchSite);
 
@@ -401,11 +418,7 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
 
     const applyingFilter = () => {
 
-
-        // setServiceStreamValue ('All Service Stream');
-        // setDivisionValue('All Divisions');
-
-        // In the case of both is all we need to run through the filtered list of ss and d
+        // In the case of both is all we just return empty and the article will track
         if(divisionValue === 'All Divisions' && serviceStreamValue === 'All Service Stream') {
 
             setAvailableSearchSites(filteredSites);
