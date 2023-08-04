@@ -59,7 +59,9 @@ const Article = () => {
   const [filteredPrograms, setFilteredPrograms] = useState([]);
 
   const [site, setSite] = useState(null);
+
   const [advancefilteredSites, setAdvanceFilteredSites] = useState([]);
+  const [advanceFilteredPrograms, setAdvanceFilteredPrograms] = useState([]);
 
   const [searchOptions, setSearchOptions] = useState([]);
 
@@ -105,10 +107,7 @@ const Article = () => {
       });
 
       setSites(distinctSites);
-
       setFilteredSites(distinctSites);
-     
-
 
       setIsLoading(false);
 
@@ -129,6 +128,7 @@ const Article = () => {
 
   useEffect(() => {
     setAdvanceFilteredSites([]);
+    setAdvanceFilteredPrograms([]);
   }, [filteredSites])
 
   useEffect(() => {
@@ -609,6 +609,10 @@ const Article = () => {
     setAdvanceFilteredSites(advanceFilteredSites);
   }
 
+  const sendAdvanceFilteredPrograms = (programs) => {
+    setAdvanceFilteredPrograms(programs);
+  }
+
 
   
   return (
@@ -625,11 +629,13 @@ const Article = () => {
             groupList={groupList}
             exportAdvanceFilteredSites={applyFilter}
             importRef={mapRef}
+            exportSite={selectedSite}
+            exportAdvanceFilteredPrograms = {sendAdvanceFilteredPrograms}
           />
           <Map 
-            sites={(advancefilteredSites.length > 0)? advancefilteredSites: filteredSites} exportSite={selectedSite} exportRef={mapRef}
+            sites={(advancefilteredSites.length > 0)? advancefilteredSites : filteredSites} exportSite={selectedSite} exportRef={mapRef} importSite={site}
           />
-          <MapInfo site={site}/>
+          <MapInfo site={site} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms }/>
         </MapElement>
       <Footer />
     </ArticleContainer>

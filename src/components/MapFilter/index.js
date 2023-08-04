@@ -17,7 +17,7 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
 
-const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList, exportAdvanceFilteredSites, importRef}) => {
+const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList, exportAdvanceFilteredSites, importRef, exportSite, exportAdvanceFilteredPrograms}) => {
 
 
     const [divisionValue, setDivisionValue] = useState('');
@@ -37,7 +37,7 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
     const [selectedProgramTypeIds, setSelectedProgramTypeIds] = useState([]);
     const [selectedGroupIds, setSelectedGroupIds] = useState([]);
 
-    const [clickedSiteId, setClickedSiteId] = useState('');
+    const [clickedSite, setClickedSite] = useState(null);
 
     const dropDownStyle = { minWidth: '16vw', maxWidth: '16vw', position: 'absolute'};
 
@@ -200,6 +200,8 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
                 selectedGroupIds.includes(program.group_id) && selectedProgramTypeIds.includes(program.prgm_type_id)
         );
 
+        exportAdvanceFilteredPrograms(tmpFilteredPrograms);
+
         const sitesIds = [];
         for(let i = 0; i < tmpFilteredPrograms.length; i++) {
             sitesIds.push(tmpFilteredPrograms[i].site_id);
@@ -274,6 +276,8 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
 
     }
 
+    
+
     const AvailableSites = () => {
         return (
             availableSearchSites && availableSearchSites.map((site, index) => {
@@ -281,9 +285,9 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
                     <ListItem key={index}>
                         <Tooltip 
                             title= {<Typography variant= 'body2' color="inherit">{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>} 
-                            style={(site.site_id === clickedSiteId)? toolTipsStyleClicked: toolTipsStyle}
+                            style={(clickedSite && site.site_id === clickedSite.site_id)? toolTipsStyleClicked: toolTipsStyle}
                         >
-                            <SiteOption onClick={() => {setClickedSiteId(site.site_id); flyingToLocation(site.lat, site.lng);}}>
+                            <SiteOption onClick={() => onClickSite(site)}>
                                 <Typography variant='body1'>
                                     {site.site_id}
                                 </Typography>
@@ -298,8 +302,14 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
 
     const flyingToLocation = (lat, lng) => {
         if(importRef.current) {
-            importRef.current.getMap().flyTo({ center: [lng, lat], zoom: 20 });
+            importRef.current.getMap().flyTo({ center: [lng, lat], zoom: 16, essential: true });
         }
+    }
+
+    const onClickSite = (site) => {
+        setClickedSite(site); 
+        flyingToLocation(site.lat, site.lng);
+        exportSite(site);
     }
 
     const onChangeServiceStream = (e) => {
@@ -415,6 +425,7 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
         setAvailableSearchSites(filterSearchSite);
 
     },300);
+
 
     const applyingFilter = () => {
 

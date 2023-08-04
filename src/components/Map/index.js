@@ -11,7 +11,7 @@ mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoidmhhcnRvbm8iLCJhIjoiY2xoc2l1Z2VzMDd0dTNlcGtwbXYwaGx2cyJ9.C77GVU3YPPgscvXrTGHWfg';
 
-const Map = ({sites, exportSite, exportRef}) => {
+const Map = ({sites, exportSite, exportRef, importSite}) => {
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
   // useState hooks
@@ -62,6 +62,11 @@ const Map = ({sites, exportSite, exportRef}) => {
     return () => clearTimeout(timerId);
 
   }, [sites, viewPort]);
+
+  useEffect(() => {
+    setSelectedMarker(importSite);
+    setPopUpMarker(importSite);
+  },[importSite])
 
 
   // close popup
