@@ -14,6 +14,17 @@ export const ProgramViewH1 = styled.h1`
 
 export const ProgramViewP = styled.p`
   font-size: 18px;
+  display: flex;
+  align-items: start;
+`;
+
+export const ProgramViewGreenP = styled.p`
+  color: green;
+  font-size: 18px;
+  text-transform: uppercase;
+  margin-left: 5px;
+  margin-top: 1px;
+  margin-bottom: 0;
 `;
 
 export const ActionsButtonLink = styled(LinkRouter)`

@@ -33,7 +33,6 @@ const Map = ({sites, exportSite, exportRef, importSite}) => {
 
   //performance increase only show marker that in the viewport if needed...
   useEffect(() => {
-    
     const timerId = setTimeout(() => {
       const zoom = viewPort.zoom;
       const width = viewPort.width;
@@ -64,8 +63,18 @@ const Map = ({sites, exportSite, exportRef, importSite}) => {
   }, [sites, viewPort]);
 
   useEffect(() => {
-    setSelectedMarker(importSite);
-    setPopUpMarker(importSite);
+
+    setPopUpMarker(null);
+    setSelectedMarker(null);
+
+  }, [sites]);
+
+  useEffect(() => {
+    if(importSite) {
+      setSelectedMarker(importSite);
+      setPopUpMarker(importSite);
+    }
+    
   },[importSite])
 
 
@@ -75,13 +84,18 @@ const Map = ({sites, exportSite, exportRef, importSite}) => {
   }
 
 
+
   const markersClick = useCallback (
     (e, site) => {
       e.stopPropagation();
       e.preventDefault();
       setSelectedMarker(site);
       setPopUpMarker(site);
-      exportSite(site);
+
+      if(exportSite) {
+        exportSite(site);
+      }
+      
     },[sites]
   );
 

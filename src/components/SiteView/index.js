@@ -1,9 +1,10 @@
 import axios from "axios";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { SiteViewContainer, SiteViewH1, SiteViewP } from './SiteViewElements';
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Map from '../Map';
 
 const SiteView = () => {
   // useState hooks
@@ -11,9 +12,19 @@ const SiteView = () => {
 
   const { id } = useParams();
 
+  const mapRef = useRef();
+
   useEffect(() => {
     getSite();
   }, []);
+
+  useEffect(() => {
+
+    if(mapRef.current && site) {
+        mapRef.current.getMap().flyTo({ center: [site.lng, site.lat], zoom: 14, essential: true });
+    }
+
+  },[mapRef.current, site]);
 
   /* get a site from the backend based on the id and display it */
   const getSite = async () => {
@@ -65,11 +76,8 @@ const SiteView = () => {
   return (
     <SiteViewContainer>
       <SiteViewH1>{site.site_id}</SiteViewH1>
-      <SiteViewP>Latitude: {site.lat}</SiteViewP>
-      <SiteViewP>Langitude: {site.lng}</SiteViewP>
       <SiteViewP>Address: {site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</SiteViewP>
-      <Button variant="contained" color="primary" onClick={edit}>Edit</Button>&nbsp;
-      <Button variant="contained" color="error" onClick={deleteSite}>Delete</Button>
+      <Map sites={[site]} exportSite={null} exportRef={mapRef}/>
     </SiteViewContainer>
   )
 }

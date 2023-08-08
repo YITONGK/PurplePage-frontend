@@ -58,6 +58,13 @@ export const SearchContainer = styled.div`
 export const SitesContainer = styled.div`
     overflow-y: auto;
     height: 20vh;
+    display: flex;
+    justify-content: center;
+
+    @media screen and (min-height: 1080px) {
+        /* Apply new styles for screens with a minimum width of 768px */
+        height: 32vh; /* New height on larger screens */
+    }
 `;
 
 export const SiteOption = styled.div`

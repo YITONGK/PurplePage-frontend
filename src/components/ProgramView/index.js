@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { ProgramViewContainer, ProgramViewH1, ProgramViewP, ActionsButtonLink } from './ProgramViewElements';
+import { ProgramViewContainer, ProgramViewH1, ProgramViewP, ActionsButtonLink, ProgramViewGreenP, pContainer} from './ProgramViewElements';
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
 import Table from '@mui/material/Table';
@@ -79,7 +79,7 @@ const ProgramView = () => {
   // related sites table element
   const RelatedSitesTable = () => {
     return (
-      <TableContainer component={Paper} style={{ width: '95%' }}>
+      <TableContainer component={Paper} style={{ width: '95%',  border: '1px solid transparent', boxShadow: '0 0 6px rgba(0, 0, 0, 0.2)'}}>
         <Table>
           <TableHead>
             <TableRow>
@@ -116,9 +116,9 @@ const ProgramView = () => {
       <ProgramViewP>Program manager: {program.prgm_mgr}</ProgramViewP>
       <ProgramViewP>Program type: {program.prgm_type}</ProgramViewP>
       <ProgramViewP>Group: {program.group_name}</ProgramViewP>
-      <ProgramViewP>Status: {program.prgm_status}</ProgramViewP>
-      <Button variant="contained" color="primary" onClick={edit}>Edit</Button>&nbsp;
-      <Button variant="contained" color="error" onClick={deleteProgram}>Delete</Button>
+      <ProgramViewP>Status: <ProgramViewGreenP><strong>{program.prgm_status}</strong></ProgramViewGreenP></ProgramViewP>
+      {/* <Button variant="contained" color="primary" onClick={edit}>Edit</Button>&nbsp;
+      <Button variant="contained" color="error" onClick={deleteProgram}>Delete</Button> */}
       <ProgramViewP style={{ fontWeight: "bold", marginTop: "2rem", color: "#A60A6C", fontSize: "24px" }}>Related Sites</ProgramViewP>
       <RelatedSitesTable />
     </ProgramViewContainer>
