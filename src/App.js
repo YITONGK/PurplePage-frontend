@@ -55,9 +55,7 @@ function App() {
       <MySidebar/>
       <Header/>
       <Routes>
-        <Route path="/login" element={<LoginPage/>} exact />
-        <Route path="/register" element={<RegisterPage/>} exact />
-        <Route element={<ProtectedRoute/>}>
+        <Route>
           <Route path="/" element={<Home/>} exact />
           <Route path="/profile" element={<Profile/>} exact />
           <Route path="/users" element={<Users/>} exact />

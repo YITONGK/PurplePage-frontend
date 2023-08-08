@@ -132,9 +132,7 @@ const Map = ({sites, exportSite, exportRef, importSite}) => {
           >
              <InfoWindowContainer>
                 <InfoWindowH1>{popUpMarker.site_id}</InfoWindowH1>
-                <InfoWindowP><strong>Address:</strong> {popUpMarker.street_nbr} {popUpMarker.street_name}, {popUpMarker.suburb}, {popUpMarker.state} {popUpMarker.postcode}</InfoWindowP>
-                <InfoWindowP><strong>Latitude:</strong> {popUpMarker.lat}</InfoWindowP>
-                <InfoWindowP><strong>Langitude:</strong> {popUpMarker.lng}</InfoWindowP>
+                <InfoWindowP><strong>Address:</strong> <br/>{popUpMarker.street_nbr} {popUpMarker.street_name}, {popUpMarker.suburb}, {popUpMarker.state} {popUpMarker.postcode}</InfoWindowP>
               </InfoWindowContainer>
           </Popup>
         ) : null}

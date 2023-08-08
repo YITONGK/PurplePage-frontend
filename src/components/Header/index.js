@@ -80,9 +80,12 @@ const Header = () => {
 
   const LoginButton = () => {
     if (sessionStorage.getItem("isAuthenticated") !== "true") {
+      // <HeaderLogin onClick={login}>
+      //     Login&nbsp;<AccountCircle fontSize='large' />
+      // </HeaderLogin>
       return (
-        <HeaderLogin onClick={login}>
-          Login&nbsp;<AccountCircle fontSize='large' />
+        <HeaderLogin>
+          Welcome&nbsp;<AccountCircle fontSize='large' />
         </HeaderLogin>
       )
     } else {
