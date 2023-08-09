@@ -10,13 +10,8 @@ export const ProgramContainer = styled.div`
 
 export const ProgramH1 = styled.h1`
   font-size: 40px;
-  margin-bottom: -1%;
+  margin-bottom: 2%;
   color: #A60A6C;
-`;
-
-export const ButtonWrapper = styled.div`
-  text-align: right;
-  margin-right: 5%;
 `;
 
 export const DataGridWrapper = styled.div`
@@ -31,11 +26,6 @@ export const ActionsColumnWrapper = styled.div`
 
 
 export const ActionsButtonLink = styled(LinkRouter)`
-  text-decoration: none;
-  color: #fff;
-`;
-
-export const ProgramButtonLink = styled(LinkRouter)`
   text-decoration: none;
   color: #fff;
 `;

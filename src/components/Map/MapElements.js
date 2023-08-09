@@ -1,8 +1,6 @@
 import styled, { keyframes }from 'styled-components';
 
 export const MapContainer = styled.div`
-  width: 55vw;
-  height: 60vh;
 `;
 
 export const MapP = styled.p`

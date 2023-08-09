@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ProgramContainer, ProgramH1, ButtonWrapper, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink, ProgramButtonLink } from './ProgramElements';
+import { ProgramContainer, ProgramH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink, ProgramButtonLink } from './ProgramElements';
 
 const Program = () => {
   // useState hooks
@@ -59,17 +59,17 @@ const Program = () => {
   // columns for datagrid
   const columns = [
     { field: 'title', headerName: 'Title', headerClassName: 'header', maxWidth: 120, flex: 1 },
-    { field: 'program_nme', headerName: 'Program Name', headerClassName: 'header', minWidth: 200, flex: 1 },
-    { field: 'prgm_mgr', headerName: 'Program Manager', headerClassName: 'header', maxWidth: 200, flex: 1 },
-    { field: 'prgm_type', headerName: 'Program Type', headerClassName: 'header', maxWidth: 360, flex: 1 },
-    { field: 'group_name', headerName: 'Group', headerClassName: 'header', maxWidth: 360, flex: 1 },
-    { field: 'site_id', headerName: 'Site ID', headerClassName: 'header', maxWidth: 160, flex: 1 },
-    { field: 'prgm_status', headerName: 'Status', headerClassName: 'header', maxWidth: 120, flex: 1 },
+    { field: 'program_nme', headerName: 'Program Name', headerClassName: 'header', minWidth: 250, flex: 1 },
+    { field: 'prgm_mgr', headerName: 'Program Manager', headerClassName: 'header', maxWidth: 160, flex: 1 },
+    { field: 'prgm_type', headerName: 'Program Type', headerClassName: 'header', maxWidth: 380, flex: 1 },
+    { field: 'group_name', headerName: 'Group', headerClassName: 'header', maxWidth: 450, flex: 1 },
+    { field: 'prgm_status', headerName: 'Status', headerClassName: 'header', maxWidth: 80, flex: 1, 
+      renderCell: (params) => (
+      <span style={{color: 'green', fontWeight: 'bold', textTransform: 'capitalize' }}>{params.value}</span>
+      )
+    },
     ActionsColumn
   ];
-
-  // links
-  const addProgramLink = '/program/create';
 
   return (
     <ProgramContainer>
@@ -87,11 +87,6 @@ const Program = () => {
       {!isLoading &&
         <>
           <ProgramH1>Program</ProgramH1>
-          <ButtonWrapper>
-            <Button variant="contained" style={{backgroundColor: '#a20066'}}>
-              <ProgramButtonLink to={addProgramLink}>Add Program</ProgramButtonLink>
-            </Button>
-          </ButtonWrapper>
           <DataGridWrapper>
             <DataGrid
               sx={{

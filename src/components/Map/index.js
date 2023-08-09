@@ -11,7 +11,7 @@ mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoidmhhcnRvbm8iLCJhIjoiY2xoc2l1Z2VzMDd0dTNlcGtwbXYwaGx2cyJ9.C77GVU3YPPgscvXrTGHWfg';
 
-const Map = ({sites, exportSite, exportRef, importSite}) => {
+const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom}) => {
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
   // useState hooks
@@ -30,6 +30,18 @@ const Map = ({sites, exportSite, exportRef, importSite}) => {
     height: (20 * window.innerWidth) /100,
     transitionDuration: 200
   });
+
+  useEffect(() => {
+
+    if(mapZoom > 0) {
+      setViewPort((prevViewPort) => ({
+        ...prevViewPort,
+        zoom: mapZoom
+      }));
+    }
+
+  }, [mapZoom]);
+
 
   //performance increase only show marker that in the viewport if needed...
   useEffect(() => {
@@ -156,7 +168,7 @@ const Map = ({sites, exportSite, exportRef, importSite}) => {
 
   return (
     <>
-      <MapContainer>
+      <MapContainer style={{width: (mapWidth && mapWidth > 0)? `${mapWidth}vw`: `55vw`, height: (mapHeight && mapHeight > 0)? `${mapHeight}vh` : `60vh`}}>
         <ReactMapGl
           ref={exportRef}
           {...viewPort}

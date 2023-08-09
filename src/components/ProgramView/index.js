@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { useParams } from 'react-router-dom';
-import { ProgramViewContainer, ProgramViewH1, ProgramViewP, ActionsButtonLink, ProgramViewGreenP, pContainer} from './ProgramViewElements';
+import { ProgramViewContainer, ProgramViewH1, ProgramViewP, ActionsButtonLink, ProgramViewGreenP, MapAndInfoContainer, ProgramViewInfo, ProgramViewMapContainer, InfoDetail, IconContainer, ProgramViewCaption, IconDescription, ProgramViewP2, Icon} from './ProgramViewElements';
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
 import Table from '@mui/material/Table';
@@ -12,12 +12,23 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+import Map from '../Map';
+
+import DescriptionIcon from '@mui/icons-material/Description';
+import PersonIcon from '@mui/icons-material/Person';
+import CategoryIcon from '@mui/icons-material/Category';
+import CallIcon from '@mui/icons-material/Call';
+import WorkIcon from '@mui/icons-material/Work';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+
 const ProgramView = () => {
   // useState hooks
   const [program, setProgram] = useState({});
   const [sites, setSites] = useState([]);
 
   const { id } = useParams();
+
+  const mapRef = useRef();
 
   useEffect(() => {
     getProgram();
@@ -112,14 +123,88 @@ const ProgramView = () => {
 
   return (
     <ProgramViewContainer>
-      <ProgramViewH1>{program.program_nme}</ProgramViewH1>
-      <ProgramViewP>Program manager: {program.prgm_mgr}</ProgramViewP>
-      <ProgramViewP>Program type: {program.prgm_type}</ProgramViewP>
-      <ProgramViewP>Group: {program.group_name}</ProgramViewP>
-      <ProgramViewP>Status: <ProgramViewGreenP><strong>{program.prgm_status}</strong></ProgramViewGreenP></ProgramViewP>
-      {/* <Button variant="contained" color="primary" onClick={edit}>Edit</Button>&nbsp;
-      <Button variant="contained" color="error" onClick={deleteProgram}>Delete</Button> */}
-      <ProgramViewP style={{ fontWeight: "bold", marginTop: "2rem", color: "#A60A6C", fontSize: "24px" }}>Related Sites</ProgramViewP>
+      <MapAndInfoContainer>
+        <ProgramViewInfo>
+          <ProgramViewH1>{program.program_nme}</ProgramViewH1>
+          <InfoDetail>
+            <Icon style={{maxWidth:'100%'}}>
+              <IconContainer>
+                <DescriptionIcon style={{fontSize: '25px', margin: '0'}}/>
+                <ProgramViewCaption>Program</ProgramViewCaption>
+                <ProgramViewCaption>Description</ProgramViewCaption>
+              </IconContainer>
+              <IconDescription>
+                <ProgramViewP2>{program.service_desc}</ProgramViewP2>
+              </IconDescription>
+            </Icon>
+
+          </InfoDetail>
+
+          <InfoDetail>
+            <Icon>
+              <IconContainer style={{minWidth: '70px'}}>
+                <PersonIcon style={{fontSize: '25px', margin: '0'}}/>
+                <ProgramViewCaption>Program</ProgramViewCaption>
+                <ProgramViewCaption>Manager</ProgramViewCaption>
+              </IconContainer>
+              <IconDescription>
+                <ProgramViewP2>{program.prgm_mgr}</ProgramViewP2>
+              </IconDescription>
+            </Icon>
+
+            <Icon>
+              <IconContainer style={{minWidth: '70px'}}>
+                <CallIcon style={{fontSize: '25px', margin: '0'}}/>
+                <ProgramViewCaption>Manager</ProgramViewCaption>
+                <ProgramViewCaption>Contact</ProgramViewCaption>
+              </IconContainer>
+              <IconDescription>
+                <ProgramViewP2>{program.prgm_cont_no}</ProgramViewP2>
+              </IconDescription>
+            </Icon>
+
+          </InfoDetail>
+
+          <InfoDetail>
+            <Icon>
+              <IconContainer style={{minWidth: '70px'}}>
+                <CategoryIcon style={{fontSize: '25px', margin: '0'}}/>
+                <ProgramViewCaption>Program</ProgramViewCaption>
+                <ProgramViewCaption>Type</ProgramViewCaption>
+              </IconContainer>
+              <IconDescription>
+                <ProgramViewP2>{program.prgm_type}</ProgramViewP2>
+              </IconDescription>
+            </Icon>
+            <Icon>
+              <IconContainer style={{minWidth: '70px'}}>
+                <WorkIcon style={{fontSize: '25px', margin: '0'}}/>
+                <ProgramViewCaption>Group</ProgramViewCaption>
+              </IconContainer>
+              <IconDescription>
+                <ProgramViewP2>{program.group_name}</ProgramViewP2>
+              </IconDescription>
+            </Icon>
+          </InfoDetail>
+          <InfoDetail>
+          
+            <Icon style={{minWidth:'100%'}}>
+              <IconContainer style={{minWidth: '70px'}}>
+                <QueryStatsIcon style={{fontSize: '25px', margin: '0'}}/>
+                <ProgramViewCaption>Status</ProgramViewCaption>
+              </IconContainer>
+              <IconDescription>
+                <ProgramViewP2><ProgramViewGreenP><strong>{program.prgm_status}</strong></ProgramViewGreenP></ProgramViewP2>
+              </IconDescription>
+              
+            </Icon>
+          </InfoDetail>
+        </ProgramViewInfo>
+        <ProgramViewMapContainer>
+          <Map sites = {sites} exportRef={mapRef} mapZoom={8} mapWidth={50}/>
+        </ProgramViewMapContainer>
+      </MapAndInfoContainer>
+      <ProgramViewP style={{ fontWeight: "bold", marginTop: "2rem", marginBottom: "2rem", color: "#A60A6C", fontSize: "24px" }}>Related Sites</ProgramViewP>
       <RelatedSitesTable />
     </ProgramViewContainer>
   )

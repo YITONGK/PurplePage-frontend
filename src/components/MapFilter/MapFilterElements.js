@@ -57,7 +57,7 @@ export const SearchContainer = styled.div`
 
 export const SitesContainer = styled.div`
     overflow-y: auto;
-    height: 20vh;
+    height: 16vh;
     display: flex;
     justify-content: center;
 
