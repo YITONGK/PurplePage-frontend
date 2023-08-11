@@ -168,7 +168,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
 
   return (
     <>
-      <MapContainer style={{width: (mapWidth && mapWidth > 0)? `${mapWidth}vw`: `55vw`, height: (mapHeight && mapHeight > 0)? `${mapHeight}vh` : `60vh`}}>
+      <MapContainer style={{width: (mapWidth && mapWidth > 0)? `${mapWidth}vw`: `55vw`, height: (mapHeight && mapHeight > 0)? `${mapHeight}vh` : `64.5vh`}}>
         <ReactMapGl
           ref={exportRef}
           {...viewPort}

@@ -37,6 +37,7 @@ export const MapElement = styled.div`
   flex-direction: row;
   margin-top: 2rem;
   margin-bottom: 5rem;
+  min-height: 60vh;
 `;
 
 export const MapP = styled.p`

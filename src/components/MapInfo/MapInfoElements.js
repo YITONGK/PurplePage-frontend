@@ -9,7 +9,7 @@ export const InfoContainer = styled.div`
   padding-left: 1.2rem;
   border-radius: 5px;
   width: 30%;
-  height: 60vh;
+  height: 64.5vh;
 `;
 
 export const InfoDetail = styled.div`

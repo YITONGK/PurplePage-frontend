@@ -57,13 +57,17 @@ export const SearchContainer = styled.div`
 
 export const SitesContainer = styled.div`
     overflow-y: auto;
-    height: 16vh;
     display: flex;
     justify-content: center;
+    height: 20vh;
+
+    @media screen and (display-mode: fullscreen) {
+        height: 24.5vh;
+    }
 
     @media screen and (min-height: 1080px) {
         /* Apply new styles for screens with a minimum width of 768px */
-        height: 32vh; /* New height on larger screens */
+        height: 35.5vh; /* New height on larger screens */
     }
 `;
 

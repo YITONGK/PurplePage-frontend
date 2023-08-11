@@ -1,10 +1,13 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { SiteViewContainer, SiteViewH1, SiteViewP } from './SiteViewElements';
+import { SiteViewContainer, SiteViewH1, SiteViewP, SiteViewMapAndInfoContainer, SiteViewInfoContainer, SiteViewMapContainer, SiteViewIconContainer, SiteViewInfoDetailColumn, SiteViewInfoDetailContainer, SiteViewInfoDetailRow, SiteViewH2, SiteViewP2, SperateLine, ScrollContainer} from './SiteViewElements';
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
 import Map from '../Map';
+
+import PersonIcon from '@mui/icons-material/Person';
+import CallIcon from '@mui/icons-material/Call';
 
 const SiteView = () => {
   // useState hooks
@@ -75,9 +78,108 @@ const SiteView = () => {
 
   return (
     <SiteViewContainer>
-      <SiteViewH1>{site.site_id}</SiteViewH1>
-      <SiteViewP>Address: {site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</SiteViewP>
-      <Map sites={[site]} exportSite={null} exportRef={mapRef}/>
+      <SiteViewMapAndInfoContainer>
+        <SiteViewInfoContainer>
+          <SiteViewH1>{site.site_id}</SiteViewH1>
+          <SiteViewInfoDetailContainer style={{backgroundColor: '#f5f5f5', marginRight: '-10px', gap: '20px'}}>
+          
+            <SiteViewInfoDetailRow style={{maxWidth: '50%'}}>
+
+              <SiteViewIconContainer>
+                <PersonIcon style={{fontSize: '55px'}}></PersonIcon>
+              </SiteViewIconContainer>
+
+              <SiteViewInfoDetailColumn>
+                <SiteViewP><strong>Site Manager:</strong></SiteViewP>
+                {
+                  site.site_contact_name === null ? <SiteViewP>{`-`}</SiteViewP> : <SiteViewP>{site.site_contact_name}</SiteViewP>
+                }
+              </SiteViewInfoDetailColumn>
+
+            </SiteViewInfoDetailRow>
+
+            <SiteViewInfoDetailRow style={{maxWidth:'50%'}}>
+
+              <SiteViewIconContainer>
+                <CallIcon style={{fontSize: '55px'}}></CallIcon>
+              </SiteViewIconContainer>
+
+              <SiteViewInfoDetailColumn>
+                <SiteViewP><strong>Contact Number:</strong></SiteViewP>
+                <SiteViewP>
+                  {
+                    site.site_contact_nbr === null ? <SiteViewP>{`-`}</SiteViewP> : <SiteViewP>{site.site_contact_nbr}</SiteViewP>
+                  }
+                </SiteViewP>
+              </SiteViewInfoDetailColumn>
+
+            </SiteViewInfoDetailRow>
+
+          </SiteViewInfoDetailContainer>
+          
+          <SiteViewH2>National Address:</SiteViewH2>
+
+          <SiteViewInfoDetailContainer>
+
+            <SiteViewInfoDetailColumn>
+              <SiteViewP2>STREET NUMBER</SiteViewP2>
+              <SiteViewP>{site.street_nbr}</SiteViewP>
+            </SiteViewInfoDetailColumn>
+
+            <SiteViewInfoDetailColumn>
+              <SiteViewP2>STREET NAME</SiteViewP2>
+              <SiteViewP>{site.street_name}</SiteViewP>
+            </SiteViewInfoDetailColumn>
+
+          </SiteViewInfoDetailContainer>
+
+          <SiteViewInfoDetailContainer>
+
+            <SiteViewInfoDetailColumn>
+              <SiteViewP2>SUBURB</SiteViewP2>
+              <SiteViewP>{site.suburb}</SiteViewP>
+            </SiteViewInfoDetailColumn>
+
+            <SiteViewInfoDetailColumn>
+              <SiteViewP2>STATE</SiteViewP2>
+              <SiteViewP>{site.state}</SiteViewP>
+            </SiteViewInfoDetailColumn>
+
+          </SiteViewInfoDetailContainer>
+
+          <SiteViewInfoDetailContainer>
+
+            <SiteViewInfoDetailColumn>
+              <SiteViewP2>POSTCODE</SiteViewP2>
+              <SiteViewP>{site.postcode}</SiteViewP>
+            </SiteViewInfoDetailColumn>
+
+            <SiteViewInfoDetailColumn>
+              <SiteViewP2>LOCAL GOVERNMENT AREA</SiteViewP2>
+              <SiteViewP>{(site.lga === null)? `-` : `${site.lga}`}</SiteViewP>
+            </SiteViewInfoDetailColumn>
+
+          </SiteViewInfoDetailContainer>
+
+          <SiteViewInfoDetailContainer>
+
+            <SiteViewInfoDetailColumn>
+              <SiteViewP2>DEPARTMENT OF FAMILIES,FAIRNESS AND HOUSING</SiteViewP2>
+              <SiteViewP>{(site.dffh_area === null)? `-` : `${site.dffh_area}`}</SiteViewP>
+            </SiteViewInfoDetailColumn>
+
+          </SiteViewInfoDetailContainer>
+
+          <SperateLine></SperateLine>
+
+          <SiteViewH2>Full Address:</SiteViewH2>
+
+          <SiteViewP style={{paddingLeft: '0.8rem'}}>{(site.address === null)? `-` : `${site.address}` }</SiteViewP>
+        </SiteViewInfoContainer>
+        <SiteViewMapContainer>
+          <Map sites={[site]} exportSite={null} exportRef={mapRef} mapWidth={54} mapHeight={80}/>
+        </SiteViewMapContainer>
+      </SiteViewMapAndInfoContainer>
     </SiteViewContainer>
   )
 }

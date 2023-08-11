@@ -59,7 +59,8 @@ export const MapAndInfoContainer = styled.div`
   background-color: transparent;
   border-radius: 5px;
   margin-right: 2rem;
-  width: 95%
+  width: 95%;
+  height: 70vh;
 `;
 
 export const ProgramViewInfo = styled.div`
@@ -85,7 +86,7 @@ export const Icon = styled.div`
   border-bottom: 1px solid grey;
   border-right: 1px solid grey;
   border-radius: 50px;
-  max-width: 50%;
+  min-width: 50%;
 `;
 
 export const IconContainer = styled.div`
@@ -100,7 +101,7 @@ export const IconContainer = styled.div`
   border-radius: 50px;
   padding: 0.8rem 0.8rem 0.8rem 0.8rem;
   color: white;
-  background-color: #A60A6C;
+  background-color: #333333;
   margin-right: 0.2rem;
 `;
 
@@ -111,10 +112,18 @@ export const IconDescription = styled.div`
   text-align: center; /* Center horizontally */
   width: 100%;
   padding: 0rem 0.8rem 0rem 0rem;
+  min-height: 40px;
 `;
 
 export const ProgramViewMapContainer = styled.div`
   border-left: 5px solid purple;
   border-radius: 10px;
   margin-left: 0.5rem;
+`;
+
+export const InfoDetailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 60vh;
 `;

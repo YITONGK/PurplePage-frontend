@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef} from 'react';
 import { useParams } from 'react-router-dom';
-import { ProgramViewContainer, ProgramViewH1, ProgramViewP, ActionsButtonLink, ProgramViewGreenP, MapAndInfoContainer, ProgramViewInfo, ProgramViewMapContainer, InfoDetail, IconContainer, ProgramViewCaption, IconDescription, ProgramViewP2, Icon} from './ProgramViewElements';
+import { ProgramViewContainer, ProgramViewH1, ProgramViewP, ActionsButtonLink, ProgramViewGreenP, MapAndInfoContainer, ProgramViewInfo, ProgramViewMapContainer, InfoDetail, IconContainer, ProgramViewCaption, IconDescription, ProgramViewP2, Icon, InfoDetailContainer} from './ProgramViewElements';
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
 import Table from '@mui/material/Table';
@@ -126,82 +126,81 @@ const ProgramView = () => {
       <MapAndInfoContainer>
         <ProgramViewInfo>
           <ProgramViewH1>{program.program_nme}</ProgramViewH1>
-          <InfoDetail>
-            <Icon style={{maxWidth:'100%'}}>
-              <IconContainer>
-                <DescriptionIcon style={{fontSize: '25px', margin: '0'}}/>
-                <ProgramViewCaption>Program</ProgramViewCaption>
-                <ProgramViewCaption>Description</ProgramViewCaption>
-              </IconContainer>
-              <IconDescription>
-                <ProgramViewP2>{program.service_desc}</ProgramViewP2>
-              </IconDescription>
-            </Icon>
+          <InfoDetailContainer>
+            <InfoDetail>
+              <Icon style={{maxWidth:'100%'}}>
+                <IconContainer>
+                  <DescriptionIcon style={{fontSize: '25px', margin: '0'}}/>
+                  <ProgramViewCaption>Program</ProgramViewCaption>
+                  <ProgramViewCaption>Description</ProgramViewCaption>
+                </IconContainer>
+                <IconDescription>
+                  <ProgramViewP2>{program.service_desc}</ProgramViewP2>
+                </IconDescription>
+              </Icon>
+            </InfoDetail>
 
-          </InfoDetail>
+            <InfoDetail>
+              <Icon>
+                <IconContainer style={{minWidth: '70px'}}>
+                  <PersonIcon style={{fontSize: '25px', margin: '0'}}/>
+                  <ProgramViewCaption>Program</ProgramViewCaption>
+                  <ProgramViewCaption>Manager</ProgramViewCaption>
+                </IconContainer>
+                <IconDescription>
+                  <ProgramViewP2>{program.prgm_mgr}</ProgramViewP2>
+                </IconDescription>
+              </Icon>
 
-          <InfoDetail>
-            <Icon>
-              <IconContainer style={{minWidth: '70px'}}>
-                <PersonIcon style={{fontSize: '25px', margin: '0'}}/>
-                <ProgramViewCaption>Program</ProgramViewCaption>
-                <ProgramViewCaption>Manager</ProgramViewCaption>
-              </IconContainer>
-              <IconDescription>
-                <ProgramViewP2>{program.prgm_mgr}</ProgramViewP2>
-              </IconDescription>
-            </Icon>
+              <Icon>
+                <IconContainer style={{minWidth: '70px'}}>
+                  <CallIcon style={{fontSize: '25px', margin: '0'}}/>
+                  <ProgramViewCaption>Manager</ProgramViewCaption>
+                  <ProgramViewCaption>Contact</ProgramViewCaption>
+                </IconContainer>
+                <IconDescription>
+                  <ProgramViewP2>{program.prgm_cont_no}</ProgramViewP2>
+                </IconDescription>
+              </Icon>
+            </InfoDetail>
 
-            <Icon>
-              <IconContainer style={{minWidth: '70px'}}>
-                <CallIcon style={{fontSize: '25px', margin: '0'}}/>
-                <ProgramViewCaption>Manager</ProgramViewCaption>
-                <ProgramViewCaption>Contact</ProgramViewCaption>
-              </IconContainer>
-              <IconDescription>
-                <ProgramViewP2>{program.prgm_cont_no}</ProgramViewP2>
-              </IconDescription>
-            </Icon>
+            <InfoDetail>
+              <Icon>
+                <IconContainer style={{minWidth: '70px'}}>
+                  <CategoryIcon style={{fontSize: '25px', margin: '0'}}/>
+                  <ProgramViewCaption>Program</ProgramViewCaption>
+                  <ProgramViewCaption>Type</ProgramViewCaption>
+                </IconContainer>
+                <IconDescription>
+                  <ProgramViewP2>{program.prgm_type}</ProgramViewP2>
+                </IconDescription>
+              </Icon>
 
-          </InfoDetail>
-
-          <InfoDetail>
-            <Icon>
-              <IconContainer style={{minWidth: '70px'}}>
-                <CategoryIcon style={{fontSize: '25px', margin: '0'}}/>
-                <ProgramViewCaption>Program</ProgramViewCaption>
-                <ProgramViewCaption>Type</ProgramViewCaption>
-              </IconContainer>
-              <IconDescription>
-                <ProgramViewP2>{program.prgm_type}</ProgramViewP2>
-              </IconDescription>
-            </Icon>
-            <Icon>
-              <IconContainer style={{minWidth: '70px'}}>
-                <WorkIcon style={{fontSize: '25px', margin: '0'}}/>
-                <ProgramViewCaption>Group</ProgramViewCaption>
-              </IconContainer>
-              <IconDescription>
-                <ProgramViewP2>{program.group_name}</ProgramViewP2>
-              </IconDescription>
-            </Icon>
-          </InfoDetail>
-          <InfoDetail>
-          
-            <Icon style={{minWidth:'100%'}}>
-              <IconContainer style={{minWidth: '70px'}}>
-                <QueryStatsIcon style={{fontSize: '25px', margin: '0'}}/>
-                <ProgramViewCaption>Status</ProgramViewCaption>
-              </IconContainer>
-              <IconDescription>
-                <ProgramViewP2><ProgramViewGreenP><strong>{program.prgm_status}</strong></ProgramViewGreenP></ProgramViewP2>
-              </IconDescription>
-              
-            </Icon>
-          </InfoDetail>
+              <Icon>
+                <IconContainer style={{minWidth: '70px', minHeight: '55px'}}>
+                  <WorkIcon style={{fontSize: '25px', margin: '0'}}/>
+                  <ProgramViewCaption>Group</ProgramViewCaption>
+                </IconContainer>
+                <IconDescription>
+                  <ProgramViewP2>{program.group_name}</ProgramViewP2>
+                </IconDescription>
+              </Icon>
+            </InfoDetail>
+            <InfoDetail>
+              <Icon style={{minWidth:'100%'}}>
+                <IconContainer style={{minWidth: '70px'}}>
+                  <QueryStatsIcon style={{fontSize: '25px', margin: '0'}}/>
+                  <ProgramViewCaption>Status</ProgramViewCaption>
+                </IconContainer>
+                <IconDescription>
+                  <ProgramViewP2><ProgramViewGreenP><strong>{program.prgm_status}</strong></ProgramViewGreenP></ProgramViewP2>
+                </IconDescription>
+              </Icon>
+            </InfoDetail>
+          </InfoDetailContainer>
         </ProgramViewInfo>
         <ProgramViewMapContainer>
-          <Map sites = {sites} exportRef={mapRef} mapZoom={8} mapWidth={50}/>
+          <Map sites = {sites} exportRef={mapRef} mapZoom={6} mapWidth={50} mapHeight={70}/>
         </ProgramViewMapContainer>
       </MapAndInfoContainer>
       <ProgramViewP style={{ fontWeight: "bold", marginTop: "2rem", marginBottom: "2rem", color: "#A60A6C", fontSize: "24px" }}>Related Sites</ProgramViewP>
