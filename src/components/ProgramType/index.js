@@ -59,7 +59,11 @@ const ProgramType = () => {
     { field: 'prgm_type_id', headerName: 'Program Type ID', headerClassName: 'header', maxWidth: 200, flex: 1 },
     { field: 'prgm_type', headerName: 'Program Type', headerClassName: 'header', minWidth: 200, flex: 1 },
     { field: 'ser_type', headerName: 'Service Type', headerClassName: 'header', minWidth: 200, flex: 1 },
-    { field: 'pgm_type_status', headerName: 'Status', headerClassName: 'header', maxWidth: 240, flex: 1 },
+    { field: 'pgm_type_status', headerName: 'Status', headerClassName: 'header', maxWidth: 240, flex: 1, 
+      renderCell: (params) => (
+        <span style={{color: 'green', fontWeight: 'bold', textTransform: 'capitalize' }}>{params.value}</span>
+        )
+    },
     ActionsColumn
   ];
 
@@ -82,11 +86,6 @@ const ProgramType = () => {
       {!isLoading &&
         <>
           <ProgramTypeH1>Program Type</ProgramTypeH1>
-          <ButtonWrapper>
-            <Button variant="contained" style={{backgroundColor: '#a20066'}}>
-              <ProgramTypeButtonLink to={addProgramTypeLink}>Add Program Type</ProgramTypeButtonLink>
-            </Button>
-          </ButtonWrapper>
           <DataGridWrapper>
             <DataGrid
               sx={{

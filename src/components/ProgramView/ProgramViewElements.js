@@ -1,5 +1,7 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Link as LinkRouter } from 'react-router-dom';
+import RoomIcon from '@mui/icons-material/Room';
+import TableCell from '@mui/material/TableCell';
 
 export const ProgramViewContainer = styled.div`
   margin-top: 2%;
@@ -11,7 +13,15 @@ export const ProgramViewContainer = styled.div`
 export const ProgramViewH1 = styled.h1`
   font-size: 32px;
   color: #A60A6C;
-  margin: 0 0 1rem 0;
+  margin: 0 0 5% 0;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+export const TitleContainer = styled.div`
+  margin: 0 0 0 0;
   padding: 0;
 `;
 
@@ -54,20 +64,42 @@ export const ActionsButtonLink = styled(LinkRouter)`
 export const MapAndInfoContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  box-shadow: 20px 15px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 20px 15px 20px rgba(0, 0, 0, 0.2);
   background-color: transparent;
   border-radius: 5px;
   margin-right: 2rem;
   width: 95%;
-  height: 70vh;
+  height: 50vh;
 `;
 
 export const ProgramViewInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-  width: 40%
+  min-width: 43.6%;
+  max-width: 43.6%;
+  max-height: 50vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+   /* Styling for the scrollbar */
+  &::-webkit-scrollbar {
+    width: 8px; /* Adjust the width as needed */
+    background-color: purple;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0); /* Scrollbar thumb color */
+    border-radius: 4px; /* Rounder corners */
+  }
+
+  &:hover {
+      &::-webkit-scrollbar-thumb {
+      background-color: rgba(209, 209, 209, 0.7); /* Scrollbar thumb color */
+      border-radius: 4px; /* Rounder corners */
+    }
+  }
 `;
 
 export const InfoDetail = styled.div`
@@ -86,7 +118,8 @@ export const Icon = styled.div`
   border-bottom: 1px solid grey;
   border-right: 1px solid grey;
   border-radius: 50px;
-  min-width: 50%;
+  min-width: 48%;
+  max-width: 48%;
 `;
 
 export const IconContainer = styled.div`
@@ -116,9 +149,7 @@ export const IconDescription = styled.div`
 `;
 
 export const ProgramViewMapContainer = styled.div`
-  border-left: 5px solid purple;
   border-radius: 10px;
-  margin-left: 0.5rem;
 `;
 
 export const InfoDetailContainer = styled.div`
@@ -127,3 +158,25 @@ export const InfoDetailContainer = styled.div`
   justify-content: center;
   height: 60vh;
 `;
+
+const rightSlide = keyframes`
+  0%, 100% {
+    transform: rotate(90deg) translateY(-10px);
+  }
+  50% {
+    transform: rotate(90deg) translateY(30px);
+  }
+`;
+
+export const AnimatedRoomIcon = styled(RoomIcon)`
+  color: #A60A6C;
+  animation: ${rightSlide} 2s ease infinite;
+`;
+
+export const AnimatedTableCell = styled(TableCell)`
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+

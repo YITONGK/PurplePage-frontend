@@ -31,7 +31,12 @@ const Program = () => {
       for (let i=0; i < list.length; i++) {
         list[i] = Object.assign(list[i], programTypeList[i], groupList[i], siteList[i]);
       }
-      setProgramList(list);
+
+      const distinctPrograms = list.filter((program, index, self) => {
+        return index === self.findIndex((obj) => obj.program_nme === program.program_nme);
+      });
+
+      setProgramList(distinctPrograms);
       setIsLoading(false);
     })
   }
@@ -59,10 +64,10 @@ const Program = () => {
   // columns for datagrid
   const columns = [
     { field: 'title', headerName: 'Title', headerClassName: 'header', maxWidth: 120, flex: 1 },
-    { field: 'program_nme', headerName: 'Program Name', headerClassName: 'header', minWidth: 250, flex: 1 },
-    { field: 'prgm_mgr', headerName: 'Program Manager', headerClassName: 'header', maxWidth: 160, flex: 1 },
-    { field: 'prgm_type', headerName: 'Program Type', headerClassName: 'header', maxWidth: 380, flex: 1 },
-    { field: 'group_name', headerName: 'Group', headerClassName: 'header', maxWidth: 450, flex: 1 },
+    { field: 'program_nme', headerName: 'Program Name', headerClassName: 'header', minWidth: 280, flex: 1 },
+    { field: 'prgm_mgr', headerName: 'Program Manager', headerClassName: 'header', maxWidth: 200, flex: 1 },
+    { field: 'prgm_type', headerName: 'Program Type', headerClassName: 'header', maxWidth: 250, flex: 1 },
+    { field: 'group_name', headerName: 'Group', headerClassName: 'header', maxWidth: 250, flex: 1 },
     { field: 'prgm_status', headerName: 'Status', headerClassName: 'header', maxWidth: 80, flex: 1, 
       renderCell: (params) => (
       <span style={{color: 'green', fontWeight: 'bold', textTransform: 'capitalize' }}>{params.value}</span>

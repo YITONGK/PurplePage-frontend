@@ -12,6 +12,7 @@ export const ProgramTypeH1 = styled.h1`
   font-size: 40px;
   margin-bottom: -1%;
   color: #A60A6C;
+  margin-bottom: 2%;
 `;
 
 export const ButtonWrapper = styled.div`

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef} from 'react';
 import { useParams } from 'react-router-dom';
-import { ProgramViewContainer, ProgramViewH1, ProgramViewP, ActionsButtonLink, ProgramViewGreenP, MapAndInfoContainer, ProgramViewInfo, ProgramViewMapContainer, InfoDetail, IconContainer, ProgramViewCaption, IconDescription, ProgramViewP2, Icon, InfoDetailContainer} from './ProgramViewElements';
+import { ProgramViewContainer, ProgramViewH1, ProgramViewP, ActionsButtonLink, ProgramViewGreenP, MapAndInfoContainer, ProgramViewInfo, ProgramViewMapContainer, InfoDetail, IconContainer, ProgramViewCaption, IconDescription, ProgramViewP2, Icon, InfoDetailContainer, TitleContainer, AnimatedRoomIcon, AnimatedTableCell } from './ProgramViewElements';
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
 import Table from '@mui/material/Table';
@@ -26,6 +26,8 @@ const ProgramView = () => {
   const [program, setProgram] = useState({});
   const [sites, setSites] = useState([]);
 
+  const [selectedSite, setSelectedSite] = useState(null);
+
   const { id } = useParams();
 
   const mapRef = useRef();
@@ -33,6 +35,9 @@ const ProgramView = () => {
   useEffect(() => {
     getProgram();
   }, []);
+
+  const TableTitleStyle = {fontWeight: 'bold', fontSize: '18px', color: '#666666'};
+  const TableContentStyle = {fontSize: '16px', color: 'black'};
 
   /* get a program from the backend based on the id and display it */
   const getProgram = async () => {
@@ -87,17 +92,23 @@ const ProgramView = () => {
     })
   }
 
+  const ExportSite = (site) => {
+    setSelectedSite(site);
+
+  };
+
   // related sites table element
   const RelatedSitesTable = () => {
     return (
-      <TableContainer component={Paper} style={{ width: '95%',  border: '1px solid transparent', boxShadow: '0 0 6px rgba(0, 0, 0, 0.2)'}}>
+      <TableContainer component={Paper} style={{ width: '95%',  border: '1px solid transparent', boxShadow: '0 0 6px rgba(0, 0, 0, 0.4)'}}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Site ID</TableCell>
-              <TableCell>Address</TableCell>
-              <TableCell>Contact</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell style={TableTitleStyle}>Site ID</TableCell>
+              <TableCell style={TableTitleStyle}>Address</TableCell>
+              <TableCell style={TableTitleStyle}>Contact</TableCell>
+              <TableCell style={TableTitleStyle}>Actions</TableCell>
+              <TableCell style={TableTitleStyle}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -105,14 +116,21 @@ const ProgramView = () => {
               <TableRow
                 key={index}
               >
-                <TableCell>{site.site_id}</TableCell>
-                <TableCell>{site.street_name}</TableCell>
-                <TableCell>{site.site_contact_name}</TableCell>
-                <TableCell>
-                <Button variant="contained" style={{textTransform: "none", marginRight: "5%"}}>
-                  <ActionsButtonLink to={`/site/${site.id}`}>View</ActionsButtonLink>
-                </Button>
+                <TableCell style={TableContentStyle}>{site.site_id}</TableCell>
+                <TableCell style={TableContentStyle}>{site.address}</TableCell>
+                <TableCell style={TableContentStyle}>{site.site_contact_name}</TableCell>
+                <TableCell style={{width: '10px'}}>
+                  <Button variant="contained" style={{textTransform: "none", marginRight: "5%"}}>
+                    <ActionsButtonLink to={`/site/${site.id}`}>View</ActionsButtonLink>
+                  </Button>
                 </TableCell>
+                {
+                  (selectedSite && selectedSite.site_id === site.site_id) ? 
+                  <AnimatedTableCell>
+                    <AnimatedRoomIcon style={{fontSize: '30px'}}></AnimatedRoomIcon>
+                  </AnimatedTableCell> : <TableCell></TableCell>
+                }
+                
               </TableRow>
             ))}
           </TableBody>
@@ -125,16 +143,18 @@ const ProgramView = () => {
     <ProgramViewContainer>
       <MapAndInfoContainer>
         <ProgramViewInfo>
-          <ProgramViewH1>{program.program_nme}</ProgramViewH1>
+          <TitleContainer>
+            <ProgramViewH1>{program.program_nme}</ProgramViewH1>
+          </TitleContainer>
           <InfoDetailContainer>
             <InfoDetail>
-              <Icon style={{maxWidth:'100%'}}>
+              <Icon style={{minWidth:'100%'}}>
                 <IconContainer>
                   <DescriptionIcon style={{fontSize: '25px', margin: '0'}}/>
                   <ProgramViewCaption>Program</ProgramViewCaption>
                   <ProgramViewCaption>Description</ProgramViewCaption>
                 </IconContainer>
-                <IconDescription>
+                <IconDescription style={{padding: "1rem", textAlign: 'justify'}}>
                   <ProgramViewP2>{program.service_desc}</ProgramViewP2>
                 </IconDescription>
               </Icon>
@@ -200,10 +220,10 @@ const ProgramView = () => {
           </InfoDetailContainer>
         </ProgramViewInfo>
         <ProgramViewMapContainer>
-          <Map sites = {sites} exportRef={mapRef} mapZoom={6} mapWidth={50} mapHeight={70}/>
+          <Map sites = {sites} exportRef={mapRef} exportSite={ExportSite} mapZoom={6} mapWidth={50} mapHeight={50}/>
         </ProgramViewMapContainer>
       </MapAndInfoContainer>
-      <ProgramViewP style={{ fontWeight: "bold", marginTop: "2rem", marginBottom: "2rem", color: "#A60A6C", fontSize: "24px" }}>Related Sites</ProgramViewP>
+      <ProgramViewP style={{ fontWeight: "bold", marginTop: "2rem", marginBottom: "2rem", color: "#A60A6C", fontSize: "28px" }}>Related Sites</ProgramViewP>
       <RelatedSitesTable />
     </ProgramViewContainer>
   )
