@@ -1,5 +1,6 @@
 import './App.css';
-import React from 'react';
+import axios from 'axios';
+import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
@@ -49,7 +50,88 @@ import SiteView from './components/SiteView';
 import SiteEdit from './components/SiteEdit';
 import SiteCreate from './components/SiteCreate';
 
+//export NODE_OPTIONS=--openssl-legacy-provider //use this comment id digital routine unsupport
+
 function App() {
+
+  const [sites, setSites] = useState([]);
+  const [programList, setProgramList] = useState([]);
+  const [programTypeList, setProgramTypeList] = useState([]);
+  const [groupList, setGroupList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // useEffect(() => {
+
+  //   getAllData();
+
+  // }, [])
+
+  const getAllData = async () => {
+
+    try {
+      const [programTypes, groups, programs, sites] = await Promise.all ([
+        getProgramTypes(),
+        getGroups(),
+        getPrograms(),
+        getSites(),
+      ]);
+
+      setProgramTypeList(programTypes);
+      setGroupList(groups);
+      setProgramList(programs);
+
+      const distinctSites = sites.filter((site, index, self) => {
+        return index === self.findIndex((obj) => obj.site_id === site.site_id);
+      });
+
+      setSites(distinctSites);
+      setIsLoading(false);
+
+    } catch (error) {
+
+      console.log(error);
+    }
+    
+
+  }
+
+   /* get a list of sites from the backend and display it */
+   const getSites = async () => {
+    const BASE_URL = "http://localhost:8888";
+
+    const result = await axios.get(BASE_URL+ '/site');
+    return result.data;
+  }
+
+  /* get list of programs from the backend and display them */
+  const getPrograms = async () => {
+    const BASE_URL = 'http://localhost:8888';
+
+    const result = await axios.get(BASE_URL + '/program');
+    return result.data[0];
+  }
+
+  /* get list of program types from the backend and display them */
+  const getProgramTypes = async () => {
+    const BASE_URL = 'http://localhost:8888';
+
+    let result = await axios.get(BASE_URL + '/programtype');
+    result = result.data[0];
+    result.sort ((a, b) => a.prgm_type.localeCompare(b.prgm_type));
+    return result;
+  }
+
+  /* get list of groups from the backend and display them */
+  const getGroups = async () => {
+    const BASE_URL = 'http://localhost:8888';
+
+    let result =  await axios.get(BASE_URL + '/group');
+    result = result.data[0];
+    result.sort ((a, b) => a.group_name.localeCompare(b.group_name));
+    return result;
+  }
+
+
   return (
     <Router>
       <MySidebar/>

@@ -36,7 +36,7 @@ const ProgramView = () => {
     getProgram();
   }, []);
 
-  const TableTitleStyle = {fontWeight: 'bold', fontSize: '18px', color: '#666666'};
+  const TableTitleStyle = {fontWeight: 'bold', fontSize: '18px', color: '#A60A6C'};
   const TableContentStyle = {fontSize: '16px', color: 'black'};
 
   /* get a program from the backend based on the id and display it */
@@ -102,7 +102,7 @@ const ProgramView = () => {
     return (
       <TableContainer component={Paper} style={{ width: '95%',  border: '1px solid transparent', boxShadow: '0 0 6px rgba(0, 0, 0, 0.4)'}}>
         <Table>
-          <TableHead>
+          <TableHead style={{backgroundColor: '#FCF0F5', position: 'sticky', top: 0 , zIndex: 1}}>
             <TableRow>
               <TableCell style={TableTitleStyle}>Site ID</TableCell>
               <TableCell style={TableTitleStyle}>Address</TableCell>

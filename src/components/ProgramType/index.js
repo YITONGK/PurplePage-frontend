@@ -56,9 +56,21 @@ const ProgramType = () => {
 
   // columns for datagrid
   const columns = [
-    { field: 'prgm_type_id', headerName: 'Program Type ID', headerClassName: 'header', maxWidth: 200, flex: 1 },
-    { field: 'prgm_type', headerName: 'Program Type', headerClassName: 'header', minWidth: 200, flex: 1 },
-    { field: 'ser_type', headerName: 'Service Type', headerClassName: 'header', minWidth: 200, flex: 1 },
+    { field: 'prgm_type_id', headerName: 'Program Type ID', headerClassName: 'header', maxWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      ) 
+    },
+    { field: 'prgm_type', headerName: 'Program Type', headerClassName: 'header', minWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'ser_type', headerName: 'Service Type', headerClassName: 'header', minWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
     { field: 'pgm_type_status', headerName: 'Status', headerClassName: 'header', maxWidth: 240, flex: 1, 
       renderCell: (params) => (
         <span style={{color: 'green', fontWeight: 'bold', textTransform: 'capitalize' }}>{params.value}</span>

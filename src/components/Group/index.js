@@ -56,11 +56,35 @@ const Group = () => {
 
   // columns for datagrid
   const columns = [
-    { field: 'group_id', headerName: 'Group ID', headerClassName: 'header', maxWidth: 200, flex: 1 },
-    { field: 'group_name', headerName: 'Group Name', headerClassName: 'header', minWidth: 200, flex: 1 },
-    { field: 'eo', headerName: 'Executive Officer', headerClassName: 'header', maxWidth: 240, flex: 1 },
-    { field: 'division_name', headerName: 'Division Name', headerClassName: 'header', minWidth: 200, flex: 1 },
-    { field: 'status', headerName: 'Status', headerClassName: 'header', maxWidth: 200, flex: 1 },
+    { field: 'group_id', headerName: 'Group ID', headerClassName: 'header', maxWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+
+    { field: 'group_name', headerName: 'Group Name', headerClassName: 'header', minWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+
+    { field: 'eo', headerName: 'Executive Officer', headerClassName: 'header', maxWidth: 240, flex: 1 ,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+
+    { field: 'division_name', headerName: 'Division Name', headerClassName: 'header', minWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+
+    { field: 'status', headerName: 'Status', headerClassName: 'header', maxWidth: 200, flex: 1 , 
+      renderCell: (params) => (
+        <span style={{color: 'green', fontWeight: 'bold', textTransform: 'capitalize', fontSize: '16px' }}>{params.value}</span>
+      )
+    },
     ActionsColumn
   ];
 
@@ -83,11 +107,6 @@ const Group = () => {
       {!isLoading &&
         <>
           <GroupH1>Group</GroupH1>
-          <ButtonWrapper>
-            <Button variant="contained" style={{backgroundColor: '#a20066'}}>
-              <GroupButtonLink to={addGroupLink}>Add Group</GroupButtonLink>
-            </Button>
-          </ButtonWrapper>
           <DataGridWrapper>
             <DataGrid
               sx={{

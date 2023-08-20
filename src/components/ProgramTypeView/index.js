@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { ProgramTypeViewContainer, ProgramTypeViewH1, ProgramTypeViewP, ActionsButtonLink, ProgramTypeViewH2} from './ProgramTypeViewElements';
+import { ProgramTypeViewContainer, ProgramTypeViewH1, ProgramTypeViewP, ActionsButtonLink, ProgramTypeViewH2, LoadingContainer, LoadingCircle, LoadingText, ProgramsContainer, ProgramTypeViewP2, PContainer } from './ProgramTypeViewElements';
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,9 +17,11 @@ const ProgramTypeView = () => {
   const [programs, setPrograms] = useState([]);
   const [relatedPrograms, setRelatedPrograms] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const { id } = useParams();
 
-  const TableTitleStyle = {fontWeight: 'bold', fontSize: '18px', color: '#666666'};
+  const TableTitleStyle = {fontWeight: 'bold', fontSize: '18px', color: '#A60A6C'};
   const TableContentStyle = {fontSize: '16px', color: 'black'};
 
   useEffect(() => {
@@ -55,6 +57,8 @@ const ProgramTypeView = () => {
     const BASE_URL = 'http://localhost:8888';
     const result = await axios.get(BASE_URL + '/program');
     setPrograms(result.data[0]);
+    setIsLoading(false);
+
   }
 
   /* Handle going to edit page */
@@ -100,7 +104,7 @@ const ProgramTypeView = () => {
     return (
       <TableContainer component={Paper} style={{ width: '95%',  border: '1px solid transparent', boxShadow: '0 0 6px rgba(0, 0, 0, 0.4)'}}>
         <Table>
-          <TableHead>
+          <TableHead style={{backgroundColor: '#FCF0F5', position: 'sticky', top: 0, zIndex: 1}}>
             <TableRow>
               <TableCell style={TableTitleStyle}>Program ID</TableCell>
               <TableCell style={TableTitleStyle}>Program Title</TableCell>
@@ -137,11 +141,23 @@ const ProgramTypeView = () => {
     <ProgramTypeViewContainer>
       <ProgramTypeViewH1>{programType.prgm_type}</ProgramTypeViewH1>
       <ProgramTypeViewP>Service type: {programType.ser_type}</ProgramTypeViewP>
-      <ProgramTypeViewP>Status: {programType.pgm_type_status}</ProgramTypeViewP>
-
+      <PContainer>
+        <ProgramTypeViewP>Status:</ProgramTypeViewP>
+        <ProgramTypeViewP2 style={{color: 'green'}}> {programType.pgm_type_status}</ProgramTypeViewP2>
+      </PContainer>
       <ProgramTypeViewH2>Related Programs</ProgramTypeViewH2>
+      
+      <ProgramsContainer>
+      {
+        (isLoading) ? 
+        <LoadingContainer>
+          <LoadingCircle> </LoadingCircle>
+          <LoadingText>Loading...</LoadingText>
+        </LoadingContainer>
+        : <RelatedProgramsTable></RelatedProgramsTable>
+      }
+      </ProgramsContainer>
 
-      <RelatedProgramsTable></RelatedProgramsTable>
     </ProgramTypeViewContainer>
   )
 }

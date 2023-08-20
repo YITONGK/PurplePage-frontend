@@ -14,6 +14,19 @@ mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom}) => {
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
+  // const address = '247 Peel Street, North Melbourne, Australia'; 
+
+  // const geocoding = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${MAPBOX_ACCESS_TOKEN}`;
+
+  // axios.get(geocoding)
+  //   .then(response => {
+  //     const coordinates = response.data.features[0].center; // [longitude, latitude]
+  //     console.log('Coordinates:', coordinates);
+  //   })
+  //   .catch(error => {
+  //     console.error('Error:', error);
+  //   });
+
   // useState hooks
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [popUpMarker, setPopUpMarker] = useState(null);

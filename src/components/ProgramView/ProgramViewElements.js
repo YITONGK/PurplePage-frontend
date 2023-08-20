@@ -157,6 +157,7 @@ export const InfoDetailContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   height: 60vh;
+  padding-right: 3%;
 `;
 
 const rightSlide = keyframes`

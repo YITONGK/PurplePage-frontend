@@ -16,8 +16,8 @@ const Program = () => {
 
   // load data from the backend when loading the page
   useEffect(() => {
-    getPrograms();
     document.title = 'Program';
+    getPrograms();
   }, []);
 
   /* get list of programs from the backend and display them */
@@ -63,14 +63,34 @@ const Program = () => {
 
   // columns for datagrid
   const columns = [
-    { field: 'title', headerName: 'Title', headerClassName: 'header', maxWidth: 120, flex: 1 },
-    { field: 'program_nme', headerName: 'Program Name', headerClassName: 'header', minWidth: 280, flex: 1 },
-    { field: 'prgm_mgr', headerName: 'Program Manager', headerClassName: 'header', maxWidth: 200, flex: 1 },
-    { field: 'prgm_type', headerName: 'Program Type', headerClassName: 'header', maxWidth: 250, flex: 1 },
-    { field: 'group_name', headerName: 'Group', headerClassName: 'header', maxWidth: 250, flex: 1 },
+    { field: 'title', headerName: 'Title', headerClassName: 'header', maxWidth: 120, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'program_nme', headerName: 'Program Name', headerClassName: 'header', minWidth: 280, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'prgm_mgr', headerName: 'Program Manager', headerClassName: 'header', maxWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'prgm_type', headerName: 'Program Type', headerClassName: 'header', maxWidth: 300, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'group_name', headerName: 'Group', headerClassName: 'header', minWidth: 250, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
     { field: 'prgm_status', headerName: 'Status', headerClassName: 'header', maxWidth: 80, flex: 1, 
       renderCell: (params) => (
-      <span style={{color: 'green', fontWeight: 'bold', textTransform: 'capitalize' }}>{params.value}</span>
+      <span style={{color: 'green', fontWeight: 'bold', textTransform: 'capitalize', fontSize: '16px'}}>{params.value}</span>
       )
     },
     ActionsColumn
@@ -86,7 +106,7 @@ const Program = () => {
               color: "#90929f",
               marginTop: "3rem"
             }}
-          />
+          ></CircularProgress>
         </>
       }
       {!isLoading &&
