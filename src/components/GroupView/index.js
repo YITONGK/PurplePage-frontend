@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { GroupViewContainer, GroupViewH1, GroupViewP, ActionsButtonLink, GroupViewH2, LoadingContainer, LoadingCircle, LoadingText, ProgramsContainer} from './GroupViewElements';
+import { GroupViewContainer, GroupViewH1, GroupViewP, ActionsButtonLink, GroupViewH2, LoadingContainer, LoadingCircle, LoadingText, GroupProgramsContainer} from './GroupViewElements';
 import Button from '@mui/material/Button';
 
 import Table from '@mui/material/Table';
@@ -111,7 +111,7 @@ const GroupView = () => {
   //   })
   // }
 
-  // related sites table element
+  // related programs table element
   const RelatedProgramsTable = () => {
     return (
       <TableContainer component={Paper} style={{ width: '95%',  border: '1px solid transparent', boxShadow: '0 0 6px rgba(0, 0, 0, 0.4)'}}>
@@ -159,7 +159,7 @@ const GroupView = () => {
       <GroupViewP>Status: {group.status}</GroupViewP>
 
       <GroupViewH2>Related Programs</GroupViewH2>
-      <ProgramsContainer>
+      <GroupProgramsContainer>
       {
         (isLoading) ? 
         <LoadingContainer>
@@ -168,7 +168,7 @@ const GroupView = () => {
         </LoadingContainer>
         : <RelatedProgramsTable></RelatedProgramsTable>
       }
-      </ProgramsContainer>
+      </GroupProgramsContainer>
     </GroupViewContainer>
   )
 }

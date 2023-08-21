@@ -56,10 +56,26 @@ const ServiceType = () => {
 
   // columns for datagrid
   const columns = [
-    { field: 'ser_type_id', headerName: 'Service Type ID', headerClassName: 'header', maxWidth: 200, flex: 1 },
-    { field: 'ser_type', headerName: 'Service Type', headerClassName: 'header', minWidth: 200, flex: 1 },
-    { field: 'ser_stream', headerName: 'Service Stream', headerClassName: 'header', minWidth: 200, flex: 1 },
-    { field: 'status', headerName: 'Status', headerClassName: 'header', maxWidth: 240, flex: 1 },
+    { field: 'ser_type_id', headerName: 'Service Type ID', headerClassName: 'header', maxWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'ser_type', headerName: 'Service Type', headerClassName: 'header', minWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'ser_stream', headerName: 'Service Stream', headerClassName: 'header', minWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'status', headerName: 'Status', headerClassName: 'header', maxWidth: 240, flex: 1,
+      renderCell: (params) => (
+        <span style={{color: 'green', fontWeight: 'bold', textTransform: 'capitalize', fontSize: '16px' }}>{params.value}</span>
+      )
+    },
     ActionsColumn
   ];
 
@@ -82,11 +98,6 @@ const ServiceType = () => {
       {!isLoading &&
         <>
           <ServiceTypeH1>Service Type</ServiceTypeH1>
-          <ButtonWrapper>
-            <Button variant="contained" style={{backgroundColor: '#a20066'}}>
-              <ServiceTypeButtonLink to={addServiceTypeLink}>Add Service Type</ServiceTypeButtonLink>
-            </Button>
-          </ButtonWrapper>
           <DataGridWrapper>
             <DataGrid
               sx={{

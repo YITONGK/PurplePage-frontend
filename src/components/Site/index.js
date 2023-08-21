@@ -52,13 +52,41 @@ const Site = () => {
 
   // columns for datagrid
   const columns = [
-    { field: 'site_id', headerName: 'Site ID', headerClassName: 'header', minWidth: 200, flex: 1 },
-    { field: 'street_nbr', headerName: 'Number', headerClassName: 'header', maxWidth: 100, flex: 1 },
-    { field: 'street_name', headerName: 'Street Name', headerClassName: 'header', minWidth: 240, flex: 1 },
-    { field: 'suburb', headerName: 'Suburb', headerClassName: 'header', maxWidth: 120, flex: 1 },
-    { field: 'state', headerName: 'State', headerClassName: 'header', maxWidth: 100, flex: 1 },
-    { field: 'postcode', headerName: 'Postcode', headerClassName: 'header', maxWidth: 120, flex: 1 },
-    { field: 'status', headerName: 'Status', headerClassName: 'header', maxWidth: 120, flex: 1 },
+    { field: 'site_id', headerName: 'Site ID', headerClassName: 'header', minWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'street_nbr', headerName: 'Number', headerClassName: 'header', maxWidth: 100, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'street_name', headerName: 'Street Name', headerClassName: 'header', minWidth: 240, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'suburb', headerName: 'Suburb', headerClassName: 'header', maxWidth: 120, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'state', headerName: 'State', headerClassName: 'header', maxWidth: 100, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'postcode', headerName: 'Postcode', headerClassName: 'header', maxWidth: 120, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'status', headerName: 'Status', headerClassName: 'header', maxWidth: 120, flex: 1,
+      renderCell: (params) => (
+        <span style={{color: 'green', fontWeight: 'bold', textTransform: 'capitalize', fontSize: '16px' }}>{params.value}</span>
+      )
+    },
     ActionsColumn
   ];
 
@@ -81,11 +109,6 @@ const Site = () => {
       {!isLoading &&
         <>
           <SiteH1>Site</SiteH1>
-          <ButtonWrapper>
-            <Button variant="contained" style={{backgroundColor: '#a20066'}}>
-              <SiteButtonLink to={addSiteLink}>Add Site</SiteButtonLink>
-            </Button>
-          </ButtonWrapper>
           <DataGridWrapper>
             <DataGrid
               sx={{

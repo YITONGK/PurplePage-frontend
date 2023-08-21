@@ -52,9 +52,21 @@ const ServiceStream = () => {
 
   // columns for datagrid
   const columns = [
-    { field: 'ser_stream_id', headerName: 'Service Stream ID', headerClassName: 'header', maxWidth: 200, flex: 1 },
-    { field: 'ser_stream', headerName: 'Service Stream', headerClassName: 'header', minWidth: 200, flex: 1 },
-    { field: 'status', headerName: 'Status', headerClassName: 'header', maxWidth: 240, flex: 1 },
+    { field: 'ser_stream_id', headerName: 'Service Stream ID', headerClassName: 'header', maxWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'ser_stream', headerName: 'Service Stream', headerClassName: 'header', minWidth: 200, flex: 1,
+      renderCell: (params) => (
+        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'status', headerName: 'Status', headerClassName: 'header', maxWidth: 240, flex: 1,
+      renderCell: (params) => (
+        <span style={{color: 'green', fontWeight: 'bold', textTransform: 'capitalize', fontSize: '16px' }}>{params.value}</span>
+      )
+    },
     ActionsColumn
   ];
 
@@ -77,11 +89,6 @@ const ServiceStream = () => {
       {!isLoading &&
         <>
           <ServiceStreamH1>Service Stream</ServiceStreamH1>
-          <ButtonWrapper>
-            <Button variant="contained" style={{backgroundColor: '#a20066'}}>
-              <ServiceStreamButtonLink to={addServiceStreamLink}>Add Service Stream</ServiceStreamButtonLink>
-            </Button>
-          </ButtonWrapper>
           <DataGridWrapper>
             <DataGrid
               sx={{

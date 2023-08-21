@@ -10,7 +10,7 @@ export const ServiceTypeContainer = styled.div`
 
 export const ServiceTypeH1 = styled.h1`
   font-size: 40px;
-  margin-bottom: -1%;
+  margin-bottom: 2%;
   color: #A60A6C;
 `;
 

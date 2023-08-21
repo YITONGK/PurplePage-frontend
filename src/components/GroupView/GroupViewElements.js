@@ -61,7 +61,7 @@ export const LoadingText = styled.div`
   text-align: center;
 `;
 
-export const ProgramsContainer = styled.div`
+export const GroupProgramsContainer = styled.div`
   display: flex;
   width: 98%;
   height: 60vh;
