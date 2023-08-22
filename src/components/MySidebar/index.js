@@ -27,21 +27,25 @@ const MySidebar = () => {
       <Nav defaultSelected="home">
         <NavItem eventKey="">
           <NavIcon>
-            <i className="fa-solid fa-house" style={{ fontSize: "1.5em" }}></i>
+            <i className="fa-solid fa-search" style={{ fontSize: "1.5em" }}></i>
           </NavIcon>
-          <NavText>Home</NavText>
+          <NavText>Search</NavText>
         </NavItem>
         <NavItem>
           <NavIcon>
             <i className="fa-solid fa-list" style={{ fontSize: "1.5em" }}></i>
           </NavIcon>
+
           <NavText>Program</NavText>
+
           <NavItem eventKey="program">
             <NavText>Program</NavText>
           </NavItem>
+
           <NavItem eventKey="programtype">
             <NavText>Program Type</NavText>
           </NavItem>
+          
         </NavItem>
         <NavItem>
           <NavIcon>

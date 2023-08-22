@@ -28,8 +28,6 @@ export const SearchContainer = styled.div`
   flex-direction: row;
   align-items: center;
   width: fit-content;
-  border: 0.5px solid grey;
-  border-radius: 5px;
 `;
 
 export const MapElement = styled.div`

@@ -27,14 +27,6 @@ const Article = () => {
     document.title = 'Home';
   }, []);
 
-  //search type
-  const searchTypesEnum = {
-    ProgramType: 'PT',
-    Group: 'G',
-    ProgramDescription: 'PD',
-
-  }
-
   // useState hooks
   const [values, setValues] = useState({
     prgm_type: 'All Program Types',
@@ -46,13 +38,14 @@ const Article = () => {
     type: 'All',
   })
 
-  const [searchTypeValue, setSearchTypeValue] = useState(searchTypesEnum.ProgramType);
-
-
   const [sites, setSites] = useState([]);
   const [programList, setProgramList] = useState([]);
   const [programTypeList, setProgramTypeList] = useState([]);
   const [groupList, setGroupList] = useState([]);
+  const [serviceStreamList, setServiceStreamList] = useState([]);
+  const [serviceTypeList, setServiceTypeList] = useState([]);
+  const [divisionList, setDivisionList] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
 
   const [filteredSites, setFilteredSites] = useState([]);
@@ -64,20 +57,19 @@ const Article = () => {
   const [advanceFilteredPrograms, setAdvanceFilteredPrograms] = useState([]);
 
   const [searchOptions, setSearchOptions] = useState([]);
+  const [searchFilteredOptions, setSearchFilteredOptions] = useState([]);
 
   const mapRef = useRef();
 
   // styles
   const textFieldStyle = { minWidth: "400px"};
   const buttonFieldStyle = {minWidth: '150px'};
-  const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", marginTop: "1.5rem", display: "inline-flex"};
 
   const searchTextFieldStyle = {
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
-        border: 'none',
-        borderLeft: '0.5px solid',
-        borderRadius: '0',
+        border: '0.5px solid grey',
+        borderRadius: '5px',
       },
       '&.Mui-focused fieldset': {
         borderColor: "#A20066", // Change the outline color on focus to black
@@ -90,11 +82,14 @@ const Article = () => {
   const getAllData = async () => {
 
     try {
-      const [programTypes, groups, programs, sites] = await Promise.all ([
+      const [programTypes, groups, programs, sites, serviceStreams, serviceTypes, divisions] = await Promise.all ([
         getProgramTypes(),
         getGroups(),
         getPrograms(),
         getSites(),
+        getServiceStreams(),
+        getServiceTypes(),
+        getDivisions(),
       ]);
 
       setProgramTypeList(programTypes);
@@ -108,6 +103,29 @@ const Article = () => {
 
       setSites(distinctSites);
       setFilteredSites(distinctSites);
+      setAdvanceFilteredSites(distinctSites);
+
+      setServiceStreamList(serviceStreams);
+      setServiceTypeList(serviceTypes);
+      setDivisionList(divisions);
+
+      const programTypesOptions = programTypes.map((programType, index) => ({
+        value: programType.prgm_type,
+        type: 'Program Types'
+      }));
+    
+      const groupsOptions = groups.map((group, index) => ({
+        value: group.group_name,
+        type: 'Group'
+      }));
+
+      const filteredOptions = [];
+    
+      filteredOptions.push(...programTypesOptions, ...groupsOptions);
+      filteredOptions.unshift({ value: ' --All Program Types & Group--',type: 'All'});
+
+      setSearchOptions(filteredOptions);
+      setSearchValues({value: ' --All Program Types & Group--', type: 'All'});
 
       setIsLoading(false);
 
@@ -127,25 +145,26 @@ const Article = () => {
   }, [])
 
   useEffect(() => {
-    setAdvanceFilteredSites([]);
     setAdvanceFilteredPrograms([]);
   }, [filteredSites])
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if(programTypeList.length > 0 && searchOptions.length <= 0)
-    {
-      const programTypeOptions = programTypeList.map((programType) => {
-        return {
-          value: programType.prgm_type,
-          type: 'Program Types'
-        }
-      })
-      programTypeOptions.unshift({ value: ' --All Program Types & Group--',type: 'All'});
-      setSearchOptions(programTypeOptions);
-    }
+  //   if(programTypeList.length > 0 && searchOptions.length <= 0)
+  //   {
+  //     const programTypeOptions = programTypeList.map((programType) => {
+  //       return {
+  //         value: programType.prgm_type,
+  //         type: 'Program Types'
+  //       }
+  //     })
+  //     programTypeOptions.unshift({ value: ' --All Program Types & Group--',type: 'All'});
+  //     setSearchOptions(programTypeOptions);
+  //   }
 
-  }, [programTypeList])
+  // }, [programTypeList])
+  
+  // =============================Data Collect Method From Database====================================
 
   /* get a list of sites from the backend and display it */
   const getSites = async () => {
@@ -183,7 +202,34 @@ const Article = () => {
     return result;
   }
 
-  //================================================================
+  const getServiceStreams = async() => {
+    const BASE_URL = 'http://localhost:8888';
+
+    let result = await axios.get(BASE_URL + '/servicestream');
+    result = result.data;
+    result.sort((a, b) => a.ser_stream.localeCompare(b.ser_stream));
+    return result;
+  }
+
+  const getDivisions = async() => {
+      const BASE_URL = 'http://localhost:8888';
+
+      let result = await axios.get(BASE_URL + '/division');
+      result = result.data;
+      result.sort((a, b) => a.division_name.localeCompare(b.division_name));
+      return result;
+
+  }
+
+  const getServiceTypes = async() => {
+      const BASE_URL = 'http://localhost:8888';
+
+      let result = await axios.get(BASE_URL + '/servicetype');
+      result = result.data[0];
+      return result;
+  }
+
+  //============================Data Collect Method in App====================================
 
   const getSitesWithProgramType = (matchedProgramTypes) => {
 
@@ -251,156 +297,89 @@ const Article = () => {
     return result;
   };
 
-  //================================================================
-
-  // handle the change for program type dropdown
-  const onChangeProgramType = (e) => {
-
-    if(e.target.value === 'All Program Types') {
-      setFilteredSites(sites); 
-      setFilteredPrograms(programList); 
-      setValues({
-        prgm_type: 'All Program Types',
-        group_name: ''
-      });
-      setSearchValues ({value: '', type: ''});
-      return;
-    }
-
-    const programTypes = programTypeList.filter((programType) => {
-      return programType.prgm_type === e.target.value;
-    }); // return program types in the program type list that match with the selected value
-
-    setFilteredSites(getSitesWithProgramType(programTypes));
-
-    setValues({
-      prgm_type: e.target.value,
-      group_name: ''
-    });
-    setSearchValues ({value: '', type: ''});
-  }
-
-  // handle the change for group dropdown
-  const onChangeGroup = (e) => {
-
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value
-    });
-
-    if(e.target.value === 'All Groups') {
-      setFilteredSites(sites); 
-      setFilteredPrograms(programList);
-      setValues({
-        prgm_type: '',
-        group_name: 'All Groups'
-      }) 
-      setSearchValues ({value: '', type: ''});
-      return;
-    }
-
-    const groups = groupList.filter((group) => {
-      return group.group_name === e.target.value;
-    });
-
-    setFilteredSites(getSitesWithGroup(groups));
-
-    setValues({
-      prgm_type: '',
-      group_name: e.target.value
-    });
-    setSearchValues ({value: '', type: ''});
-  }
-
-  const onChangeSearchType = (e) => {
-
-    setSearchTypeValue(e.target.value);
-    const value = e.target.value;
-    let filteredOptions = [];
-
-    if(value === searchTypesEnum.ProgramType) {
-      filteredOptions = programTypeList.map((programType, index) => {
-        return {
-          value: programType.prgm_type,
-          type: 'Program Types'
-        }
-      })
-    }
-
-    if(value === searchTypesEnum.Group) {
-      filteredOptions = groupList.map((group, index) => {
-        return {
-          value: group.group_name,
-          type: 'Group'
-        }
-      })
-
-
-    }
-
-    if(value === searchTypesEnum.ProgramDescription) {
-
-      const programTypesOptions = programTypeList.map((programType, index) => ({
-        value: programType.prgm_type,
-        type: 'Program Types'
-      }));
-    
-      const groupsOptions = groupList.map((group, index) => ({
-        value: group.group_name,
-        type: 'Group'
-      }));
-    
-      filteredOptions.push(...programTypesOptions, ...groupsOptions);
-
-    }
-
-    filteredOptions.unshift({ value: ' --All Program Types & Group--',type: 'All'});
-
-    setSearchOptions(filteredOptions);
-
-    //reset All
-    setSearchValues({value: ' --All Program Types & Group--', type: 'All'});
-    setFilteredPrograms(programList);
-    setFilteredSites(sites);
-
-  };
 
   // handle the change for the search
   const onChangeSearch = (event, value) => {
 
     if(value)
     {
-      if(value.type === 'All')
-      {
-        setFilteredPrograms(programList);
-        setFilteredSites(sites);
-        setSearchValues(value);
-      }
+      setSearchValues({value: value, type: ''});
 
-      if (value.type === 'Group') {
+      if(typeof value === 'string') {
 
-        const groups = groupList.filter((group) => {
-          return group.group_name === value.value;
-        });
-  
-        setFilteredSites(getSitesWithGroup(groups));
-        setSearchValues(value);
-      }
-  
-      if (value.type === 'Program Types') {
-  
-        const programTypes = programTypeList.filter((programType) => {
-          return programType.prgm_type === value.value;
-        }); // return program types in the program type list that match with the selected value
+        const filteringValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     
-        setFilteredSites(getSitesWithProgramType(programTypes));
-        setSearchValues(value);
-      }
+        const filteredPattern = new RegExp(filteringValue.trim(), 'i');
 
-      setValues({
-        prgm_type: '',
-        group_name: ''
-      });
+        // upper table
+        const filteringServiceStreams = serviceStreamList.filter(serviceStream => filteredPattern.test(serviceStream.ser_stream));
+        const serviceStreamIds = filteringServiceStreams.map(serviceStream => serviceStream.ser_stream_id);
+
+        const filteringServiceTypes = serviceTypeList.filter(serviceType => filteredPattern.test(serviceType.ser_stream) || serviceStreamIds.includes(serviceType.ser_stream_id));
+        const serviceTypeIds = filteringServiceTypes.map(serviceType => serviceType.ser_type_id);
+
+        const filteringProgramTypes = programTypeList.filter(programType => filteredPattern.test(programType.prgm_type || serviceTypeIds.includes(programType.ser_type_id)));
+        const programTypeIds = filteringProgramTypes.map(programType => programType.prgm_type_id);
+
+        //lower table
+        const filteringDivisions = divisionList.filter(division => filteredPattern.test(division.division_name));
+        const divisionIds = filteringDivisions.map(division => division.division_id);
+
+        const filteringGroups = groupList.filter(group => filteredPattern.test(group.group_name) || divisionIds.includes(group.division_id));
+        const groupsIds = filteringGroups.map(group => group.group_id);
+
+        // Program Filtering
+        const filteringPrograms = programList.filter(program => 
+          filteredPattern.test(program.program_nme) ||
+          (program.service_desc && filteredPattern.test(program.service_desc)) ||
+          programTypeIds.includes(program.prgm_type_id) ||
+          groupsIds.includes(program.group_id)
+        );
+
+        const siteIds = filteringPrograms.map(program => program.site_id);
+
+        const filteringSites = sites.filter(site => siteIds.includes(site.site_id));
+
+        setFilteredPrograms(filteringPrograms);
+        setFilteredSites(filteringSites);
+        setAdvanceFilteredSites(filteringSites);
+      }
+      else if (typeof value === 'object') 
+      {
+
+        setSearchValues(value);
+
+        if(value.type === 'All')
+        {
+          setFilteredPrograms(programList);
+          setFilteredSites(sites);
+          setAdvanceFilteredSites(sites);
+        }
+
+        if (value.type === 'Group') {
+
+          const groups = groupList.filter((group) => {
+            return group.group_name === value.value;
+          });
+          
+          const filteredSites = getSitesWithGroup(groups);
+          setFilteredSites(filteredSites);
+          setAdvanceFilteredSites(filteredSites);
+        }
+    
+        if (value.type === 'Program Types') {
+    
+          const programTypes = programTypeList.filter((programType) => {
+            return programType.prgm_type === value.value;
+          }); // return program types in the program type list that match with the selected value
+      
+
+          const filteredSites = getSitesWithProgramType(programTypes);
+          setFilteredSites(filteredSites);
+          setAdvanceFilteredSites(filteredSites);
+        }
+        
+      }
 
     }
  
@@ -410,100 +389,63 @@ const Article = () => {
 
     const value = state.inputValue;
     const filteringValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const pattern = new RegExp(filteringValue, 'i'); // pattern to search more accurately
-    const filterTypeGroup = options.filter((option) => pattern.test(option.value));
 
-    if(searchTypeValue === searchTypesEnum.ProgramType || searchTypeValue === searchTypesEnum.Group)
-    {
-      return filterTypeGroup;
-    }
-    
-    if(searchTypeValue === searchTypesEnum.ProgramDescription)
-    {
+    const splitValue = filteringValue.trim().split(/\s+/);
 
-      const splitValue = filteringValue.trim().split(/\s+/);
+    const stopwords = new Set(natural.stopwords);
 
-      const stopwords = new Set(natural.stopwords);
+    const filteredWords = splitValue.filter((word) => !stopwords.has(word));
+    const filteredValue = filteredWords.join(' ');
 
-      const filteredWords = splitValue.filter((word) => !stopwords.has(word));
-      const filteredValue = filteredWords.join(' ');
+    const filteredPattern = new RegExp(filteredValue, 'i');
 
-      const filteredPattern = new RegExp(filteredValue, 'i');
-
-      const filteredProgram = programList.filter((program) => {
-        const programDesc = program.service_desc;
-        if(programDesc)
-        {
-          return filteredPattern.test(program.service_desc);
-        }
-        return;
-      });
-
-      const programTypeIds = [];
-      const groupIds = [];
-
-      for(let i = 0; i < filteredProgram.length; i++) {
-        programTypeIds.push(filteredProgram[i].prgm_type_id);
-        groupIds.push(filteredProgram[i].group_id);
+    const filteredProgram = programList.filter((program) => {
+      const programDesc = program.service_desc;
+      if(programDesc)
+      {
+        return filteredPattern.test(program.service_desc);
       }
+      return false;
+    });
 
-      const filteredProgramType = programTypeList.map((type) => {
-        if(programTypeIds.includes(type.prgm_type_id)) { 
-          return type.prgm_type;
-        }
-      });
+    const programTypeIds = [];
+    const groupIds = [];
 
-      const filteredGroups = groupList.map((group) => {
-        if(groupIds.includes(group.group_id)) {
-          return group.group_name;
-        }
-      });
-
-      const availableOptions = options.filter((option) => (filteredProgramType.includes(option.value) || filteredGroups.includes(option.value)));
-
-      return availableOptions;
-
+    for(let i = 0; i < filteredProgram.length; i++) {
+      programTypeIds.push(filteredProgram[i].prgm_type_id);
+      groupIds.push(filteredProgram[i].group_id);
     }
+
+    const filteredProgramType = programTypeList.map((type) => {
+      if(programTypeIds.includes(type.prgm_type_id)) { 
+        return type.prgm_type;
+      }
+    });
+
+    const filteredGroups = groupList.map((group) => {
+      if(groupIds.includes(group.group_id)) {
+        return group.group_name;
+      }
+    });
+
+    const availableOptions = options.filter((option) => (filteredProgramType.includes(option.value) || filteredGroups.includes(option.value)));
+    const filterTypeGroup = options.filter((option) => filteredPattern.test(option.value));
+
+    const filteredOptions = options.filter((option) => availableOptions.includes(option) || filterTypeGroup.includes(option));
+
+
+    return filteredOptions;
 
   }
 
   // reset the filters
-  const clear = () => {
-    setFilteredSites(sites);
-    setValues({
-      prgm_type: '',
-      group_name: ''
-    });
-  }
-
-
-  const SearchTypes = () => {
-    return (
-      <SelectDiv>
-        <Select
-            name='searchType'
-            size='small'
-            sx={{"& fieldset": { border: 'none' }}}
-            style={buttonFieldStyle}
-            onChange={onChangeSearchType}
-            value={searchTypeValue}
-            required
-          >
-            <MenuItem key={0} value={searchTypesEnum.ProgramType}> ProgramType </MenuItem>
-            <MenuItem key={1} value={searchTypesEnum.Group}>Group</MenuItem>
-            <MenuItem key={2} value={searchTypesEnum.ProgramDescription}> ProgramDesc </MenuItem>
-            
-          </Select>
-      </SelectDiv>
-    )
-  };
-
-  // const renderOption = (props, option) => (
-  //   <div key={option.key} {...props}>
-  //     <span style={{ marginRight: '10px' }}>{option.value}</span>
-  //     <span style={{ color: 'gray' }}>{option.type}</span>
-  //   </div>
-  // );
+  // const clear = () => {
+  //   setFilteredSites(sites);
+  //   setValues({
+  //     prgm_type: '',
+  //     group_name: ''
+  //   });
+  // }
 
   const FreeTextSearch = () => {
     return (
@@ -512,14 +454,13 @@ const Article = () => {
             Search
         </InputLabel>
         <SearchContainer>
-          <SearchTypes></SearchTypes>
           <SelectDiv>
             <Autocomplete
               disablePortal
               id="search-test"
               options={searchOptions}
               groupBy={(option) => option.type}
-              getOptionLabel={(option)=> option.value} // Use the label property as the option label
+              getOptionLabel={(option)=> (option.value)? option.value : ''} // Use the label property as the option label
               isOptionEqualToValue={(option) => option.value === searchValues.value}
               filterOptions={searchFilterOptions}
               onChange={onChangeSearch}
@@ -530,6 +471,8 @@ const Article = () => {
               size='small'
               selectOnFocus
               clearOnBlur
+              freeSolo
+              forcePopupIcon 
               renderInput={(params) => <TextField {...params}  sx={searchTextFieldStyle}/>}
               renderGroup={(params) => (
                 <li key={params.key}>
@@ -542,62 +485,6 @@ const Article = () => {
         </SearchContainer>
       </ColSearchContainer>
     );
-  }
-
-  // program type dropdown
-  const ProgramTypeSelect = () => {
-    return (
-      <SelectDiv>
-        <InputLabel>Program Type</InputLabel>
-        <Select
-          name='prgm_type'
-          size='small'
-          style={textFieldStyle}
-          value={values.prgm_type}
-          defaultValue='All Program Types'
-          onChange={onChangeProgramType}
-          required
-        >
-          <MenuItem key={-1} value={'All Program Types'}> --All Programs Type-- </MenuItem>
-          {programTypeList.map((programType, index) => (
-            <MenuItem
-              key={index}
-              value={programType.prgm_type}
-            >
-              {programType.prgm_type}
-            </MenuItem>
-          ))}
-        </Select>
-      </SelectDiv>
-    )
-  }
-
-  // group dropdown
-  const GroupSelect = () => {
-    return (
-      <SelectDiv>
-        <InputLabel>Group</InputLabel>
-        <Select
-          name='group_name'
-          size='small'
-          style={textFieldStyle}
-          value={values.group_name}
-          defaultValue='All Groups'
-          onChange={onChangeGroup}
-          required
-        >
-          <MenuItem key={-1} value={'All Groups'}> --All Group-- </MenuItem>
-          {groupList.map((group, index) => (
-            <MenuItem
-              key={index}
-              value={group.group_name}
-            >
-              {group.group_name}
-            </MenuItem>
-          ))}
-        </Select>
-      </SelectDiv>
-    )
   }
 
   //===================== Export Function ===========================================
@@ -633,7 +520,7 @@ const Article = () => {
             exportAdvanceFilteredPrograms = {sendAdvanceFilteredPrograms}
           />
           <Map 
-            sites={(advancefilteredSites.length > 0)? advancefilteredSites : filteredSites} exportSite={selectedSite} exportRef={mapRef} importSite={site}
+            sites={advancefilteredSites} exportSite={selectedSite} exportRef={mapRef} importSite={site}
           />
           <MapInfo site={site} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms }/>
         </MapElement>

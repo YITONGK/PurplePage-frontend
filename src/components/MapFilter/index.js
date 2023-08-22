@@ -44,8 +44,8 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
     const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", width: 'fit-content', marginBottom: '0.5rem', marginTop: '0.5rem', marginLeft: '0.5rem'};
     const textFieldStyle = { minWidth: "16vw", marginTop: '0.5rem', fontSize: '15px', borderRadius: '20px'};
     const textStyle = { fontSize: '18px', fontWeight: 'bold', color: '#A20066'};
-    const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
-    const toolTipsStyleClicked = {backgroundColor: '#A20066',  color: 'white', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
+    const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
+    const toolTipsStyleClicked = {backgroundColor: '#A20066',  color: 'white', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
 
     const listStyle = { marginTop: '0'};
     const captionStyle = {
@@ -143,14 +143,14 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
             return programTypeIds.includes(type.prgm_type_id);
         });
 
-        const filteredServicTypeIds = [];
+        const filteredServiceTypeIds = [];
         for(let i = 0; i < filteredProgramTypes.length; i++)
         {
-            filteredServicTypeIds.push(filteredProgramTypes[i].ser_type_id);
+            filteredServiceTypeIds.push(filteredProgramTypes[i].ser_type_id);
         }
 
         const filteredServiceTypes = serviceTypes.filter((type) => {
-            return filteredServicTypeIds.includes(type.ser_type_id);
+            return filteredServiceTypeIds.includes(type.ser_type_id);
         })
 
         const filteredServiceStreamIds = [];
@@ -488,6 +488,7 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
                 }
                 
                 const advanceFilteredSites = filteringSites(groupIds, programTypeIds);
+                console.log(advanceFilteredSites);
 
 
                 setAvailableSearchSites(advanceFilteredSites);

@@ -25,19 +25,22 @@ const ServiceTypeView = () => {
   const TableContentStyle = {fontSize: '16px', color: 'black'};
 
   useEffect(() => {
-    getAllData();
+    getServiceType();
   }, []);
+
+  useEffect(() => {
+    if(Object.values(serviceType).length > 0) {
+      getAllData();
+    }
+  }, [serviceType]);
 
   const getAllData = async () => {
 
     try {
-      const [serviceType, programTypes, programs] = await Promise.all ([
-        getServiceType(),
+      const [programTypes, programs] = await Promise.all ([
         getProgramTypes(),
         getPrograms(),
       ]);
-
-      setServiceType(serviceType);
 
       const filteringProgramTypes = programTypes.filter((type) => {
         return type.ser_type_id === serviceType.ser_type_id;
@@ -64,13 +67,11 @@ const ServiceTypeView = () => {
   /* get a service type from the backend based on the id and display it */
   const getServiceType = async () => {
     const BASE_URL = "http://localhost:8888";
-    const result = await axios.get(BASE_URL + '/servicetype/' + id).then(res => {
+    await axios.get(BASE_URL + '/servicetype/' + id).then(res => {
       const data = res.data[0];
       data['ser_stream'] = res.data[1];
-      return data;
+      setServiceType(data);
     })
-
-    return result;
   }
 
   const getProgramTypes = async () => {

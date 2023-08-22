@@ -25,18 +25,21 @@ const GroupView = () => {
   const TableContentStyle = {fontSize: '16px', color: 'black'};
 
   useEffect(() => {
-    getAllData();
-  }, []);
+    getGroup();
+  },[]);
+
+  useEffect(() => {
+    if(Object.values(group).length > 0) {
+      getAllData();
+    }
+  }, [group]);
 
   const getAllData = async () => {
 
     try {
-      const [group, programs] = await Promise.all ([
-        getGroup(),
-        getPrograms(),
+      const [programs] = await Promise.all ([
+        getPrograms()
       ]);
-
-      setGroup(group);
 
       const filteringsPrograms = programs.filter((program) => {
         return program.group_id === group.group_id;
@@ -50,20 +53,17 @@ const GroupView = () => {
 
       console.log(error);
     }
-    
 
   }
 
   /* get a group from the backend based on the id and display it */
   const getGroup = async () => {
     const BASE_URL = "http://localhost:8888";
-    const result = await axios.get(BASE_URL + '/group/' + id).then(res => {
+    await axios.get(BASE_URL + '/group/' + id).then(res => {
       const data = res.data[0];
       data['division_name'] = res.data[1];
-      return data;
+      setGroup(data);
     })
-
-    return result;
   }
 
   const getPrograms = async () => {

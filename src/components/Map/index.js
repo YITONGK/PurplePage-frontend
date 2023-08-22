@@ -55,6 +55,12 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
 
   }, [mapZoom]);
 
+  useEffect(() => {
+
+    setPopUpMarker(null);
+    setSelectedMarker(null);
+
+  }, [sites]);
 
   //performance increase only show marker that in the viewport if needed...
   useEffect(() => {
@@ -86,13 +92,6 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
     return () => clearTimeout(timerId);
 
   }, [sites, viewPort]);
-
-  useEffect(() => {
-
-    setPopUpMarker(null);
-    setSelectedMarker(null);
-
-  }, [sites]);
 
   useEffect(() => {
     if(importSite) {
