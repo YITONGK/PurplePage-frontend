@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {memo, useEffect, useState} from 'react';
-import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption, ToolTips} from './MapFilterElements';
+import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption, ProgramDropDownContainer, GroupDropDownContainer, BreakingLine, SearchInputContainer, BreakingLine2} from './MapFilterElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
@@ -17,11 +17,18 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
 
-const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList, exportAdvanceFilteredSites, importRef, exportSite, exportAdvanceFilteredPrograms}) => {
+import CardTravelIcon from '@mui/icons-material/CardTravel';
 
+const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList, serviceStreamList, serviceTypeList, divisionList ,exportAdvanceFilteredSites, importRef, exportSite, exportAdvanceFilteredPrograms}) => {
+
+
+    const [serviceStreamValue, setServiceStreamValue] = useState('');
+    const [serviceTypeValue, setServiceTypeValue] = useState('');
+    const [programTypeValue, setProgramTypeValue] = useState('');
+    const [programNameValue, setProgramNameValue] = useState('');
 
     const [divisionValue, setDivisionValue] = useState('');
-    const [serviceStreamValue, setServiceStreamValue] = useState('');
+    const [groupValue, setGroupValue] = useState('');
 
     const [serviceStreams, setServiceStreams] = useState([]);
     const [serviceTypes, setServiceTypes] = useState([]);
@@ -39,11 +46,12 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
 
     const [clickedSite, setClickedSite] = useState(null);
 
-    const dropDownStyle = { minWidth: '16vw', maxWidth: '16vw', position: 'absolute'};
+    const dropDownStyle = { minWidth: '15vw', maxWidth: '15vw', fontSize: '16px'};
 
-    const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", width: 'fit-content', marginBottom: '0.5rem', marginTop: '0.5rem', marginLeft: '0.5rem'};
-    const textFieldStyle = { minWidth: "16vw", marginTop: '0.5rem', fontSize: '15px', borderRadius: '20px'};
-    const textStyle = { fontSize: '18px', fontWeight: 'bold', color: '#A20066'};
+    const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", width: 'fit-content'};
+    const buttonStyle2 = { textTransform: "none", color: "#FFF", backgroundColor: "Black", width: 'fit-content', height: '2rem'};
+    const textFieldStyle = { minWidth: "16vw", fontSize: '15px', borderRadius: '10px'};
+    const textStyle = { fontSize: '20px', fontWeight: 'bold', color: '#A20066'};
     const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
     const toolTipsStyleClicked = {backgroundColor: '#A20066',  color: 'white', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
 
@@ -54,11 +62,6 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
     }
-
-    useEffect(() => {
-        getFilterData();
-
-    },[]);
 
     useEffect(()=> {
 
@@ -81,56 +84,28 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
         
     },[filteredSites])
 
-    const getFilterData = async () => {
+    useEffect(() => {
+        if (serviceStreamList && serviceStreamList.length > 0) {
+            setServiceStreams(serviceStreamList);
+        }
+        
+        if (serviceTypeList && serviceTypeList.length > 0) {
+            setServiceTypes(serviceTypeList);
+        }
+        
+        if (divisionList && divisionList.length > 0) {
+            setDivisions(divisionList);
+        }
+        
+    }, [serviceStreamList, serviceTypeList, divisionList]);
 
-        try {
-          const [serviceTypes, serviceStreams, divisions, ] = await Promise.all ([
-            getServiceTypes(),
-            getServiceStreams(),
-            getDivisions(),
-          ]);
+    useEffect(() => {
 
-          setServiceTypes(serviceTypes);
-          setServiceStreams(serviceStreams);
-          setDivisions(divisions);
-    
-    
-          setIsLoading(false);
-    
-    
-        } catch (error) {
-    
-          console.log(error);
-        } 
-    
-    }
+        if(serviceStreams.length > 0 && serviceTypes.length > 0 && divisions.length > 0) {
+            setIsLoading(false);
+        }
 
-    const getServiceStreams = async() => {
-        const BASE_URL = 'http://localhost:8888';
-
-        let result = await axios.get(BASE_URL + '/servicestream');
-        result = result.data;
-        result.sort((a, b) => a.ser_stream.localeCompare(b.ser_stream));
-        return result;
-    }
-    
-    const getDivisions = async() => {
-        const BASE_URL = 'http://localhost:8888';
-
-        let result = await axios.get(BASE_URL + '/division');
-        result = result.data;
-        result.sort((a, b) => a.division_name.localeCompare(b.division_name));
-        return result;
-
-    }
-
-    const getServiceTypes = async() => {
-        const BASE_URL = 'http://localhost:8888';
-
-        let result = await axios.get(BASE_URL + '/servicetype');
-        result = result.data[0];
-        return result;
-    }
+    }, [serviceStreams, serviceTypes, divisions])
 
     const filteringServiceStreams= (programList) => {
 
@@ -513,28 +488,66 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
     return (
          <MapFilterContainer>
             <FilterContainer>
-                <SelectDiv>
-                    <InputLabel>Service Stream</InputLabel>
-                    <ServiceStreamDropdown></ServiceStreamDropdown>
-                </SelectDiv> 
-                <SelectDiv>
-                    <InputLabel>Division</InputLabel>
-                    <DivisionDropdown></DivisionDropdown>
-                </SelectDiv> 
+                <ProgramDropDownContainer>
+                    <SelectDiv>
+                        <InputLabel >Service Stream</InputLabel>
+                        <ServiceStreamDropdown></ServiceStreamDropdown>
+                    </SelectDiv>
+                    <SelectDiv>
+                        <InputLabel >Service Type</InputLabel>
+                        <ServiceStreamDropdown></ServiceStreamDropdown>
+                    </SelectDiv>
+                    <SelectDiv>
+                        <InputLabel >Program Type</InputLabel>
+                        <ServiceStreamDropdown></ServiceStreamDropdown>
+                    </SelectDiv>
+                    <SelectDiv>
+                        <InputLabel>Program</InputLabel>
+                        <ServiceStreamDropdown></ServiceStreamDropdown>
+                    </SelectDiv>
+                </ProgramDropDownContainer>
+
+                <BreakingLine></BreakingLine>
+
+                <GroupDropDownContainer>
+                    <SelectDiv>
+                        <InputLabel >Division</InputLabel>
+                        <DivisionDropdown></DivisionDropdown>
+                    </SelectDiv> 
+                    <SelectDiv>
+                        <InputLabel>Group</InputLabel>
+                        <DivisionDropdown></DivisionDropdown>
+                    </SelectDiv> 
+                </GroupDropDownContainer>
                 <ButtonContainer>
+                    <Button variant="contained" style={buttonStyle2}>Reset Filter</Button>
                     <Button variant="contained" style={buttonStyle} onClick={applyingFilter}>Apply Filter</Button>
                 </ButtonContainer>
             </FilterContainer>
             <ResultContainer>
                 <SearchContainer>
                     <InputLabel style={textStyle}>Available Sites</InputLabel>
-                    <OutlinedInput style={textFieldStyle} size='small' placeholder='Search Sites...' onChange={onChangeSiteSearch}
-                        startAdornment= {
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        }
-                    ></OutlinedInput>
+                    <SearchInputContainer>
+                        <InputLabel>Routing Address</InputLabel>
+                        <OutlinedInput style={textFieldStyle} size='small' placeholder='Customer Address...'
+                            startAdornment= {
+                                <InputAdornment position="start">
+                                    <CardTravelIcon></CardTravelIcon>
+                                </InputAdornment>
+                            }
+                        ></OutlinedInput>
+                    </SearchInputContainer>
+                    <BreakingLine2></BreakingLine2>
+                    <SearchInputContainer>
+                        <InputLabel>Search</InputLabel>
+                        <OutlinedInput style={textFieldStyle} size='small' placeholder='Search Sites...' onChange={onChangeSiteSearch}
+                            startAdornment= {
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            }
+                        ></OutlinedInput>
+                    </SearchInputContainer>
                 </SearchContainer>
                 <SitesContainer>
                     <List sx={listStyle}>

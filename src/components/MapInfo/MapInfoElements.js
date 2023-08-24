@@ -4,19 +4,22 @@ import PersonIcon from '@mui/icons-material/Person';
 
 
 export const InfoContainer = styled.div`
-  margin-left: 2rem;
+  ${'' /* margin-left: 1rem; */}
   border: 1px solid #CCC;
   padding-left: 1.2rem;
+  padding-bottom: 1rem;
   border-radius: 5px;
-  width: 30%;
-  height: 64.5vh;
+  width: 100%;
+  height: 63vh;
+  overflow: hidden;
 `;
 
 export const InfoDetail = styled.div`
     display: flex;
     flex-direction: column;
-    height: 85%;
+    height: 95%;
     border-top: 2px solid #CCC;
+    padding-bottom: 1rem;
     overflow: auto;
 `;
 

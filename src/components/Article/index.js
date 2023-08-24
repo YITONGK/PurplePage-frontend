@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef} from 'react';
 import { ArticleContainer, ArticleH1 } from './ArticleElements';
 import Footer from '../../components/Footer';
 
-import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer} from './ArticleElements';
+import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer} from './ArticleElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
@@ -18,6 +18,7 @@ import Map from '../Map';
 import MapInfo from '../MapInfo';
 import MapFilter from '../MapFilter';
 import natural from 'natural';
+import { Box } from '@mui/material';
 
 // article component
 const Article = () => {
@@ -514,6 +515,9 @@ const Article = () => {
             filteredSites={filteredSites}
             programTypeList={programTypeList}
             groupList={groupList}
+            serviceStreamList = {serviceStreamList} 
+            serviceTypeList = {serviceTypeList}
+            divisionList = {divisionList}
             exportAdvanceFilteredSites={applyFilter}
             importRef={mapRef}
             exportSite={selectedSite}
@@ -522,7 +526,9 @@ const Article = () => {
           <Map 
             sites={advancefilteredSites} exportSite={selectedSite} exportRef={mapRef} importSite={site}
           />
-          <MapInfo site={site} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms }/>
+          <MapInfoContainer>
+            <MapInfo site={site} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms }/>
+          </MapInfoContainer>
         </MapElement>
       <Footer />
     </ArticleContainer>

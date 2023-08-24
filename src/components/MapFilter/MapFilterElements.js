@@ -2,13 +2,10 @@ import styled from 'styled-components';
 
 export const MapFilterContainer = styled.div`
     margin-right: 2rem;
-    max-width: 20%;
-    min-width: 20%;
-    height: fit-content;
+    height: 64.5vh;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 10px;
+    flex-direction: row;
+    gap: 10px; 
 `;
 
 export const FilterContainer = styled.div`
@@ -17,7 +14,9 @@ export const FilterContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 10px;
+    padding: 1rem 1rem 0rem 1rem;
+    align-items: center;
+    overflow-y: auto;
 `;
 
 export const ResultContainer = styled.div`
@@ -25,8 +24,7 @@ export const ResultContainer = styled.div`
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    height: 30%;
-    z-index:1;
+    height: 100%;
     position: relative;
 `;
 
@@ -34,14 +32,55 @@ export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
 `;
 
 export const SelectDiv = styled.div`
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    margin-left: 1rem;
-    margin-bottom: 1rem;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    ${'' /* border: 1px solid; */}
+`;
+
+export const ProgramDropDownContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    ${'' /* border: 1px solid red; */}
+    gap: 1.5rem;
+`;
+
+export const GroupDropDownContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    ${'' /* border: 1px solid yellow; */}
+    gap: 1.5rem;
+`;
+
+export const BreakingLine = styled.div`
+    width: 100%;
+    border-bottom: 5px solid #A20066;
+    max-height: 0;
+    padding: 0;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+`;
+
+export const BreakingLine2 = styled.div`
+    width: 90%;
+    border-radius: 10px;
+    max-height: 0;
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+    /* Outer shadow for a floating effect */
+    box-shadow: 0px 5px 5px pink;
+
+    /* Gradient border with a slight inset appearance */
+    border: 2px solid grey;
+    border-image: linear-gradient(.25turn, #FF6B6B, #A20066, #FF6B6B);
+    border-image-slice: 1;
 `;
 
 export const SearchContainer = styled.div`
@@ -59,16 +98,6 @@ export const SitesContainer = styled.div`
     overflow-y: auto;
     display: flex;
     justify-content: center;
-    height: 20vh;
-
-    @media screen and (display-mode: fullscreen) {
-        height: 24.5vh;
-    }
-
-    @media screen and (min-height: 1080px) {
-        /* Apply new styles for screens with a minimum width of 768px */
-        height: 35.5vh; /* New height on larger screens */
-    }
 `;
 
 export const SiteOption = styled.div`
@@ -86,13 +115,11 @@ export const SiteOption = styled.div`
     }
 `;
 
-export const ToolTips = styled.div`
-    background-color: white;
-    color: rgba(0, 0, 0, 0.87);
-    max-width: 13.5vw;
-    font-size: 12rem;
-    border: 1px solid #A20066;
-    border-radius: 15px;
+export const SearchInputContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
 `;
+

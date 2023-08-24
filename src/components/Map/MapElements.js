@@ -43,4 +43,11 @@ export const BasicMarker = styled.button`
   cursor: pointer;
 `;
 
+export const InterContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+
+
 

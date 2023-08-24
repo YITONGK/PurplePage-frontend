@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { MapContainer, MapP, InfoWindowContainer, InfoWindowH1, InfoWindowP, MarkerAnimation, BasicMarker} from './MapElements';
+import { MapContainer, MapP, InfoWindowContainer, InfoWindowH1, InfoWindowP, MarkerAnimation, BasicMarker, InterContainer} from './MapElements';
 import ReactMapGl, { Marker, Popup} from "react-map-gl";
 import mapboxgl from 'mapbox-gl';
 
@@ -179,7 +179,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
   }
 
   return (
-    <>
+    <InterContainer>
       <MapContainer style={{width: (mapWidth && mapWidth > 0)? `${mapWidth}vw`: `55vw`, height: (mapHeight && mapHeight > 0)? `${mapHeight}vh` : `64.5vh`}}>
         <ReactMapGl
           ref={exportRef}
@@ -201,7 +201,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
           <Markers />
         </ReactMapGl>
       </MapContainer>
-    </>
+    </InterContainer>
   )
 }
 

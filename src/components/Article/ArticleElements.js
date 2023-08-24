@@ -36,6 +36,26 @@ export const MapElement = styled.div`
   margin-top: 2rem;
   margin-bottom: 5rem;
   min-height: 60vh;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  padding-bottom: 2rem;
+  width: 100%;
+  
+  /* Customize the scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+    height: 15px; /* Height of the scrollbar */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #A20066; /* Color of the thumb */
+    border-radius: 20px; /* Rounded corners for the thumb */
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: grey; /* Color of the track */
+    border-radius: 20px; 
+  }
 `;
 
 export const MapP = styled.p`
@@ -59,3 +79,11 @@ export const GroupHeader = styled.div`
 export const GroupItems = styled('ul')({
   padding: 0,
 });
+
+export const MapInfoContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-left: 2rem;
+  min-width: 25%;
+  max-width: 25%;
+`;
