@@ -127,7 +127,6 @@ const Header = () => {
           <HeaderLogo to={homeLink}>
             <HeaderImg src={logo}></HeaderImg>
           </HeaderLogo>
-          <LoginButton />
         </HeaderContainer>
       </Nav>
     </>

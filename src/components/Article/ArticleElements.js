@@ -2,8 +2,31 @@ import styled from 'styled-components';
 
 export const ArticleContainer = styled.div`
   height: 100%;
+  display: flex;
+  flex-direction: column;
   margin-left: 5%;
   padding-left: 2%;
+  overflow-x: auto;
+  margin-bottom: 60px;
+
+    /* Styling for the scrollbar */
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #ff8a00, #e52e71);
+    border-radius: 10px;
+    border: 3px solid #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #e52e71, #ff8a00);
+  }
 `;
 
 export const ArticleH1 = styled.h1`
@@ -34,28 +57,8 @@ export const MapElement = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: 2rem;
-  margin-bottom: 5rem;
   min-height: 60vh;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  padding-bottom: 2rem;
-  width: 100%;
-  
-  /* Customize the scrollbar */
-  ::-webkit-scrollbar {
-    width: 10px; /* Width of the scrollbar */
-    height: 15px; /* Height of the scrollbar */
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: #A20066; /* Color of the thumb */
-    border-radius: 20px; /* Rounded corners for the thumb */
-  }
-
-  ::-webkit-scrollbar-track {
-    background-color: grey; /* Color of the track */
-    border-radius: 20px; 
-  }
+  padding-bottom: 1rem;
 `;
 
 export const MapP = styled.p`

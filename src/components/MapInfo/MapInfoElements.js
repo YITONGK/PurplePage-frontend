@@ -17,10 +17,8 @@ export const InfoContainer = styled.div`
 export const InfoDetail = styled.div`
     display: flex;
     flex-direction: column;
-    height: 95%;
     border-top: 2px solid #CCC;
-    padding-bottom: 1rem;
-    overflow: auto;
+    max-height: 100%;
 `;
 
 
@@ -74,6 +72,7 @@ export const SiteTitle = styled.div`
 export const SiteContainer = styled.div`
     display: flex;
     flex-direction: column;
+    margin-bottom: 3rem;
 `;
 
 export const SiteInfo = styled.div`

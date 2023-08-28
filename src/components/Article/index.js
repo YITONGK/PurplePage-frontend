@@ -530,7 +530,6 @@ const Article = () => {
             <MapInfo site={site} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms }/>
           </MapInfoContainer>
         </MapElement>
-      <Footer />
     </ArticleContainer>
   )
 }

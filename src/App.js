@@ -4,6 +4,7 @@ import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import Home from './pages';
 import LoginPage from './pages/login';
 import RegisterPage from './pages/register';
@@ -181,6 +182,7 @@ function App() {
           <Route path="/site/create" element={<SiteCreate/>} exact />
         </Route>
       </Routes>
+      <Footer />
     </Router>
   );
 }

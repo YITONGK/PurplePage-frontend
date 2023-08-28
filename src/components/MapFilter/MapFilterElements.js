@@ -26,6 +26,7 @@ export const ResultContainer = styled.div`
     flex-direction: column;
     height: 100%;
     position: relative;
+    transition: width 0.5s ease;
 `;
 
 export const ButtonContainer = styled.div`
@@ -74,13 +75,9 @@ export const BreakingLine2 = styled.div`
     max-height: 0;
     margin-top: 0.8rem;
     margin-bottom: 0.8rem;
-    /* Outer shadow for a floating effect */
-    box-shadow: 0px 5px 5px pink;
 
     /* Gradient border with a slight inset appearance */
-    border: 2px solid grey;
-    border-image: linear-gradient(.25turn, #FF6B6B, #A20066, #FF6B6B);
-    border-image-slice: 1;
+    border: 2px solid #A20066;
 `;
 
 export const SearchContainer = styled.div`
@@ -121,5 +118,21 @@ export const SearchInputContainer = styled.div`
     margin-bottom: 0.5rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+`;
+
+export const LabelContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+`;
+
+export const CollapseButtonContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: top;
+    margin-left: -10px;
 `;
 

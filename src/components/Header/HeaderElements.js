@@ -5,13 +5,13 @@ export const Nav = styled.nav`
   height: 80px;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: start;
+  background-color: #A20066;
 `;
 
 export const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: #A20066;
   height: 80px;
   width: 100%;
   padding: 0 24px;

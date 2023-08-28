@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {memo, useEffect, useState} from 'react';
-import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption, ProgramDropDownContainer, GroupDropDownContainer, BreakingLine, SearchInputContainer, BreakingLine2} from './MapFilterElements';
+import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption, ProgramDropDownContainer, GroupDropDownContainer, BreakingLine, SearchInputContainer, BreakingLine2, LabelContainer, CollapseButtonContainer} from './MapFilterElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
@@ -18,6 +18,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
 
 import CardTravelIcon from '@mui/icons-material/CardTravel';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList, serviceStreamList, serviceTypeList, divisionList ,exportAdvanceFilteredSites, importRef, exportSite, exportAdvanceFilteredPrograms}) => {
 
@@ -45,6 +46,7 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
     const [selectedGroupIds, setSelectedGroupIds] = useState([]);
 
     const [clickedSite, setClickedSite] = useState(null);
+    const [isCollapse, setIsCollapse] = useState(false);
 
     const dropDownStyle = { minWidth: '15vw', maxWidth: '15vw', fontSize: '16px'};
 
@@ -484,6 +486,10 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
 
     }
 
+    const collapseRequest = () => {
+        setIsCollapse(!isCollapse);
+    }
+
 
     return (
          <MapFilterContainer>
@@ -524,9 +530,11 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
                     <Button variant="contained" style={buttonStyle} onClick={applyingFilter}>Apply Filter</Button>
                 </ButtonContainer>
             </FilterContainer>
-            <ResultContainer>
-                <SearchContainer>
+            <ResultContainer style={{width: isCollapse ? '0' : 'auto', overflow: isCollapse ? 'hidden' : 'auto', display: isCollapse ? 'none' : ''}}>
+                <LabelContainer>
                     <InputLabel style={textStyle}>Available Sites</InputLabel>
+                </LabelContainer>
+                <SearchContainer>
                     <SearchInputContainer>
                         <InputLabel>Routing Address</InputLabel>
                         <OutlinedInput style={textFieldStyle} size='small' placeholder='Customer Address...'
@@ -555,6 +563,11 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
                     </List>
                 </SitesContainer>      
             </ResultContainer>
+            <CollapseButtonContainer>
+                <Button style={{ border: '1px solid'}} sx={{width: '5px'}} onClick={collapseRequest}>
+                    {/* <ArrowBackIosNewIcon style={{padding: '0', margin: '0'}}></ArrowBackIosNewIcon> */}
+                </Button>
+            </CollapseButtonContainer>
         
         </MapFilterContainer>
 
