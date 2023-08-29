@@ -9,7 +9,8 @@ export const InfoContainer = styled.div`
   padding-left: 1.2rem;
   padding-bottom: 1rem;
   border-radius: 5px;
-  width: 100%;
+  min-width: 22rem;
+  max-width: 22rem;
   height: 63vh;
   overflow: hidden;
 `;
@@ -19,6 +20,7 @@ export const InfoDetail = styled.div`
     flex-direction: column;
     border-top: 2px solid #CCC;
     max-height: 100%;
+    overflow: auto;
 `;
 
 
@@ -52,7 +54,7 @@ export const InfoP2 = styled.p`
 export const ProgramInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 0.2rem;
+  padding: 0 0rem;
   background-color: white;
   justify-content: center; 
 `;
@@ -86,10 +88,10 @@ export const ListItemButton = styled.div`
     display: flex;
     flex-direction: space-between;
     align-items: center;
-    min-width: 21vw;
-    max-width: 21vw;
     margin: 0 0 0.3rem 0;
     padding: 0.3rem 0 0 0.3rem;
+    min-width: 320px;
+    max-width: 320px;
     border-radius: 10px;
     background-color: #f2f2f2; /* Light background color */
     transition: all 0.2s ease-in-out; /* Smooth transition on hover */

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {memo, useEffect, useState} from 'react';
-import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption, ProgramDropDownContainer, GroupDropDownContainer, BreakingLine, SearchInputContainer, BreakingLine2, LabelContainer, CollapseButtonContainer} from './MapFilterElements';
+import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption, ProgramDropDownContainer, GroupDropDownContainer, BreakingLine, SearchInputContainer, BreakingLine2, LabelContainer, CollapseButtonContainer, CollapseButton, ApplyButton, ResetButton, ButtonLabel} from './MapFilterElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
@@ -19,6 +19,10 @@ import { debounce } from '@mui/material/utils';
 
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+
+import SendIcon from '@mui/icons-material/Send';
+import ClearIcon from '@mui/icons-material/Clear';
+import { Clear } from '@mui/icons-material';
 
 const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList, serviceStreamList, serviceTypeList, divisionList ,exportAdvanceFilteredSites, importRef, exportSite, exportAdvanceFilteredPrograms}) => {
 
@@ -48,11 +52,11 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
     const [clickedSite, setClickedSite] = useState(null);
     const [isCollapse, setIsCollapse] = useState(false);
 
-    const dropDownStyle = { minWidth: '15vw', maxWidth: '15vw', fontSize: '16px'};
+    const dropDownStyle = { minWidth: '13vw', maxWidth: '13vw', fontSize: '14px'};
 
-    const buttonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", width: 'fit-content'};
-    const buttonStyle2 = { textTransform: "none", color: "#FFF", backgroundColor: "Black", width: 'fit-content', height: '2rem'};
-    const textFieldStyle = { minWidth: "16vw", fontSize: '15px', borderRadius: '10px'};
+    const ApplyButtonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "#A20066", width: 'fit-content'};
+    const ResetButtonStyle = { textTransform: "none", color: "#FFF", backgroundColor: "transparent", border: '1px solid #A20066',width: 'fit-content'};
+    const textFieldStyle = { minWidth: "16vw", fontSize: '15px', borderRadius: '5px'};
     const textStyle = { fontSize: '20px', fontWeight: 'bold', color: '#A20066'};
     const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
     const toolTipsStyleClicked = {backgroundColor: '#A20066',  color: 'white', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
@@ -261,7 +265,7 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
                 return (
                     <ListItem key={index}>
                         <Tooltip 
-                            title= {<Typography variant= 'body2' color="inherit">{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>} 
+                            title= {<Typography variant= 'body2' color="inherit" style= {{zIndex: 0}}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>} 
                             style={(clickedSite && site.site_id === clickedSite.site_id)? toolTipsStyleClicked: toolTipsStyle}
                         >
                             <SiteOption onClick={() => onClickSite(site)}>
@@ -494,21 +498,24 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
     return (
          <MapFilterContainer>
             <FilterContainer>
+                <LabelContainer>
+                    <InputLabel style={textStyle}>Map Filter</InputLabel>
+                </LabelContainer>
                 <ProgramDropDownContainer>
                     <SelectDiv>
-                        <InputLabel >Service Stream</InputLabel>
+                        <InputLabel style={{fontSize: '16px'}}>Service Stream</InputLabel>
                         <ServiceStreamDropdown></ServiceStreamDropdown>
                     </SelectDiv>
                     <SelectDiv>
-                        <InputLabel >Service Type</InputLabel>
+                        <InputLabel style={{fontSize: '16px'}}>Service Type</InputLabel>
                         <ServiceStreamDropdown></ServiceStreamDropdown>
                     </SelectDiv>
                     <SelectDiv>
-                        <InputLabel >Program Type</InputLabel>
+                        <InputLabel style={{fontSize: '16px'}}>Program Type</InputLabel>
                         <ServiceStreamDropdown></ServiceStreamDropdown>
                     </SelectDiv>
                     <SelectDiv>
-                        <InputLabel>Program</InputLabel>
+                        <InputLabel style={{fontSize: '16px'}}>Program</InputLabel>
                         <ServiceStreamDropdown></ServiceStreamDropdown>
                     </SelectDiv>
                 </ProgramDropDownContainer>
@@ -517,26 +524,32 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
 
                 <GroupDropDownContainer>
                     <SelectDiv>
-                        <InputLabel >Division</InputLabel>
+                        <InputLabel style={{fontSize: '16px'}} >Division</InputLabel>
                         <DivisionDropdown></DivisionDropdown>
                     </SelectDiv> 
                     <SelectDiv>
-                        <InputLabel>Group</InputLabel>
+                        <InputLabel style={{fontSize: '16px'}}>Group</InputLabel>
                         <DivisionDropdown></DivisionDropdown>
                     </SelectDiv> 
                 </GroupDropDownContainer>
                 <ButtonContainer>
-                    <Button variant="contained" style={buttonStyle2}>Reset Filter</Button>
-                    <Button variant="contained" style={buttonStyle} onClick={applyingFilter}>Apply Filter</Button>
+                    <ApplyButton onClick={applyingFilter}>
+                        <SendIcon style= {{fontSize: '16px', marginRight: '5px'}}></SendIcon>
+                        <ButtonLabel>Apply Filter</ButtonLabel>
+                    </ApplyButton>
+                    <ResetButton>
+                        <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
+                        <ButtonLabel style={{color: '#A20066'}}>Clear</ButtonLabel>
+                    </ResetButton>
                 </ButtonContainer>
             </FilterContainer>
-            <ResultContainer style={{width: isCollapse ? '0' : 'auto', overflow: isCollapse ? 'hidden' : 'auto', display: isCollapse ? 'none' : ''}}>
+            <ResultContainer style={{width: isCollapse ? '0' : 'auto', overflow: isCollapse ? 'hidden' : '', display: isCollapse ? 'none' : ''}}>
                 <LabelContainer>
                     <InputLabel style={textStyle}>Available Sites</InputLabel>
                 </LabelContainer>
                 <SearchContainer>
                     <SearchInputContainer>
-                        <InputLabel>Routing Address</InputLabel>
+                        <InputLabel style={{fontSize: '16px'}}>Routing Address</InputLabel>
                         <OutlinedInput style={textFieldStyle} size='small' placeholder='Customer Address...'
                             startAdornment= {
                                 <InputAdornment position="start">
@@ -547,7 +560,7 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
                     </SearchInputContainer>
                     <BreakingLine2></BreakingLine2>
                     <SearchInputContainer>
-                        <InputLabel>Search</InputLabel>
+                        <InputLabel style={{fontSize: '16px'}}>Search</InputLabel>
                         <OutlinedInput style={textFieldStyle} size='small' placeholder='Search Sites...' onChange={onChangeSiteSearch}
                             startAdornment= {
                                 <InputAdornment position="start">
@@ -564,9 +577,11 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, groupList,
                 </SitesContainer>      
             </ResultContainer>
             <CollapseButtonContainer>
-                <Button style={{ border: '1px solid'}} sx={{width: '5px'}} onClick={collapseRequest}>
-                    {/* <ArrowBackIosNewIcon style={{padding: '0', margin: '0'}}></ArrowBackIosNewIcon> */}
-                </Button>
+                <CollapseButton 
+                    onClick={collapseRequest}
+                >
+                    <ArrowBackIosNewIcon style={{padding: '0', margin: '0', color: 'white', transform: isCollapse? 'rotate(180deg)' : ''}}></ArrowBackIosNewIcon>
+                </CollapseButton>
             </CollapseButtonContainer>
         
         </MapFilterContainer>

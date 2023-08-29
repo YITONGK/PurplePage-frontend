@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef} from 'react';
 import { ArticleContainer, ArticleH1 } from './ArticleElements';
 import Footer from '../../components/Footer';
 
-import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer} from './ArticleElements';
+import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer, ArticalAndPopUpContainer, AnimatedModalContent, ProgramCardContainer, ProgramCardHaader, ProgramCardHeaderLeft, ProgramCardHeaderRight, CustomClearIcon} from './ArticleElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
@@ -18,7 +18,6 @@ import Map from '../Map';
 import MapInfo from '../MapInfo';
 import MapFilter from '../MapFilter';
 import natural from 'natural';
-import { Box } from '@mui/material';
 
 // article component
 const Article = () => {
@@ -58,7 +57,9 @@ const Article = () => {
   const [advanceFilteredPrograms, setAdvanceFilteredPrograms] = useState([]);
 
   const [searchOptions, setSearchOptions] = useState([]);
-  const [searchFilteredOptions, setSearchFilteredOptions] = useState([]);
+
+  const [selectedProgram, setSelectedProgram] = useState([]);
+  const [popUpOpen, setPopUpOpen] = useState(false);
 
   const mapRef = useRef();
 
@@ -434,9 +435,7 @@ const Article = () => {
 
     const filteredOptions = options.filter((option) => availableOptions.includes(option) || filterTypeGroup.includes(option));
 
-
     return filteredOptions;
-
   }
 
   // reset the filters
@@ -447,6 +446,12 @@ const Article = () => {
   //     group_name: ''
   //   });
   // }
+
+  const closeModal = () => {
+    setPopUpOpen(false);
+  };
+
+  
 
   const FreeTextSearch = () => {
     return (
@@ -501,36 +506,67 @@ const Article = () => {
     setAdvanceFilteredPrograms(programs);
   }
 
+  const selectingProgram = (program) => {
+    setSelectedProgram(program);
+    setPopUpOpen(true);
+  }
+
 
   
   return (
-    <ArticleContainer>
-      <ArticleH1>Find a Uniting service near you</ArticleH1>
-        <FilterContainer>
-          <FreeTextSearch />
-        </FilterContainer>
-        <MapElement>
-          <MapFilter 
-            filteredPrograms={filteredPrograms} 
-            filteredSites={filteredSites}
-            programTypeList={programTypeList}
-            groupList={groupList}
-            serviceStreamList = {serviceStreamList} 
-            serviceTypeList = {serviceTypeList}
-            divisionList = {divisionList}
-            exportAdvanceFilteredSites={applyFilter}
-            importRef={mapRef}
-            exportSite={selectedSite}
-            exportAdvanceFilteredPrograms = {sendAdvanceFilteredPrograms}
-          />
-          <Map 
-            sites={advancefilteredSites} exportSite={selectedSite} exportRef={mapRef} importSite={site}
-          />
-          <MapInfoContainer>
-            <MapInfo site={site} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms }/>
-          </MapInfoContainer>
-        </MapElement>
-    </ArticleContainer>
+    <ArticalAndPopUpContainer>
+      <ArticleContainer>
+        <ArticleH1>Find a Uniting service near you</ArticleH1>
+          <FilterContainer>
+            <FreeTextSearch />
+          </FilterContainer>
+          <MapElement>
+            <MapFilter 
+              filteredPrograms={filteredPrograms} 
+              filteredSites={filteredSites}
+              programTypeList={programTypeList}
+              groupList={groupList}
+              serviceStreamList = {serviceStreamList} 
+              serviceTypeList = {serviceTypeList}
+              divisionList = {divisionList}
+              exportAdvanceFilteredSites={applyFilter}
+              importRef={mapRef}
+              exportSite={selectedSite}
+              exportAdvanceFilteredPrograms = {sendAdvanceFilteredPrograms}
+            />
+            <Map 
+              sites={advancefilteredSites} exportSite={selectedSite} exportRef={mapRef} importSite={site}
+            />
+            <MapInfoContainer>
+              <MapInfo site={site} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms } exportProgram={selectingProgram}/>
+            </MapInfoContainer>
+          </MapElement>
+      </ArticleContainer>
+      <AnimatedModalContent
+        isOpen={popUpOpen}
+        contentLabel="Site Information Modal"
+        style={{
+          content: {
+            width: '50vw', // Set the desired width
+            height: '50vh', // Set the desired height
+            margin: 'auto', // Center the modal horizontally
+          },
+        }}
+      >
+        <ProgramCardContainer>
+          <ProgramCardHaader>
+            <ProgramCardHeaderLeft>
+              <h2 style={{margin: '0', padding: '0', color: 'white'}}>Program Info</h2>
+            </ProgramCardHeaderLeft>
+            <ProgramCardHeaderRight>
+              <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeModal}>
+                <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+              </Button>
+            </ProgramCardHeaderRight>
+          </ProgramCardHaader>
+        </ProgramCardContainer>
+      </AnimatedModalContent>
+    </ArticalAndPopUpContainer>
   )
 }
 

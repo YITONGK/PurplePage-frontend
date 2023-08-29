@@ -9,7 +9,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 
-const MapInfo = ({site, advanceFilteredPrograms}) => {
+const MapInfo = ({site, advanceFilteredPrograms, exportProgram}) => {
     
     const [relatedPrograms, setRelatedPrograms] = useState([]);
 
@@ -41,24 +41,10 @@ const MapInfo = ({site, advanceFilteredPrograms}) => {
                 {
                     relatedPrograms.map((program) =>{
                         return (
-                            (selectedPrograms.includes(program.program_nme)) ? 
-                            <ProgramDetailsContainer>
-                                <ListItemButton onClick= {() => onClickProgram(program.program_nme)}>
-                                    <ListItemText primary= {program.program_nme}/>
-                                    <ExpandLess></ExpandLess>
-                                </ListItemButton>
-                                <Collapse in={true} timeout="auto" unmountOnExit>
-                                    <CollapseInfoContainer >
-                                        <InfoP2><strong><CustomPersonIcon></CustomPersonIcon>: {(program.prgm_mgr)? program.prgm_mgr : ` -`}</strong></InfoP2>
-                                        <InfoP2><strong><CustomCallIcon></CustomCallIcon>: {(program.prgm_cont_no)? program.prgm_cont_no: ` -`}</strong></InfoP2>
-                                    </CollapseInfoContainer>
-                                </Collapse>
-                            </ProgramDetailsContainer>
-                            :
                             <>
-                                <ListItemButton onClick= {() => onClickProgram(program.program_nme)}>
+                                <ListItemButton onClick= {() => onClickProgram(program)}>
                                     <ListItemText primary= {program.program_nme}/>
-                                    <ExpandMore></ExpandMore>
+                                    <ExpandMore style={{transform: 'rotate(-90deg)'}}></ExpandMore>
                                 </ListItemButton>
                             </>
                         
@@ -69,16 +55,8 @@ const MapInfo = ({site, advanceFilteredPrograms}) => {
         )
     }
 
-    const onClickProgram = (programName) => {
-        console.log(programName);
-        if(selectedPrograms.includes(programName))
-        {
-            const tmpSelectedProgram = selectedPrograms.filter((program) => program !== programName)
-            setSelectedPrograms(tmpSelectedProgram);
-        }
-        else {
-            setSelectedPrograms([...selectedPrograms, programName])
-        }
+    const onClickProgram = (program) => {
+        exportProgram(program);
     };
 
 

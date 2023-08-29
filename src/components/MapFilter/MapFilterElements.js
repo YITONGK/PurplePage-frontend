@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const MapFilterContainer = styled.div`
-    margin-right: 2rem;
+    margin-right: 1rem;
     height: 64.5vh;
     display: flex;
     flex-direction: row;
@@ -13,8 +13,7 @@ export const FilterContainer = styled.div`
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 1rem 1rem 0rem 1rem;
+    padding: 0rem 1rem 0rem 1rem;
     align-items: center;
     overflow-y: auto;
 `;
@@ -26,17 +25,18 @@ export const ResultContainer = styled.div`
     flex-direction: column;
     height: 100%;
     position: relative;
-    transition: width 0.5s ease;
+    overflow: hiddden;
 `;
 
 export const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  flex:1;
   gap: 20px;
   margin-bottom: 0.5rem;
-  margin-top: 0.5rem;
+  margin-top: 1.5rem;
 `;
 
 export const SelectDiv = styled.div`
@@ -49,8 +49,8 @@ export const SelectDiv = styled.div`
 export const ProgramDropDownContainer = styled.div`
     display: flex;
     flex-direction: column;
-    ${'' /* border: 1px solid red; */}
-    gap: 1.5rem;
+    padding-top: 0.5rem;
+    gap: 1rem;
 `;
 
 export const GroupDropDownContainer = styled.div`
@@ -87,12 +87,13 @@ export const SearchContainer = styled.div`
     justify-content: center;
     border-bottom: 0.2rem solid;
     padding-bottom: 0.5rem;
-    padding-top: 0.2rem;
+    padding-top: 0.5rem;
     border-bottom-color: #A20066;
 `;
 
 export const SitesContainer = styled.div`
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     justify-content: center;
 `;
@@ -127,12 +128,86 @@ export const LabelContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     justify-content: center;
+    margin-top: 0.5rem;
 `;
 
 export const CollapseButtonContainer = styled.div`
     display: flex;
     justify-content: center;
-    align-items: top;
+    align-items: center;
     margin-left: -10px;
+`;
+
+export const CollapseButton = styled.button`
+  width: 30px;
+  padding: 0;
+  min-width: unset;
+  height: 90%;
+  background-color: #A20066;
+  border-top: 1px solid;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+  border-color: #A20066;
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
+  cursor: pointer;
+  transition: transform 0.3s;
+  
+  &:hover {
+    box-shadow: 3px 0px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  &:active {
+    transform: scaleY(0.9) scaleX(1);
+    border-color: #A20066;
+    border-left: 1px solid transparent;
+  }
+`;
+
+export const ApplyButton = styled.button`
+    display:flex;
+    flex-direction: row;
+    text-transform: none;
+    color: #FFF;
+    background-color: #A20066;
+    border: 1px solid #A20066;
+    border-radius: 10px;
+    width: fix-content;
+    height: 2.5rem;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+
+    &:hover {
+        box-shadow: 3px 0px 8px rgba(0, 0, 0, 0.4);
+    }
+`;
+
+export const ResetButton = styled.button`
+    display: flex;
+    flex-direction: row;
+    text-transform: none;
+    color: #FFF;
+    background-color: transparent; 
+    border: 2px solid #A20066;
+    border-radius: 10px;
+    width: fit-content;
+    height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding-right: 1rem;
+
+    &:hover {
+        box-shadow: 3px 0px 8px rgba(0, 0, 0, 0.4);
+    }
+`;
+
+export const ButtonLabel = styled.p`
+   font-size: 14px;
+   color: 'white';
+   font-weight: bold;
+   padding: 0;
+   margin: 0;
 `;
 
