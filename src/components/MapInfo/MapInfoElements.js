@@ -1,7 +1,8 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import CallIcon from '@mui/icons-material/Call';
 import PersonIcon from '@mui/icons-material/Person';
-
+import Modal from 'react-modal';
+import ClearIcon from '@mui/icons-material/Clear';
 
 export const InfoContainer = styled.div`
   ${'' /* margin-left: 1rem; */}
@@ -129,5 +130,76 @@ export const CustomPersonIcon = styled(PersonIcon)`
 export const CustomCallIcon = styled(CallIcon)`
   color: #FF9900; /* Example: Change the icon color */
   vertical-align: middle;
+`;
+
+export const InfoAndPopupContainer = styled.div`
+    display: flex;
+`;
+
+// Define the animation keyframes
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(0%, 0%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0%, 50%);
+  }
+`;
+
+// Create a styled component for the modal content with the animation
+export const AnimatedModalContent = styled(Modal)`
+  &.ReactModal__Content {
+    animation: ${fadeIn} 0.3s ease-in-out;
+    transform: translate(0%, 50%);
+    background-color: white;
+    display: flex;
+    background-color: white;
+    box-shadow: 3px 0px 20px rgba(0, 0, 0, 0.4);
+    outline: none;
+  }
+`;
+
+export const ProgramCardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1.5rem;
+`;
+
+export const ProgramCardHaader = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  ${'' /* border: 1px solid black; */}
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  border-bottom: 1px solid grey;
+  background-color: #A20066;
+`;
+
+export const ProgramCardHeaderLeft = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  ${'' /* border: 1px solid yellow; */}
+  width: 50%;
+`;
+
+export const ProgramCardHeaderRight = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width: 50%;
+  ${'' /* border: 1px solid red; */}
+`;
+
+export const CustomClearIcon = styled(ClearIcon)`
+  color: white;
+
+  &:hover {
+    color: black; /* Your hover effect color */
+  }
 `;
 
