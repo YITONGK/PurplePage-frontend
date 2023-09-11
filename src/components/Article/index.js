@@ -47,6 +47,8 @@ const Article = () => {
 
   const [site, setSite] = useState(null);
 
+  const [departureAddress, setDepartureAddress] = useState(null);
+
   const [advancefilteredSites, setAdvanceFilteredSites] = useState([]);
   const [advanceFilteredPrograms, setAdvanceFilteredPrograms] = useState([]);
 
@@ -492,6 +494,10 @@ const Article = () => {
     setAdvanceFilteredPrograms(programs);
   }
 
+  const transferDepartureAddress = (address) => {
+    setDepartureAddress(address);
+  }
+
   
   return (
     <ArticleContainer>
@@ -512,9 +518,10 @@ const Article = () => {
             importRef={mapRef}
             exportSite={selectedSite}
             exportAdvanceFilteredPrograms = {sendAdvanceFilteredPrograms}
+            exportDepartureAddress={transferDepartureAddress}
           />
           <Map 
-            sites={advancefilteredSites} exportSite={selectedSite} exportRef={mapRef} importSite={site}
+            sites={advancefilteredSites} exportSite={selectedSite} exportRef={mapRef} importSite={site} departureLocation={departureAddress}
           />
           <MapInfoContainer>
             <MapInfo site={site} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms }/>

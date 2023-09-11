@@ -17,14 +17,28 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
 
+import { AddressAutofill } from '@mapbox/search-js-react';
+
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import SendIcon from '@mui/icons-material/Send';
 import ClearIcon from '@mui/icons-material/Clear';
 
-const MapFilter = ({filteredPrograms, filteredSites, programTypeList, serviceTypeList, serviceStreamList, groupList, divisionList ,exportAdvanceFilteredSites, importRef, exportSite, exportAdvanceFilteredPrograms}) => {
+const MapFilter = ({filteredPrograms, 
+    filteredSites, 
+    programTypeList, 
+    serviceTypeList, 
+    serviceStreamList, 
+    groupList, 
+    divisionList, 
+    exportAdvanceFilteredSites, 
+    importRef, 
+    exportSite, 
+    exportAdvanceFilteredPrograms,
+    exportDepartureAddress}) => {
 
+    const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
     const [serviceStreamValue, setServiceStreamValue] = useState('');
     const [serviceTypeValue, setServiceTypeValue] = useState('');
@@ -33,6 +47,9 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, serviceTyp
 
     const [divisionValue, setDivisionValue] = useState('');
     const [groupValue, setGroupValue] = useState('');
+
+    const [routingAddressValue, setRoutingAddressValue] = useState({});
+    const [tmpAddressValue, setTmpAddressValue] = useState('');
 
     const [serviceStreams, setServiceStreams] = useState([]);
     const [serviceTypes, setServiceTypes] = useState([]);
@@ -54,15 +71,14 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, serviceTyp
     const [advanceFilteredSites, setAdvanceFilteredSites] = useState([]);
     const [availableSearchSites, setAvailableSearchSites] = useState([]);
 
-    const [selectedProgramTypeIds, setSelectedProgramTypeIds] = useState([]);
-    const [selectedGroupIds, setSelectedGroupIds] = useState([]);
+    const [advancedFilteredPrograms, setAdvancedFilteredPrograms] = useState([]);
 
     const [clickedSite, setClickedSite] = useState(null);
     const [isCollapse, setIsCollapse] = useState(false);
 
     const dropDownStyle = { minWidth: '13vw', maxWidth: '13vw', fontSize: '14px'};
 
-    const textFieldStyle = { minWidth: "16vw", fontSize: '15px', borderRadius: '5px'};
+    const textFieldStyle = { minWidth: "16vw", fontSize: '15px', borderRadius: '5px', paddingTop: '8px', paddingBottom: '8px'};
     const textStyle = { fontSize: '20px', fontWeight: 'bold', color: '#A20066'};
     const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
     const toolTipsStyleClicked = {backgroundColor: '#A20066',  color: 'white', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
@@ -141,6 +157,16 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, serviceTyp
         }
 
     }, [programTypes, serviceTypes, serviceStreams, groups, divisions])
+
+    useEffect(()=> {
+        if(tmpAddressValue === routingAddressValue.address) {
+            exportDepartureAddress(routingAddressValue);
+        }
+        else {
+            exportDepartureAddress(null);
+        }
+
+    }, [tmpAddressValue]);
 
 
     const filteringServiceStreams= (programList) => {
@@ -236,23 +262,6 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, serviceTyp
         });
 
         return tmpFilteredGroups;
-    }
-
-    const filteringSites = (selectedGroupIds, selectedProgramTypeIds) => {
-
-        const tmpFilteredPrograms = filteredPrograms.filter((program) => 
-                selectedGroupIds.includes(program.group_id) && selectedProgramTypeIds.includes(program.prgm_type_id)
-        );
-
-        exportAdvanceFilteredPrograms(tmpFilteredPrograms);
-
-        const sitesIds = [];
-        for(let i = 0; i < tmpFilteredPrograms.length; i++) {
-            sitesIds.push(tmpFilteredPrograms[i].site_id);
-        }
-
-        const advanceFilteredSites = filteredSites.filter((site) => sitesIds.includes(site.site_id));
-        return advanceFilteredSites;
     }
 
     //==============================Related Dropdown==============================================
@@ -475,7 +484,398 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, serviceTyp
         }
     }
 
-    //==============================Event Trigger Section==================================
+    //================================= Assistance Method ====================================
+
+    const currentDToPG = (DValue) => {
+
+        const selectedDivisionIds = [];
+        for (let i = 0; i < divisions.length; i++) {
+          const division = divisions[i];
+          if (DValue !== 'All Divisions') {
+            if (division.division_name === DValue) {
+              selectedDivisionIds.push(division.division_id);
+            }
+          } else {
+            selectedDivisionIds.push(division.division_id);
+          }
+        }
+
+        const selectedGroupIds = [];
+        for (let i = 0; i < groups.length; i++) {
+          const group = groups[i];
+          if (groupValue !== 'All Group') {
+            if (group.group_name === groupValue && selectedDivisionIds.includes(group.division_id)) {
+              selectedGroupIds.push(group.group_id);
+            }
+          } else if (groupValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
+            selectedGroupIds.push(group.group_id);
+          }
+        }
+
+        const DGFilteredProgram = filteredPrograms.filter((program) => {
+            return selectedGroupIds.includes(program.group_id);
+        })
+
+        return DGFilteredProgram;
+
+
+    }
+
+    const currentGToPG = (GValue) => { 
+
+        const selectedDivisionIds = [];
+        for (let i = 0; i < divisions.length; i++) {
+          const division = divisions[i];
+          if (divisionValue !== 'All Divisions') {
+            if (division.division_name === divisionValue) {
+              selectedDivisionIds.push(division.division_id);
+            }
+          } else {
+            selectedDivisionIds.push(division.division_id);
+          }
+        }
+
+        const selectedGroupIds = [];
+        for (let i = 0; i < groups.length; i++) {
+          const group = groups[i];
+          if (GValue !== 'All Group') {
+            if (group.group_name === GValue && selectedDivisionIds.includes(group.division_id)) {
+              selectedGroupIds.push(group.group_id);
+            }
+          } else if (GValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
+            selectedGroupIds.push(group.group_id);
+          }
+        }
+
+        const DGFilteredProgram = filteredPrograms.filter((program) => {
+            return selectedGroupIds.includes(program.group_id);
+        })
+
+        return DGFilteredProgram;
+    }
+
+    const currentDGToPG = () => {
+
+        const selectedDivisionIds = [];
+        for (let i = 0; i < divisions.length; i++) {
+          const division = divisions[i];
+          if (divisionValue !== 'All Divisions') {
+            if (division.division_name === divisionValue) {
+              selectedDivisionIds.push(division.division_id);
+            }
+          } else {
+            selectedDivisionIds.push(division.division_id);
+          }
+        }
+
+        const selectedGroupIds = [];
+        for (let i = 0; i < groups.length; i++) {
+          const group = groups[i];
+          if (groupValue !== 'All Group') {
+            if (group.group_name === groupValue && selectedDivisionIds.includes(group.division_id)) {
+              selectedGroupIds.push(group.group_id);
+            }
+          } else if (groupValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
+            selectedGroupIds.push(group.group_id);
+          }
+        }
+
+        const DGFilteredProgram = filteredPrograms.filter((program) => {
+            return selectedGroupIds.includes(program.group_id);
+        })
+
+        return DGFilteredProgram;
+    }
+
+    const currentSSToPG = (SSValue) => {
+
+        const selectedServiceStreamIds = [];
+        for(let i = 0; i <serviceStreams.length; i++) {
+            const serviceStream = serviceStreams[i];
+            if(SSValue !== 'All Service Stream') {
+                if(serviceStream.ser_stream === SSValue){
+                    selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+                }
+            }
+            else {
+                selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+            }
+        }
+
+        const selectedServiceTypeIds = [];
+        for(let i = 0; i < serviceTypes.length; i++) {
+            const serviceType = serviceTypes[i];
+            if(serviceTypeValue !== 'All Service Type') {
+                if(serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                    selectedServiceTypeIds.push(serviceType.ser_type_id);
+                }
+            }
+            else if(serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                selectedServiceTypeIds.push(serviceType.ser_type_id);
+            }
+        }
+
+        const selectedProgramTypeIds = [];
+        for(let i = 0; i < programTypes.length; i++) {
+            const programType = programTypes[i];
+            if(programTypeValue !== 'All Program Type') {
+                if(programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                    selectedProgramTypeIds.push(programType.prgm_type_id);
+                }
+            }
+            else if(programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                selectedProgramTypeIds.push(programType.prgm_type_id);
+            }
+        }
+
+        const ssToPG = filteredPrograms.filter((program) => {
+            return selectedProgramTypeIds.includes(program.prgm_type_id);
+        })
+
+        return ssToPG;
+    }
+
+    const currentSTToPG = (STValue) => {
+        const selectedServiceStreamIds = [];
+        for(let i = 0; i <serviceStreams.length; i++) {
+            const serviceStream = serviceStreams[i];
+            if(serviceStreamValue !== 'All Service Stream') {
+                if(serviceStream.ser_stream === serviceStreamValue){
+                    selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+                }
+            }
+            else {
+                selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+            }
+        }
+
+        const selectedServiceTypeIds = [];
+        for(let i = 0; i < serviceTypes.length; i++) {
+            const serviceType = serviceTypes[i];
+            if(STValue !== 'All Service Type') {
+                if(serviceType.ser_type === STValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                    selectedServiceTypeIds.push(serviceType.ser_type_id);
+                }
+            }
+            else if(STValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                selectedServiceTypeIds.push(serviceType.ser_type_id);
+            }
+        }
+
+        const selectedProgramTypeIds = [];
+        for(let i = 0; i < programTypes.length; i++) {
+            const programType = programTypes[i];
+            if(programTypeValue !== 'All Program Type') {
+                if(programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                    selectedProgramTypeIds.push(programType.prgm_type_id);
+                }
+            }
+            else if(programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                selectedProgramTypeIds.push(programType.prgm_type_id);
+            }
+        }
+
+        const stToPG = filteredPrograms.filter((program) => {
+            return selectedProgramTypeIds.includes(program.prgm_type_id);
+        })
+
+        return stToPG;
+    }
+
+    const currentPTToPG = (PTValue) => {
+        const selectedServiceStreamIds = [];
+        for(let i = 0; i <serviceStreams.length; i++) {
+            const serviceStream = serviceStreams[i];
+            if(serviceStreamValue !== 'All Service Stream') {
+                if(serviceStream.ser_stream === serviceStreamValue){
+                    selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+                }
+            }
+            else {
+                selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+            }
+        }
+
+        const selectedServiceTypeIds = [];
+        for(let i = 0; i < serviceTypes.length; i++) {
+            const serviceType = serviceTypes[i];
+            if(serviceTypeValue !== 'All Service Type') {
+                if(serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                    selectedServiceTypeIds.push(serviceType.ser_type_id);
+                }
+            }
+            else if(serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                selectedServiceTypeIds.push(serviceType.ser_type_id);
+            }
+        }
+
+        const selectedProgramTypeIds = [];
+        for(let i = 0; i < programTypes.length; i++) {
+            const programType = programTypes[i];
+            if(PTValue !== 'All Program Type') {
+                if(programType.prgm_type === PTValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                    selectedProgramTypeIds.push(programType.prgm_type_id);
+                }
+            }
+            else if(PTValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                selectedProgramTypeIds.push(programType.prgm_type_id);
+            }
+        }
+
+        const ptToPG = filteredPrograms.filter((program) => {
+            return selectedProgramTypeIds.includes(program.prgm_type_id);
+        })
+
+        return ptToPG;
+    }
+
+    const currentPSToPG = () => {
+        const selectedServiceStreamIds = [];
+        for(let i = 0; i <serviceStreams.length; i++) {
+            const serviceStream = serviceStreams[i];
+            if(serviceStreamValue !== 'All Service Stream') {
+                if(serviceStream.ser_stream === serviceStreamValue){
+                    selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+                }
+            }
+            else {
+                selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+            }
+        }
+
+        const selectedServiceTypeIds = [];
+        for(let i = 0; i < serviceTypes.length; i++) {
+            const serviceType = serviceTypes[i];
+            if(serviceTypeValue !== 'All Service Type') {
+                if(serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                    selectedServiceTypeIds.push(serviceType.ser_type_id);
+                }
+            }
+            else if(serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                selectedServiceTypeIds.push(serviceType.ser_type_id);
+            }
+        }
+
+        const selectedProgramTypeIds = [];
+        for(let i = 0; i < programTypes.length; i++) {
+            const programType = programTypes[i];
+            if(programTypeValue !== 'All Program Type') {
+                if(programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                    selectedProgramTypeIds.push(programType.prgm_type_id);
+                }
+            }
+            else if(programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                selectedProgramTypeIds.push(programType.prgm_type_id);
+            }
+        }
+
+        const psToPG = filteredPrograms.filter((program) => {
+            return selectedProgramTypeIds.includes(program.prgm_type_id);
+        })
+
+        return psToPG;
+    }
+    
+
+    //============================== Event Trigger Section ==================================
+
+    useEffect(() => {
+
+        if( serviceStreamValue === '' || serviceTypeValue === '' || programTypeValue === '' || divisionValue === '' || groupValue === '' ) {
+            return;
+        }
+
+        // Upper
+        const selectedServiceStreamIds = [];
+        for(let i = 0; i <serviceStreams.length; i++) {
+            const serviceStream = serviceStreams[i];
+            if(serviceStreamValue !== 'All Service Stream') {
+                if(serviceStream.ser_stream === serviceStreamValue){
+                    selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+                }
+            }
+            else {
+                selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+            }
+        }
+
+        const selectedServiceTypeIds = [];
+        for(let i = 0; i < serviceTypes.length; i++) {
+            const serviceType = serviceTypes[i];
+            if(serviceTypeValue !== 'All Service Type') {
+                if(serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                    selectedServiceTypeIds.push(serviceType.ser_type_id);
+                }
+            }
+            else if(serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                selectedServiceTypeIds.push(serviceType.ser_type_id);
+            }
+        }
+
+        const selectedProgramTypeIds = [];
+        for(let i = 0; i < programTypes.length; i++) {
+            const programType = programTypes[i];
+            if(programTypeValue !== 'All Program Type') {
+                if(programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                    selectedProgramTypeIds.push(programType.prgm_type_id);
+                }
+            }
+            else if(programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                selectedProgramTypeIds.push(programType.prgm_type_id);
+            }
+        }
+
+        // Lower
+
+        const selectedDivisionIds = [];
+        for (let i = 0; i < divisions.length; i++) {
+          const division = divisions[i];
+          if (divisionValue !== 'All Divisions') {
+            if (division.division_name === divisionValue) {
+              selectedDivisionIds.push(division.division_id);
+            }
+          } else {
+            selectedDivisionIds.push(division.division_id);
+          }
+        }
+
+        const selectedGroupIds = [];
+        for (let i = 0; i < groups.length; i++) {
+          const group = groups[i];
+          if (groupValue !== 'All Group') {
+            if (group.group_name === groupValue && selectedDivisionIds.includes(group.division_id)) {
+              selectedGroupIds.push(group.group_id);
+            }
+          } else if (groupValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
+            selectedGroupIds.push(group.group_id);
+          }
+        }
+
+        // Combination
+
+        const finalFilteredPrograms = filteredPrograms.filter((program) => 
+            selectedProgramTypeIds.includes(program.prgm_type_id) && 
+            selectedGroupIds.includes(program.group_id)
+        );
+
+        setAdvancedFilteredPrograms(finalFilteredPrograms);
+
+        if(programValue !== 'All Program') {
+            const tmpProgram = filteredPrograms.filter((program) => program.program_nme === programValue);
+            if(tmpProgram.length <= 0) {
+                setProgramValue('All Program');
+            }
+        }
+
+        //remove redundent
+        const distinctPrograms = finalFilteredPrograms.filter((program, index, self) => {
+            return index === self.findIndex((obj) => obj.program_nme === program.program_nme);
+        });
+
+
+        setLocalFilteredProgram(distinctPrograms);
+
+    },[serviceStreamValue, serviceTypeValue, programTypeValue, divisionValue, groupValue])
 
     const onClickSite = (site) => {
         setClickedSite(site); 
@@ -486,149 +886,617 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, serviceTyp
     const onChangeServiceStream = (e) => {
 
         setServiceStreamValue(e.target.value);
+       
+
+        const tmpDGFilteredProgram = currentDGToPG();
+        const tmpPSFilteredProgram = currentSSToPG(e.target.value);
 
         if(e.target.value === 'All Service Stream') {
 
-            setFilteredServiceStreams(filteringServiceStreams(filteredPrograms));
-            setFilteredServiceTypes(filteringServiceTypes(filteredPrograms));
-            setFilteredProgramTypes(filteringProgramTypes(filteredPrograms));
-            setLocalFilteredProgram(filteredPrograms);
 
-            setFilteredDivisions(filteringDivisions(filteredPrograms));
-            setFilteredGroups(filteringGroups(filteredPrograms));
-            return;
+            const tmpFilteredServiceTypes = filteringServiceTypes(tmpDGFilteredProgram);
+            const tmpFilteredProgramTypes = filteringProgramTypes(tmpDGFilteredProgram);
+
+            setFilteredServiceTypes(tmpFilteredServiceTypes);
+
+            if(serviceTypeValue !== 'All Service Type') {
+
+                const selectedServiceTypeIds = [];
+
+                for (let i = 0; i < serviceTypes.length; i++) {
+                  const serviceType = serviceTypes[i];
+                  if (serviceType.ser_type === serviceTypeValue) {
+                    selectedServiceTypeIds.push(serviceType.ser_type_id);
+                  }
+                }
+
+                setFilteredProgramTypes(tmpFilteredProgramTypes.filter((programType)=> selectedServiceTypeIds.includes(programType.ser_type_id)));
+
+            }
+
+            if(serviceTypeValue === 'All Service Type') {
+
+                setFilteredProgramTypes(tmpFilteredProgramTypes);
+            }
+
+           
+            const tmpFilteredDivisions = filteringDivisions(tmpPSFilteredProgram);
+            let tmpFilteredGroups = filteringGroups(tmpPSFilteredProgram);
+
+
+            if(divisionValue !== 'All Divisions') {
+
+                const tmpDivision = tmpFilteredDivisions.filter((division) => division.division_name === divisionValue);
+                if(tmpDivision.length <= 0) {
+                    setDivisionValue('All Divisions');
+                } else {
+                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);           
+                    tmpFilteredGroups = tmpFilteredGroups.filter((group) => {
+                        return tmpSelectedDivisionIds.includes(group.division_id);
+                    });
+    
+                }
+    
+            }
+            
+            if(groupValue !== 'All Group') {
+                const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
+                if(tmpGroup.length <= 0) {
+                    setGroupValue('All Group');
+                }
+            }
+
+            setFilteredDivisions(tmpFilteredDivisions);
+            setFilteredGroups(tmpFilteredGroups);
+
         }
 
-        const serviceStreamIds = [];
-        for(let i = 0; i < serviceStreams.length; i++) {
-            if(serviceStreams[i].ser_stream === e.target.value)
+        if(e.target.value !== 'All Service Stream') {
+
+
+            const tmpSelectedServiceStreamIds = [];
+            for (let i = 0; i < serviceStreams.length; i++) {
+                const serviceStream = serviceStreams[i];
+                if (serviceStream.ser_stream === e.target.value) {
+                    tmpSelectedServiceStreamIds.push(serviceStream.ser_stream_id);
+                }
+            }
+
+            const tmpFilteredServiceTypeIds = [];
+            for (let i = 0; i < serviceTypes.length; i++) {
+                const serviceType = serviceTypes[i];
+                if (tmpSelectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                    tmpFilteredServiceTypeIds.push(serviceType.ser_type_id);
+                }
+            }
+
+            const tmpFilteredProgramTypeIds = [];
+            for (let i = 0; i < programTypes.length; i++) {
+                const programType = programTypes[i];
+                if (tmpFilteredServiceTypeIds.includes(programType.ser_type_id)) {
+                    tmpFilteredProgramTypeIds.push(programType.prgm_type_id);
+                }
+            }
+
+            const tmpFilteredPrograms = filteredPrograms.filter((program) => tmpFilteredProgramTypeIds.includes(program.prgm_type_id));
+
+            const tmpFilteredServiceTypes = filteringServiceTypes(tmpFilteredPrograms);
+
+            let tmpFilteredProgramTypes = filteringProgramTypes(tmpFilteredPrograms);
+
+            if(serviceTypeValue !== 'All Service Type')
             {
-                serviceStreamIds.push(serviceStreams[i].ser_stream_id);
+                const tmpServiceType = tmpFilteredServiceTypes.filter((serviceType) => serviceType.ser_type === serviceTypeValue);
+                if(tmpServiceType.length <= 0) {
+                    setServiceTypeValue('All Service Type'); // IF THERE IS NO RESULT THEN SET IT TO ALL...
+                }
+                else { 
+                    // NO RESULT FILGTERING THE PT
+                    const tmpServiceTypeIds = tmpServiceType.map((serviceType) =>  serviceType.ser_type_id); 
+                    tmpFilteredProgramTypes = tmpFilteredProgramTypes.filter((programType) => tmpServiceTypeIds.includes(programType.ser_type_id));
+                }
             }
-        }
 
-        const tmpFilteredServiceTypes = serviceTypes.filter((serviceType) => serviceStreamIds.includes(serviceType.ser_stream_id));
-
-        const serviceTypeIds = [];
-        for(let i = 0; i < tmpFilteredServiceTypes.length; i++) {
-            serviceTypeIds.push(tmpFilteredServiceTypes[i].ser_type_id);
-        }
-
-        const tmpFilteredProgramTypes = programTypes.filter((programType) => serviceTypeIds.includes(programType.ser_type_id));
-
-        const programTypeIds = [];
-        for(let i = 0; i < tmpFilteredProgramTypes.length; i++) {
-            programTypeIds.push(tmpFilteredProgramTypes[i].prgm_type_id);
-        }
-
-        setSelectedProgramTypeIds(programTypeIds);
-
-        const tmpFilteredPrograms = filteredPrograms.filter((program) => programTypeIds.includes(program.prgm_type_id));
-
-
-        const tmpFilteredDivisions = filteringDivisions(tmpFilteredPrograms);
-        const tmpFilteredGroups = filteringGroups(tmpFilteredPrograms);
-
-        if(serviceTypeValue) {
-            const tmpServiceType = tmpFilteredServiceTypes.filter((type) => type.ser_type === serviceTypeValue);
-            if(tmpServiceType.length <= 0) {
-                setServiceTypeValue('All Service Type');
+            if(programTypeValue !== 'All Program Type') // SETTING THE THE PT
+            {
+                const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
+                if(tmpProgramType.length <= 0) {
+                    setProgramTypeValue('All Program Type');
+                }
             }
-        }
 
-        if(programTypeValue) {
-            const tmpProgramType = tmpFilteredProgramTypes.filter((type) => type.prgm_type === programTypeValue);
-            if(tmpProgramType.length <= 0) {
-                setProgramTypeValue('All Program Type');
+            setFilteredServiceTypes(tmpFilteredServiceTypes);
+            setFilteredProgramTypes(tmpFilteredProgramTypes);
+
+            // division and group
+
+            // cannot set the division or group back to all since there are filtered... so no need to worry about all
+
+            
+            const tmpFilteredDivisions = filteringDivisions(tmpFilteredPrograms);
+            let tmpFilteredGroups = filteringGroups(tmpFilteredPrograms);
+
+
+            if(divisionValue !== 'All Divisions') {
+
+                const tmpDivision = tmpFilteredDivisions.filter((division) => division.division_name === divisionValue);
+                if(tmpDivision.length <= 0) {
+                    setDivisionValue('All Divisions');
+                } else {
+                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);           
+                    tmpFilteredGroups = tmpFilteredGroups.filter((group) => {
+                        return tmpSelectedDivisionIds.includes(group.division_id);
+                    });
+    
+                }
+    
             }
-        }
-
-        if(divisionValue) {
-            const tmpDivision = tmpFilteredDivisions.filter((division) => division.division_name === divisionValue);
-            if(tmpDivision.length <= 0) {
-                setDivisionValue('All Divisions');
+            
+            if(groupValue !== 'All Group') {
+                const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
+                if(tmpGroup.length <= 0) {
+                    setGroupValue('All Group');
+                }
             }
-        }
-        
-        if(groupValue) {
-            const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
-            if(tmpGroup.length <= 0) {
-                setGroupValue('All Group');
-            }
+
+            setFilteredDivisions(tmpFilteredDivisions);
+            setFilteredGroups(tmpFilteredGroups);
         }
 
-        setFilteredServiceTypes(tmpFilteredServiceTypes);
-        setFilteredProgramTypes(tmpFilteredProgramTypes);
-
-        setFilteredDivisions(tmpFilteredDivisions);
-        setFilteredGroups(tmpFilteredGroups);
     }
 
     const onChangeServiceType = (e) => {
 
         setServiceTypeValue(e.target.value);
 
+        // checking for the division adn group first.... 
+
+        // if divisions and group are exist then filtering program... 
+
+        const tmpDGFilteredProgram = currentDGToPG();
+        const tmpPSFilteredProgram = currentSTToPG(e.target.value);
+
+        // else if division and group are not exist then 
+
+        if(e.target.value === 'All Service Type') {
+
+            //checking whether the division or group is selected...if selected the program should be additional filtered....
+
+            if(serviceStreamValue === 'All Service Stream') {
+
+                // setFilteredServiceStreams(filteringServiceStreams(tmpDGFilteredProgram));
+                // setFilteredServiceTypes(filteringServiceTypes(tmpDGFilteredProgram));
+                setFilteredProgramTypes(filteringProgramTypes(tmpDGFilteredProgram));
+            }
+
+            if(serviceStreamValue !== 'All Service Stream') {
+
+                const serviceStreamIds = [];
+                for (let i = 0; i < serviceStreams.length; i++) {
+                    const serviceStream = serviceStreams[i];
+                    if (serviceStream.ser_stream === serviceStreamValue) {
+                        serviceStreamIds.push(serviceStream.ser_stream_id);
+                    }
+                }
+
+
+                const tmpFilteredServiceTypes = serviceTypes.filter((serviceType) => serviceStreamIds.includes(serviceType.ser_stream_id));
+
+                const serviceTypeIds = tmpFilteredServiceTypes.map((serviceType) => serviceType.ser_type_id);
+
+                const tmpFilteredProgramTypes = programTypes.filter((programType) => serviceTypeIds.includes(programType.ser_type_id));
+
+                const programTypeIds = tmpFilteredProgramTypes.map((programType) =>  programType.prgm_type_id);
+    
+                const tmpFilteredPrograms = tmpDGFilteredProgram.filter((program) => programTypeIds.includes(program.prgm_type_id));
+
+                // setFilteredServiceTypes(filteringServiceTypes(tmpFilteredPrograms));
+                setFilteredProgramTypes(filteringProgramTypes(tmpFilteredPrograms));
+            }
+
+            
+            const tmpFilteredDivisions = filteringDivisions(tmpPSFilteredProgram);
+            let tmpFilteredGroups = filteringGroups(tmpPSFilteredProgram);
+
+            if(divisionValue !== 'All Divisions') {
+
+                const tmpDivision = tmpFilteredDivisions.filter((division) => division.division_name === divisionValue);
+                if(tmpDivision.length <= 0) {
+                    setDivisionValue('All Divisions');
+                } else {
+                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);           
+                    tmpFilteredGroups = tmpFilteredGroups.filter((group) => {
+                        return tmpSelectedDivisionIds.includes(group.division_id);
+                    });
+    
+                }
+    
+            }
+            
+            if(groupValue !== 'All Group') {
+                const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
+                if(tmpGroup.length <= 0) {
+                    setGroupValue('All Group');
+                }
+            }
+
+            setFilteredDivisions(tmpFilteredDivisions);
+            setFilteredGroups(tmpFilteredGroups);
+    
+        }
+
+        if(e.target.value !== 'All Service Type') {
+
+            //change happen
+            // the provided options should already be filtered by the division adn group
+            // the service stream will need to change at here...
+            // just need to set the reset of the program type & program
+            // because the stream will only provided the available service type
+
+            const selectedServiceTypeIds = [];
+            for (let i = 0; i < serviceTypes.length; i++) {
+              const serviceType = serviceTypes[i];
+              if (serviceType.ser_type === e.target.value) {
+                selectedServiceTypeIds.push(serviceType.ser_type_id);
+              }
+            }
+            
+            const tmpFilteredProgramTypeIds = [];
+            for (let i = 0; i < programTypes.length; i++) {
+              const programType = programTypes[i];
+              if (selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                tmpFilteredProgramTypeIds.push(programType.prgm_type_id);
+              }
+            }
+            
+
+            const tmpFilteredPrograms = filteredPrograms.filter((program) => {
+                return tmpFilteredProgramTypeIds.includes(program.prgm_type_id);
+            })
+
+            // setServiceStreams(filteringServiceStreams(tmpFilteredPrograms)); // more restriction...
+            const tmpFilteredProgramTypes = filteringProgramTypes(tmpFilteredPrograms);
+
+            if(programTypeValue !== 'All Program Type')
+            {
+                const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
+                if(tmpProgramType.length <= 0) {
+                    setProgramTypeValue('All Program Type');
+                }
+            }
+
+            setFilteredProgramTypes(tmpFilteredProgramTypes);
+
+            // need to check for both...
+
+            const tmpFilteredDivisions = filteringDivisions(tmpFilteredPrograms);
+            let tmpFilteredGroups = filteringGroups(tmpFilteredPrograms);
+
+
+            if(divisionValue !== 'All Divisions') {
+
+                const tmpDivision = tmpFilteredDivisions.filter((division) => division.division_name === divisionValue);
+                if(tmpDivision.length <= 0) {
+                    setDivisionValue('All Divisions');
+                } else {
+                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);           
+                    tmpFilteredGroups = tmpFilteredGroups.filter((group) => {
+                        return tmpSelectedDivisionIds.includes(group.division_id);
+                    });
+    
+                }
+    
+            }
+            
+            if(groupValue !== 'All Group') {
+                const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
+                if(tmpGroup.length <= 0) {
+                    setGroupValue('All Group');
+                }
+            }
+
+            setFilteredDivisions(tmpFilteredDivisions);
+            setFilteredGroups(tmpFilteredGroups);
+
+        }
+
     }
 
     const onChangeProgramType = (e) => {
 
         setProgramTypeValue(e.target.value);
+
+        const tmpPSFilteredProgram = currentPTToPG(e.target.value);
+
         
+        const tmpFilteredDivisions = filteringDivisions(tmpPSFilteredProgram);
+        let tmpFilteredGroups = filteringGroups(tmpPSFilteredProgram);
+
+
+        if(divisionValue !== 'All Divisions') {
+
+            const tmpDivision = tmpFilteredDivisions.filter((division) => division.division_name === divisionValue);
+            if(tmpDivision.length <= 0) {
+                setDivisionValue('All Divisions');
+            } else {
+                const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);           
+                tmpFilteredGroups = tmpFilteredGroups.filter((group) => {
+                    return tmpSelectedDivisionIds.includes(group.division_id);
+                });
+
+            }
+
+        }
+        
+        if(groupValue !== 'All Group') {
+            const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
+            if(tmpGroup.length <= 0) {
+                setGroupValue('All Group');
+            }
+        }
+
+        setFilteredDivisions(tmpFilteredDivisions);
+        setFilteredGroups(tmpFilteredGroups);
     }
 
     const onChangeProgram = (e) => {
-
         setProgramValue(e.target.value);
-        
     }
 
     const onChangeDivision = (e) => {
 
         setDivisionValue(e.target.value);
 
+        // need to use both use the data of the upper table to set division and group
+        // use the data that seted on the down table to set the upper table (program type and ....)
+
+        const tmpPSFilteredProgram = currentPSToPG();
+        const tmpDGFilteredProgram = currentDToPG(e.target.value);
+
         if(e.target.value === 'All Divisions') {
-           setFilteredServiceStreams(filteringServiceStreams(filteredPrograms));
-           return;
-        }
+            const tmpFilteringGroups = filteringGroups(tmpPSFilteredProgram);
+            setFilteredGroups(tmpFilteringGroups);
 
-        const divisionIds = [];
-        for(let i = 0; i < divisions.length; i++) {
+            const tmpFilteredServiceStreams = filteringServiceStreams(tmpDGFilteredProgram);
+            let tmpFilteredServiceTypes = filteringServiceTypes(tmpDGFilteredProgram);
+            let tmpFilteredProgramTypes = filteringProgramTypes(tmpDGFilteredProgram);
 
-            if(divisions[i].division_name === e.target.value)
-            {
-                divisionIds.push(divisions[i].division_id);
+            if(serviceStreamValue !== 'All Service Stream') {
+
+                const tmpServiceStream = tmpFilteredServiceStreams.filter((serviceStream) => serviceStream.ser_stream === serviceStreamValue)
+                if(tmpServiceStream.length <= 0) {
+                    setServiceStreamValue('All Service Stream');
+                } else {
+                    const selectedServiceStreamIds = tmpServiceStream.map((serviceStream) => serviceStream.ser_stream_id);
+                    tmpFilteredServiceTypes = tmpFilteredServiceTypes.filter((serviceType) => selectedServiceStreamIds.includes(serviceType.ser_stream_id));
+                }
             }
-        }
 
-        const tmpFilteredGroup = groups.filter((group) => divisionIds.includes(group.division_id));
+            setFilteredServiceStreams(tmpFilteredServiceStreams);
 
-        const groupIds = [];
-        for(let i = 0; i < tmpFilteredGroup.length; i++) {
-            groupIds.push(tmpFilteredGroup[i].group_id);
-        }
-
-        setSelectedGroupIds(groupIds);
-
-        const tmpFilteredPrograms = filteredPrograms.filter((program) =>groupIds.includes(program.group_id));
-
-        const tmpFilteredServiceStream = filteringServiceStreams(tmpFilteredPrograms);
-
-        if(serviceStreamValue) {
-            const tmpServiceStream = tmpFilteredServiceStream.filter((serviceStream) => serviceStream.ser_stream === serviceStreamValue);
-
-            if(tmpServiceStream.length <= 0) {
-
-                setServiceStreamValue('All Service Stream');
+            if(serviceTypeValue !== 'All Service Type' ){
+                const tmpServiceType = tmpFilteredServiceTypes.filter((serviceType) => serviceType.ser_type === serviceTypeValue);
+                if(tmpServiceType.length <=0) {
+                    setServiceTypeValue('All Service Type');
+                } else {
+                    const selectedServiceTypeIds = tmpServiceType.map((serviceType) => serviceType.ser_type_id);
+                    tmpFilteredProgramTypes = tmpFilteredProgramTypes.filter((programType) => selectedServiceTypeIds.includes(programType.ser_type_id));
+                }
             }
+
+            setFilteredServiceTypes(tmpFilteredServiceTypes);
+
+            if(programTypeValue !== 'All Program Type') {
+                const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
+                if(tmpProgramType.length <= 0) {
+                    setProgramTypeValue('All Program Type');
+                }
+            }
+
+            setFilteredProgramTypes(tmpFilteredProgramTypes);
+
         }
 
-        setFilteredServiceStreams(tmpFilteredServiceStream);
+        if(e.target.value !== 'All Divisions') {
+            
+            const tmpSelectedDivisionIds = [];
+            for(let i = 0; i < divisions.length; i++) {
+                const division = divisions[i];
+                if(division.division_name === e.target.value) {
+                    tmpSelectedDivisionIds.push(division.division_id); 
+                }   
+            }
+
+            const tmpSelectedGroupIds = [];
+            for(let i = 0; i < groups.length; i++) {
+                const group = groups[i];
+                if(tmpSelectedDivisionIds.includes(group.division_id))  {
+                    tmpSelectedGroupIds.push(group.group_id);
+                }
+            }
+
+            const tmpFilteredPrograms = filteredPrograms.filter((program) => tmpSelectedGroupIds.includes(program.group_id));
+
+            const tmpFilteredGroups = filteringGroups(tmpFilteredPrograms);
+
+            if(groupValue === 'All Group' ) {
+                const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
+                if(tmpGroup.length <= 0) { 
+                    setGroupValue('All Group');
+                }
+            }
+
+            setFilteredGroups(tmpFilteredGroups);
+
+            const tmpFilteredServiceStreams = filteringServiceStreams(tmpFilteredPrograms);
+            let tmpFilteredServiceTypes = filteringServiceTypes(tmpFilteredPrograms);
+            let tmpFilteredProgramTypes = filteringProgramTypes(tmpFilteredPrograms);
+
+            if(serviceStreamValue !== 'All Service Stream') {
+
+                const tmpServiceStream = tmpFilteredServiceStreams.filter((serviceStream) => serviceStream.ser_stream === serviceStreamValue)
+                if(tmpServiceStream.length <= 0) {
+                    setServiceStreamValue('All Service Stream');
+                } else {
+                    const selectedServiceStreamIds = tmpServiceStream.map((serviceStream) => serviceStream.ser_stream_id);
+                    tmpFilteredServiceTypes = tmpFilteredServiceTypes.filter((serviceType) => selectedServiceStreamIds.includes(serviceType.ser_stream_id));
+                }
+            }
+
+            setFilteredServiceStreams(tmpFilteredServiceStreams);
+
+            if(serviceTypeValue !== 'All Service Type' ){
+                const tmpServiceType = tmpFilteredServiceTypes.filter((serviceType) => serviceType.ser_type === serviceTypeValue);
+                if(tmpServiceType.length <=0) {
+                    setServiceTypeValue('All Service Type');
+                } else {
+                    const selectedServiceTypeIds = tmpServiceType.map((serviceType) => serviceType.ser_type_id);
+                    tmpFilteredProgramTypes = tmpFilteredProgramTypes.filter((programType) => selectedServiceTypeIds.includes(programType.ser_type_id));
+                }
+            }
+
+            setFilteredServiceTypes(tmpFilteredServiceTypes);
+
+            if(programTypeValue !== 'All Program Type') {
+                const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
+                if(tmpProgramType.length <= 0) {
+                    setProgramTypeValue('All Program Type');
+                }
+            }
+
+            setFilteredProgramTypes(tmpFilteredProgramTypes);
+        }
     };
 
     const onChangeGroup = (e) => {
 
         setGroupValue(e.target.value);
 
+        const tmpDGFilteredProgram = currentGToPG(e.target.value);
+
+        if(e.target.value === 'All Group') {
+
+            const tmpFilteredServiceStreams = filteringServiceStreams(tmpDGFilteredProgram);
+            let tmpFilteredServiceTypes = filteringServiceTypes(tmpDGFilteredProgram);
+            let tmpFilteredProgramTypes = filteringProgramTypes(tmpDGFilteredProgram);
+
+            if(serviceStreamValue !== 'All Service Stream') {
+
+                const tmpServiceStream = tmpFilteredServiceStreams.filter((serviceStream) => serviceStream.ser_stream === serviceStreamValue)
+                if(tmpServiceStream.length <= 0) {
+                    setServiceStreamValue('All Service Stream');
+                } else {
+                    const selectedServiceStreamIds = tmpServiceStream.map((serviceStream) => serviceStream.ser_stream_id);
+                    tmpFilteredServiceTypes = tmpFilteredServiceTypes.filter((serviceType) => selectedServiceStreamIds.includes(serviceType.ser_stream_id));
+                }
+            }
+
+            setFilteredServiceStreams(tmpFilteredServiceStreams);
+
+            if(serviceTypeValue !== 'All Service Type' ){
+                const tmpServiceType = tmpFilteredServiceTypes.filter((serviceType) => serviceType.ser_type === serviceTypeValue);
+                if(tmpServiceType.length <=0) {
+                    setServiceTypeValue('All Service Type');
+                } else {
+                    const selectedServiceTypeIds = tmpServiceType.map((serviceType) => serviceType.ser_type_id);
+                    tmpFilteredProgramTypes = tmpFilteredProgramTypes.filter((programType) => selectedServiceTypeIds.includes(programType.ser_type_id));
+                }
+            }
+
+            setFilteredServiceTypes(tmpFilteredServiceTypes);
+
+            if(programTypeValue !== 'All Program Type') {
+                const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
+                if(tmpProgramType.length <= 0) {
+                    setProgramTypeValue('All Program Type');
+                }
+            }
+
+            setFilteredProgramTypes(tmpFilteredProgramTypes);
+        }
+
+        if(e.target.value !== 'All Group') {
+
+
+            const tmpSelectedGroupIds = [];
+            for(let i = 0; i < groups.length; i++) {
+                const group = groups[i];
+                if(group.group_name === e.target.value)  {
+                    tmpSelectedGroupIds.push(group.group_id);
+                }
+            }
+
+            const tmpFilteredPrograms = filteredPrograms.filter((program) => tmpSelectedGroupIds.includes(program.group_id));
+
+            const tmpFilteredServiceStreams = filteringServiceStreams(tmpFilteredPrograms);
+            let tmpFilteredServiceTypes = filteringServiceTypes(tmpFilteredPrograms);
+            let tmpFilteredProgramTypes = filteringProgramTypes(tmpFilteredPrograms);
+
+            if(serviceStreamValue !== 'All Service Stream') {
+
+                const tmpServiceStream = tmpFilteredServiceStreams.filter((serviceStream) => serviceStream.ser_stream === serviceStreamValue)
+                if(tmpServiceStream.length <= 0) {
+                    setServiceStreamValue('All Service Stream');
+                } else {
+                    const selectedServiceStreamIds = tmpServiceStream.map((serviceStream) => serviceStream.ser_stream_id);
+                    tmpFilteredServiceTypes = tmpFilteredServiceTypes.filter((serviceType) => selectedServiceStreamIds.includes(serviceType.ser_stream_id));
+                }
+            }
+
+            setFilteredServiceStreams(tmpFilteredServiceStreams);
+
+            if(serviceTypeValue !== 'All Service Type' ){
+                const tmpServiceType = tmpFilteredServiceTypes.filter((serviceType) => serviceType.ser_type === serviceTypeValue);
+                if(tmpServiceType.length <=0) {
+                    setServiceTypeValue('All Service Type');
+                } else {
+                    const selectedServiceTypeIds = tmpServiceType.map((serviceType) => serviceType.ser_type_id);
+                    tmpFilteredProgramTypes = tmpFilteredProgramTypes.filter((programType) => selectedServiceTypeIds.includes(programType.ser_type_id));
+                }
+            }
+
+            setFilteredServiceTypes(tmpFilteredServiceTypes);
+
+            if(programTypeValue !== 'All Program Type') {
+                const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
+                if(tmpProgramType.length <= 0) {
+                    setProgramTypeValue('All Program Type');
+                }
+            }
+
+            setFilteredProgramTypes(tmpFilteredProgramTypes);
+
+
+
+        }
+
+    }
+
+      
+    const onChangeDepartureAddress = (e) => {
+        e.preventDefault();
+        setTmpAddressValue(e.target.value);
+    };
+
+    const onRetrieveAddressAutoFill = (res) => {
+        if(res && res.features[0])
+        {
+            setRoutingAddressValue({
+                address: res.features[0].properties.full_address,
+                lng: res.features[0].geometry.coordinates[0],
+                lat: res.features[0].geometry.coordinates[1]
+            })
+
+            setTmpAddressValue(res.features[0].properties.full_address);
+
+        }
+
+    }
+
+    const onBlurRoutingAddress = (e) => {
+        if(tmpAddressValue !== routingAddressValue.address) {
+            setTmpAddressValue('');
+        }
     }
 
     const onChangeSiteSearch = debounce((e) => {
@@ -651,86 +1519,27 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, serviceTyp
 
     },300);
 
-
+    //============================Apply Filter====================================
     const applyingFilter = () => {
 
-        // In the case of both is all we just return empty and the article will track
-        if(divisionValue === 'All Divisions' && serviceStreamValue === 'All Service Stream') {
+        let tmpAdvancedFilteredPrograms = advancedFilteredPrograms;
 
-            setAvailableSearchSites(filteredSites);
-            exportAdvanceFilteredSites([]);            
-
+        if(programValue !== 'All Program') {
+            tmpAdvancedFilteredPrograms = tmpAdvancedFilteredPrograms.filter((program) => program.program_nme === programValue);
         }
 
-        if((divisionValue === 'All Divisions' && serviceStreamValue !== 'All Service Stream')
-            || (divisionValue !== 'All Divivsions' && serviceStreamValue === 'All Service Stream')) {
-
-                let groupIds = [];
-                let programTypeIds = [];
-
-                if(divisionValue === 'All Divisions') {
-                    const divisionIds = [];
-                    for(let i = 0; i < filteredDivisions.length; i++) {
-                            divisionIds.push(filteredDivisions[i].division_id);
-                    }
-
-                    const tmpFilteredGroup = groups.filter((group) => divisionIds.includes(group.division_id));
-
-                    for(let i = 0; i < tmpFilteredGroup.length; i++) {
-                        groupIds.push(tmpFilteredGroup[i].group_id);
-                    }
-                }
-
-                if(serviceStreamValue === 'All Service Stream') {
-
-                    const serviceStreamIds = [];
-                    for(let i = 0; i < filteredServiceStreams.length; i++) {
-                    
-                        serviceStreamIds.push(filteredServiceStreams[i].ser_stream_id);
-                    }
-        
-                    const tmpFilteredServiceType = serviceTypes.filter((serviceType) => serviceStreamIds.includes(serviceType.ser_stream_id));
-        
-                    const serviceTypeIds = [];
-                    for(let i = 0; i < tmpFilteredServiceType.length; i++) {
-                        serviceTypeIds.push(tmpFilteredServiceType[i].ser_type_id);
-                    }
-        
-                    const tmpFilteredProgramType = programTypes.filter((programType) => serviceTypeIds.includes(programType.ser_type_id));
-        
-                    for(let i = 0; i < tmpFilteredProgramType.length; i++) {
-                        programTypeIds.push(tmpFilteredProgramType[i].prgm_type_id);
-                    }
-
-                }
-
-                if(!groupIds.length > 0) {
-                    groupIds = selectedGroupIds;
-                }
-
-                if(!programTypeIds.length > 0) {
-                    programTypeIds = selectedProgramTypeIds;
-                }
-                
-                const advanceFilteredSites = filteringSites(groupIds, programTypeIds);
-                console.log(advanceFilteredSites);
-
-
-                setAvailableSearchSites(advanceFilteredSites);
-                exportAdvanceFilteredSites(advanceFilteredSites);
-
+        const sitesIds = [];
+        for(let i = 0; i < tmpAdvancedFilteredPrograms.length; i++) {
+            sitesIds.push(tmpAdvancedFilteredPrograms[i].site_id);
         }
 
-        if(divisionValue !== 'All Divisions' && serviceStreamValue !== 'All Service Stream') {
+        const tmpAdvanceFilteredSites = filteredSites.filter((site) => sitesIds.includes(site.site_id));
 
-            const advanceFilteredSites = filteringSites(selectedGroupIds, selectedProgramTypeIds);
+        
+        exportAdvanceFilteredPrograms(tmpAdvancedFilteredPrograms);
+        setAvailableSearchSites(tmpAdvanceFilteredSites);
+        exportAdvanceFilteredSites(tmpAdvanceFilteredSites);
 
-            setAvailableSearchSites(advanceFilteredSites);
-            exportAdvanceFilteredSites(advanceFilteredSites);
-
-        }
-        // If one of them are selected for example we need to run through filtered list of eithers and d or ss.
-        // if both of them are selected we just need to run through selected groupids and programtypes ids.
 
     }
 
@@ -793,19 +1602,38 @@ const MapFilter = ({filteredPrograms, filteredSites, programTypeList, serviceTyp
                 </LabelContainer>
                 <SearchContainer>
                     <SearchInputContainer>
-                        <InputLabel style={{fontSize: '16px'}}>Routing Address</InputLabel>
-                        <OutlinedInput style={textFieldStyle} size='small' placeholder='Customer Address...'
-                            startAdornment= {
-                                <InputAdornment position="start">
-                                    <CardTravelIcon></CardTravelIcon>
-                                </InputAdornment>
-                            }
-                        ></OutlinedInput>
+                        <InputLabel style={{fontSize: '16px'}}>Departure Address</InputLabel>
+                        <AddressAutofill accessToken = {MAPBOX_TOKEN} 
+                            options={{
+                                language: 'en',
+                                country: 'AU',
+                            }}
+                            popoverOptions={{
+                                placement: 'bottom-start',
+                            }}
+                            onRetrieve={onRetrieveAddressAutoFill}
+
+                        >
+                            <OutlinedInput style={textFieldStyle} size='small' placeholder='Customer Address ...'
+                                startAdornment= {
+                                    <InputAdornment position="start">
+                                        <CardTravelIcon></CardTravelIcon>
+                                    </InputAdornment>
+                                }
+                                // autoComplete="address-line1 street-address"
+                                value={tmpAddressValue}
+                                onChange={onChangeDepartureAddress}
+                                onBlur={onBlurRoutingAddress}
+                                aria-autocomplete='list'
+                                aria-aria-controls='undefined'
+                                aria-expanded='false'
+                            ></OutlinedInput>
+                        </AddressAutofill>
                     </SearchInputContainer>
                     <BreakingLine2></BreakingLine2>
                     <SearchInputContainer>
-                        <InputLabel style={{fontSize: '16px'}}>Search</InputLabel>
-                        <OutlinedInput style={textFieldStyle} size='small' placeholder='Search Sites...' onChange={onChangeSiteSearch}
+                        <InputLabel style={{fontSize: '16px'}}>Search Sites</InputLabel>
+                        <OutlinedInput style={textFieldStyle} size='small' placeholder='E.g., Harris Street' onChange={onChangeSiteSearch}
                             startAdornment= {
                                 <InputAdornment position="start">
                                     <SearchIcon />

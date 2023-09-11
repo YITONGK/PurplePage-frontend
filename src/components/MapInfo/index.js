@@ -3,19 +3,19 @@ import { Grid} from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import { InfoContainer, InfoH1, InfoH2, InfoP, ProgramInfoContainer, ProgramInfoItem, InfoDetail, SiteTitle, SiteContainer, SiteInfo, ListItemButton, CollapseInfoContainer, ProgramDetailsContainer, InfoP2, CustomCallIcon, CustomPersonIcon, CustomListItemText, InfoAndPopupContainer, AnimatedModalContent, ProgramCardContainer, ProgramCardHaader, ProgramCardHeaderLeft, ProgramCardHeaderRight, CustomClearIcon} from './MapInfoElements';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import Collapse from '@mui/material/Collapse';
 import Button from '@mui/material/Button';
 
 const MapInfo = ({site, advanceFilteredPrograms}) => {
     
     const [relatedPrograms, setRelatedPrograms] = useState([]);
 
-    const [popUpOpen, setPopUpOpen] = useState(false);
+    const [programPopUpOpen, setProgramPopUpOpen] = useState(false);
     const [selectedPrograms, setSelectedPrograms] = useState({});
+
+    const [sitePopUpOpen, setSitePopUpOpen] = useState(false);
+    const [selectedSite, setSelectedSite] = useState(false);
 
     useEffect (() => {
 
@@ -59,11 +59,20 @@ const MapInfo = ({site, advanceFilteredPrograms}) => {
 
     const onClickProgram = (program) => {
         setSelectedPrograms(program);
-        setPopUpOpen(true);
+        setProgramPopUpOpen(true);
     };
 
-    const closeModal = () => {
-        setPopUpOpen(false);
+    const onClickSiteDetail = (site) => {
+        setSelectedSite(site);
+        setSitePopUpOpen(true);
+    }
+
+    const closeProgramModal = () => {
+        setProgramPopUpOpen(false);
+    };
+
+    const closeSiteModal = () => {
+        setSitePopUpOpen(false);
     };
 
 
@@ -97,6 +106,7 @@ const MapInfo = ({site, advanceFilteredPrograms}) => {
                             <InfoP><strong>Local Government Area:</strong> <br/>{site.lga}</InfoP>
                             <InfoP><strong>Department of Families, Fairness and Housing:</strong> <br/>{site.dffh_area}</InfoP>
                         </SiteInfo>
+                        <Button style={{display: 'flex', justifyContent: 'center' , marginBottom: '1rem',color: 'white', backgroundColor: '#A20066'}} onClick={onClickSiteDetail}>Show More</Button>
                     </SiteContainer>
                     ) : (
                         <SiteTitle>
@@ -106,7 +116,31 @@ const MapInfo = ({site, advanceFilteredPrograms}) => {
                 </InfoDetail>
             </InfoContainer>
             <AnimatedModalContent
-                isOpen={popUpOpen}
+                isOpen={programPopUpOpen}
+                contentLabel="Program Information Modal"
+                style={{
+                content: {
+                    width: '50vw', // Set the desired width
+                    height: '50vh', // Set the desired height
+                    margin: 'auto', // Center the modal horizontally
+                },
+                }}
+            >
+                <ProgramCardContainer>
+                <ProgramCardHaader>
+                    <ProgramCardHeaderLeft>
+                        <h2 style={{margin: '0', padding: '0', color: 'white'}}>Program Info</h2>
+                        </ProgramCardHeaderLeft>
+                        <ProgramCardHeaderRight>
+                        <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeProgramModal}>
+                            <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                        </Button>
+                    </ProgramCardHeaderRight>
+                </ProgramCardHaader>
+                </ProgramCardContainer>
+            </AnimatedModalContent>
+            <AnimatedModalContent
+                isOpen={sitePopUpOpen}
                 contentLabel="Site Information Modal"
                 style={{
                 content: {
@@ -119,12 +153,12 @@ const MapInfo = ({site, advanceFilteredPrograms}) => {
                 <ProgramCardContainer>
                 <ProgramCardHaader>
                     <ProgramCardHeaderLeft>
-                    <h2 style={{margin: '0', padding: '0', color: 'white'}}>Program Info</h2>
-                    </ProgramCardHeaderLeft>
-                    <ProgramCardHeaderRight>
-                    <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeModal}>
-                        <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
-                    </Button>
+                        <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Detail</h2>
+                        </ProgramCardHeaderLeft>
+                        <ProgramCardHeaderRight>
+                        <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeSiteModal}>
+                            <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                        </Button>
                     </ProgramCardHeaderRight>
                 </ProgramCardHaader>
                 </ProgramCardContainer>

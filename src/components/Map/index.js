@@ -11,7 +11,7 @@ mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoidmhhcnRvbm8iLCJhIjoiY2xoc2l1Z2VzMDd0dTNlcGtwbXYwaGx2cyJ9.C77GVU3YPPgscvXrTGHWfg';
 
-const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom}) => {
+const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom, departureLocation}) => {
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
   // const address = '247 Peel Street, North Melbourne, Australia'; 
@@ -30,6 +30,8 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
   // useState hooks
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [popUpMarker, setPopUpMarker] = useState(null);
+
+  const [departureLocationMarker, setDepartureLocationMarker] = useState(null);
 
   const [markersInView, setMarkersInView] = useState([]);
 
@@ -87,6 +89,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
 
       // Update the markersInView state with the filtered markers
       setMarkersInView(markersWithinViewport);
+      setDepartureLocationMarker(departureLocation);
     }, debounceDelay);
 
     return () => clearTimeout(timerId);
@@ -100,6 +103,10 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
     }
     
   },[importSite])
+
+  useEffect(() => {
+    setDepartureLocationMarker(departureLocation);
+  },[departureLocation]);
 
 
   // close popup
@@ -127,41 +134,56 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
   const Markers = () => {
     return (
       <>
-        {markersInView.map((site, index) => (
-          <Marker
-            key={index}
-            latitude={site.lat}
-            longitude={site.lng}
-          >
-          {
+        {
+          markersInView.map((site, index) => (
+            <Marker
+              key={index}
+              latitude={site.lat}
+              longitude={site.lng}
+            >
+            {
 
-            (selectedMarker) ?
+              (selectedMarker) ?
 
-              (site.site_id === selectedMarker.site_id) ? (
-                <MarkerAnimation
-                  onClick={(e) => markersClick(e, site)}
-                >
-                  <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
-                </MarkerAnimation> )    
-                : (
-                <BasicMarker
-                  onClick={(e) => markersClick(e, site)}
-                >
-                  <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
-                </BasicMarker>
+                (site.site_id === selectedMarker.site_id) ? (
+                  <MarkerAnimation
+                    onClick={(e) => markersClick(e, site)}
+                  >
+                    <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
+                  </MarkerAnimation> )    
+                  : (
+                  <BasicMarker
+                    onClick={(e) => markersClick(e, site)}
+                  >
+                    <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
+                  </BasicMarker>
 
-              ) : (
+                ) : (
 
-                <BasicMarker
-                  onClick={(e) => markersClick(e, site)}
-                >
-                  <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
-                </BasicMarker>
-              )
+                  <BasicMarker
+                    onClick={(e) => markersClick(e, site)}
+                  >
+                    <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
+                  </BasicMarker>
+                )
 
-          }
-          </Marker>
-        ))}
+            }
+            </Marker>
+          ))
+        }
+        {
+          (departureLocationMarker) ? (
+            <Marker
+                latitude={departureLocationMarker.lat}
+                longitude={departureLocationMarker.lng}
+            >
+              <MarkerAnimation>
+                  <img src={require('../../images/redMarker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
+              </MarkerAnimation>
+
+            </Marker>
+          ) : null
+        }
         {popUpMarker? (
           <Popup
             latitude={popUpMarker.lat}
@@ -196,6 +218,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
               transitionDuration: 200
             });
             setMarkersInView([]); // increase the performance when moving the map
+            setDepartureLocationMarker(null);
           }}
         >
           <Markers />
