@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {memo, useEffect, useState} from 'react';
-import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption, ProgramDropDownContainer, GroupDropDownContainer, BreakingLine, SearchInputContainer, BreakingLine2, LabelContainer, CollapseButtonContainer, CollapseButton, ApplyButton, ResetButton, ButtonLabel} from './MapFilterElements';
+import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption, ProgramDropDownContainer, GroupDropDownContainer, BreakingLine, SearchInputContainer, BreakingLine2, LabelContainer, CollapseButtonContainer, CollapseButton, ApplyButton, ResetButton, ButtonLabel, OptionContainer, OptionDetail, OptionIcon, OptionP} from './MapFilterElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
@@ -16,8 +16,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
-
-import { AddressAutofill } from '@mapbox/search-js-react';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -48,8 +47,10 @@ const MapFilter = ({filteredPrograms,
     const [divisionValue, setDivisionValue] = useState('');
     const [groupValue, setGroupValue] = useState('');
 
+    const [suggestAddressOptions, setSuggestAddressOptions] = useState([]);
     const [routingAddressValue, setRoutingAddressValue] = useState({});
     const [tmpAddressValue, setTmpAddressValue] = useState('');
+    const [onChangeAddressValue, setOnChangeAddressValue] = useState('');
 
     const [serviceStreams, setServiceStreams] = useState([]);
     const [serviceTypes, setServiceTypes] = useState([]);
@@ -78,7 +79,7 @@ const MapFilter = ({filteredPrograms,
 
     const dropDownStyle = { minWidth: '13vw', maxWidth: '13vw', fontSize: '14px'};
 
-    const textFieldStyle = { minWidth: "16vw", fontSize: '15px', borderRadius: '5px', paddingTop: '8px', paddingBottom: '8px'};
+    const textFieldStyle = { minWidth: "16vw", fontSize: '15px', borderRadius: '5px'};
     const textStyle = { fontSize: '20px', fontWeight: 'bold', color: '#A20066'};
     const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
     const toolTipsStyleClicked = {backgroundColor: '#A20066',  color: 'white', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
@@ -90,6 +91,18 @@ const MapFilter = ({filteredPrograms,
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
     }
+
+    const searchTextFieldStyle = {
+        '& .MuiOutlinedInput-root': {
+          '& fieldset': {
+            border: '0.5px solid grey',
+            borderRadius: '5px',
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: "#A20066", // Change the outline color on focus to black
+          },
+        },
+    };
 
     useEffect(()=> {
 
@@ -115,6 +128,7 @@ const MapFilter = ({filteredPrograms,
     useEffect(() => {
 
         if(isLoading) return;
+
 
         setAdvanceFilteredSites(filteredSites);
         setAvailableSearchSites(filteredSites);
@@ -158,15 +172,208 @@ const MapFilter = ({filteredPrograms,
 
     }, [programTypes, serviceTypes, serviceStreams, groups, divisions])
 
+    useEffect(() => {
+
+        if( serviceStreamValue === '' || serviceTypeValue === '' || programTypeValue === '' || divisionValue === '' || groupValue === '' ) {
+            return;
+        }
+
+        // Upper
+        const selectedServiceStreamIds = [];
+        for(let i = 0; i <serviceStreams.length; i++) {
+            const serviceStream = serviceStreams[i];
+            if(serviceStreamValue !== 'All Service Stream') {
+                if(serviceStream.ser_stream === serviceStreamValue){
+                    selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+                }
+            }
+            else {
+                selectedServiceStreamIds.push(serviceStream.ser_stream_id);
+            }
+        }
+
+        const selectedServiceTypeIds = [];
+        for(let i = 0; i < serviceTypes.length; i++) {
+            const serviceType = serviceTypes[i];
+            if(serviceTypeValue !== 'All Service Type') {
+                if(serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                    selectedServiceTypeIds.push(serviceType.ser_type_id);
+                }
+            }
+            else if(serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+                selectedServiceTypeIds.push(serviceType.ser_type_id);
+            }
+        }
+
+        const selectedProgramTypeIds = [];
+        for(let i = 0; i < programTypes.length; i++) {
+            const programType = programTypes[i];
+            if(programTypeValue !== 'All Program Type') {
+                if(programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                    selectedProgramTypeIds.push(programType.prgm_type_id);
+                }
+            }
+            else if(programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                selectedProgramTypeIds.push(programType.prgm_type_id);
+            }
+        }
+
+        // Lower
+
+        const selectedDivisionIds = [];
+        for (let i = 0; i < divisions.length; i++) {
+          const division = divisions[i];
+          if (divisionValue !== 'All Divisions') {
+            if (division.division_name === divisionValue) {
+              selectedDivisionIds.push(division.division_id);
+            }
+          } else {
+            selectedDivisionIds.push(division.division_id);
+          }
+        }
+
+        const selectedGroupIds = [];
+        for (let i = 0; i < groups.length; i++) {
+          const group = groups[i];
+          if (groupValue !== 'All Group') {
+            if (group.group_name === groupValue && selectedDivisionIds.includes(group.division_id)) {
+              selectedGroupIds.push(group.group_id);
+            }
+          } else if (groupValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
+            selectedGroupIds.push(group.group_id);
+          }
+        }
+
+        // Combination
+
+        const finalFilteredPrograms = filteredPrograms.filter((program) => 
+            selectedProgramTypeIds.includes(program.prgm_type_id) && 
+            selectedGroupIds.includes(program.group_id)
+        );
+
+        setAdvancedFilteredPrograms(finalFilteredPrograms);
+
+        if(programValue !== 'All Program') {
+            const tmpProgram = filteredPrograms.filter((program) => program.program_nme === programValue);
+            if(tmpProgram.length <= 0) {
+                setProgramValue('All Program');
+            }
+        }
+
+        //remove redundent
+        const distinctPrograms = finalFilteredPrograms.filter((program, index, self) => {
+            return index === self.findIndex((obj) => obj.program_nme === program.program_nme);
+        });
+
+
+        setLocalFilteredProgram(distinctPrograms);
+
+    },[serviceStreamValue, serviceTypeValue, programTypeValue, divisionValue, groupValue])
+
+    useEffect(() => {
+
+        if(!onChangeAddressValue) return setSuggestAddressOptions([]);
+
+        let cancel = false;
+
+        const geocoding_url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
+
+        axios.get(geocoding_url + onChangeAddressValue + `.json?country=au&types=address&language=en&access_token=${MAPBOX_TOKEN}`).then((res) =>{
+            if(cancel) return;
+            const addressSuggestions = res.data.features.map((feature) => {
+                return {
+                    address: feature.place_name,
+                    lng: feature.geometry.coordinates[0],
+                    lat: feature.geometry.coordinates[1],
+                }
+            });
+            setSuggestAddressOptions(addressSuggestions);
+        })
+
+        return () => (cancel = true);
+
+    },[onChangeAddressValue])
+
     useEffect(()=> {
-        if(tmpAddressValue === routingAddressValue.address) {
+        if(routingAddressValue.address && tmpAddressValue === routingAddressValue.address) {
             exportDepartureAddress(routingAddressValue);
         }
         else {
             exportDepartureAddress(null);
         }
 
-    }, [tmpAddressValue]);
+    }, [routingAddressValue]);
+
+    const fetchRouteData = async (site) => {
+        try {
+            const direction_url = 'https://api.mapbox.com/directions/v5/mapbox/driving/';
+            const response = await axios.get(
+            direction_url +
+                `${routingAddressValue.lng},${routingAddressValue.lat};${site.lng},${site.lat}` +
+                `?alternatives=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_TOKEN}`
+            );
+        
+            const routes = response.data.routes;
+            let pickedRoute = routes[0];
+        
+            for (let i = 1; i < routes.length; i++) {
+                if (routes[i].duration < pickedRoute.duration) {
+                    pickedRoute = routes[i]; // pick the quickest
+                }
+            }
+
+            const coordinates = pickedRoute.geometry.coordinates;
+            const geojson = {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                    type: 'LineString',
+                    coordinates: coordinates
+                }
+            }
+        
+            return {
+                ...site,
+                duration: pickedRoute.duration,
+                distance: pickedRoute.distance,
+                geojson
+
+            };
+        } catch (error) {
+          console.error(error);
+          return null; // Handle the error as needed
+        }
+    };
+
+    useEffect(() => {
+
+        if(!routingAddressValue.address || advanceFilteredSites.length <=0) return;
+
+        let cancel = false;
+
+        const fetchData = async () => {
+            const newFilteredSitesData = await Promise.all(
+              advanceFilteredSites.map(async (site) => {
+                if(cancel) return;
+                const routeData = await fetchRouteData(site);
+                return routeData;
+              })
+            );
+
+            setAdvanceFilteredSites(newFilteredSitesData); //this will run invinity loop
+
+            const tmpAvailableSiteIds = availableSearchSites.map((site) => site.site_id);
+
+            const newAvailableSite = newFilteredSitesData.filter((site) => tmpAvailableSiteIds.includes(site.site_id));
+
+            setAvailableSearchSites(newAvailableSite);
+        };
+        
+        fetchData();
+
+        return () => (cancel = true);
+
+    }, [routingAddressValue])
 
 
     const filteringServiceStreams= (programList) => {
@@ -469,6 +676,9 @@ const MapFilter = ({filteredPrograms,
                                 <Typography variant='body1'>
                                     {site.site_id}
                                 </Typography>
+                                {
+                                    (site.distance) ? <p style={{fontSize: '10px'}}>{site.distance}</p> : null
+                                }
                                 <Typography variant='caption' style={captionStyle}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>
                             </SiteOption>
                         </Tooltip>
@@ -779,108 +989,40 @@ const MapFilter = ({filteredPrograms,
 
     //============================== Event Trigger Section ==================================
 
-    useEffect(() => {
-
-        if( serviceStreamValue === '' || serviceTypeValue === '' || programTypeValue === '' || divisionValue === '' || groupValue === '' ) {
-            return;
-        }
-
-        // Upper
-        const selectedServiceStreamIds = [];
-        for(let i = 0; i <serviceStreams.length; i++) {
-            const serviceStream = serviceStreams[i];
-            if(serviceStreamValue !== 'All Service Stream') {
-                if(serviceStream.ser_stream === serviceStreamValue){
-                    selectedServiceStreamIds.push(serviceStream.ser_stream_id);
-                }
-            }
-            else {
-                selectedServiceStreamIds.push(serviceStream.ser_stream_id);
-            }
-        }
-
-        const selectedServiceTypeIds = [];
-        for(let i = 0; i < serviceTypes.length; i++) {
-            const serviceType = serviceTypes[i];
-            if(serviceTypeValue !== 'All Service Type') {
-                if(serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
-                    selectedServiceTypeIds.push(serviceType.ser_type_id);
-                }
-            }
-            else if(serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
-                selectedServiceTypeIds.push(serviceType.ser_type_id);
-            }
-        }
-
-        const selectedProgramTypeIds = [];
-        for(let i = 0; i < programTypes.length; i++) {
-            const programType = programTypes[i];
-            if(programTypeValue !== 'All Program Type') {
-                if(programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
-                    selectedProgramTypeIds.push(programType.prgm_type_id);
-                }
-            }
-            else if(programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
-                selectedProgramTypeIds.push(programType.prgm_type_id);
-            }
-        }
-
-        // Lower
-
-        const selectedDivisionIds = [];
-        for (let i = 0; i < divisions.length; i++) {
-          const division = divisions[i];
-          if (divisionValue !== 'All Divisions') {
-            if (division.division_name === divisionValue) {
-              selectedDivisionIds.push(division.division_id);
-            }
-          } else {
-            selectedDivisionIds.push(division.division_id);
-          }
-        }
-
-        const selectedGroupIds = [];
-        for (let i = 0; i < groups.length; i++) {
-          const group = groups[i];
-          if (groupValue !== 'All Group') {
-            if (group.group_name === groupValue && selectedDivisionIds.includes(group.division_id)) {
-              selectedGroupIds.push(group.group_id);
-            }
-          } else if (groupValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
-            selectedGroupIds.push(group.group_id);
-          }
-        }
-
-        // Combination
-
-        const finalFilteredPrograms = filteredPrograms.filter((program) => 
-            selectedProgramTypeIds.includes(program.prgm_type_id) && 
-            selectedGroupIds.includes(program.group_id)
-        );
-
-        setAdvancedFilteredPrograms(finalFilteredPrograms);
-
-        if(programValue !== 'All Program') {
-            const tmpProgram = filteredPrograms.filter((program) => program.program_nme === programValue);
-            if(tmpProgram.length <= 0) {
-                setProgramValue('All Program');
-            }
-        }
-
-        //remove redundent
-        const distinctPrograms = finalFilteredPrograms.filter((program, index, self) => {
-            return index === self.findIndex((obj) => obj.program_nme === program.program_nme);
-        });
-
-
-        setLocalFilteredProgram(distinctPrograms);
-
-    },[serviceStreamValue, serviceTypeValue, programTypeValue, divisionValue, groupValue])
-
     const onClickSite = (site) => {
         setClickedSite(site); 
         flyingToLocation(site.lat, site.lng);
         exportSite(site);
+
+        if(site.geojson) {
+            if(importRef.current) {
+                const map = importRef.current.getMap();
+                // if the route already exists on the map, we'll reset it using setData
+                if (map.getSource('route')) {
+                    map.getSource('route').setData(site.geojson);
+                }
+                // otherwise, we'll make a new request
+                else {
+                    map.addLayer({
+                    id: 'route',
+                    type: 'line',
+                    source: {
+                        type: 'geojson',
+                        data: site.geojson
+                    },
+                    layout: {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                    },
+                    paint: {
+                        'line-color': 'red',
+                        'line-width': 5,
+                        'line-opacity': 0.75
+                    }
+                    });
+                }
+            }
+        }
     }
 
     const onChangeServiceStream = (e) => {
@@ -1473,31 +1615,30 @@ const MapFilter = ({filteredPrograms,
     }
 
       
-    const onChangeDepartureAddress = (e) => {
+    const onChangeDepartureAddress = (e, v) => {
         e.preventDefault();
-        setTmpAddressValue(e.target.value);
+
+        if(v) {
+            setTmpAddressValue(v);
+        }
+        else {
+            setTmpAddressValue("");
+        }
+
+        const addressDetail = suggestAddressOptions.filter((address) => address.address === v);
+
+        if(addressDetail.length > 0) {
+            setRoutingAddressValue(addressDetail[0]);
+        }
+        else {
+            setRoutingAddressValue({});
+        }
+
     };
 
-    const onRetrieveAddressAutoFill = (res) => {
-        if(res && res.features[0])
-        {
-            setRoutingAddressValue({
-                address: res.features[0].properties.full_address,
-                lng: res.features[0].geometry.coordinates[0],
-                lat: res.features[0].geometry.coordinates[1]
-            })
-
-            setTmpAddressValue(res.features[0].properties.full_address);
-
-        }
-
-    }
-
-    const onBlurRoutingAddress = (e) => {
-        if(tmpAddressValue !== routingAddressValue.address) {
-            setTmpAddressValue('');
-        }
-    }
+    const onInputDepartureValue = debounce((e, v) => {
+        setOnChangeAddressValue(v);
+    }, 500)
 
     const onChangeSiteSearch = debounce((e) => {
         const inputValue = e.target.value.trim();
@@ -1546,6 +1687,22 @@ const MapFilter = ({filteredPrograms,
     const collapseRequest = () => {
         setIsCollapse(!isCollapse);
     }
+
+    //=============================Render of the Options===================================
+    const renderOptions = (option) => {
+        console.log(option);
+        return (
+            <OptionContainer {...option} className=''>
+                <OptionIcon>
+                    <img src={require('../../images/optionMarker.png')} style= {{width: "35px", height: "auto"}} alt="Marker Icon" />
+                </OptionIcon>
+                <OptionDetail>
+                    <OptionP>{option.key}</OptionP>
+                </OptionDetail>
+            </OptionContainer>
+        )
+    }
+
 
 
     return (
@@ -1603,32 +1760,23 @@ const MapFilter = ({filteredPrograms,
                 <SearchContainer>
                     <SearchInputContainer>
                         <InputLabel style={{fontSize: '16px'}}>Departure Address</InputLabel>
-                        <AddressAutofill accessToken = {MAPBOX_TOKEN} 
-                            options={{
-                                language: 'en',
-                                country: 'AU',
-                            }}
-                            popoverOptions={{
-                                placement: 'bottom-start',
-                            }}
-                            onRetrieve={onRetrieveAddressAutoFill}
-
-                        >
-                            <OutlinedInput style={textFieldStyle} size='small' placeholder='Customer Address ...'
-                                startAdornment= {
-                                    <InputAdornment position="start">
-                                        <CardTravelIcon></CardTravelIcon>
-                                    </InputAdornment>
-                                }
-                                // autoComplete="address-line1 street-address"
-                                value={tmpAddressValue}
-                                onChange={onChangeDepartureAddress}
-                                onBlur={onBlurRoutingAddress}
-                                aria-autocomplete='list'
-                                aria-aria-controls='undefined'
-                                aria-expanded='false'
-                            ></OutlinedInput>
-                        </AddressAutofill>
+                        <Autocomplete
+                            disablePortal
+                            id="search-test"
+                            options={suggestAddressOptions.map((address) => address.address)}
+                            onChange={onChangeDepartureAddress}
+                            onInputChange={onInputDepartureValue}
+                            value={tmpAddressValue}
+                            style={textFieldStyle}
+                            popupIcon={<CardTravelIcon/>}
+                            sx={{"& .MuiAutocomplete-popupIndicator": { transform: "none", pointerEvents: "none"}}}
+                            size='small'
+                            selectOnFocus
+                            clearOnBlur
+                            forcePopupIcon 
+                            renderInput={(params) => <TextField {...params} placeholder='Customer Address...' sx={searchTextFieldStyle}/>}
+                            renderOption={renderOptions}
+                        />
                     </SearchInputContainer>
                     <BreakingLine2></BreakingLine2>
                     <SearchInputContainer>

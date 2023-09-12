@@ -178,7 +178,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
                 longitude={departureLocationMarker.lng}
             >
               <MarkerAnimation>
-                  <img src={require('../../images/redMarker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
+                  <img src={require('../../images/redMarker.png')} style= {{width: "40px", height: "auto"}} alt="Marker Icon" />
               </MarkerAnimation>
 
             </Marker>

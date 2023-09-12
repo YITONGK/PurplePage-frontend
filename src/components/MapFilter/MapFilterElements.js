@@ -211,3 +211,45 @@ export const ButtonLabel = styled.p`
    margin: 0;
 `;
 
+export const OptionContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid grey;
+    gap: 5px;
+    padding: 10px;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+
+    &:hover {
+        background-color: #A20066; /* Change this to your desired hover background color */
+        color: white;
+        cursor: pointer; /* Change cursor to pointer to indicate interactivity */
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2); /* Adjust values as needed */
+        transform: scale(1.1);
+
+        img {
+            filter: brightness(0) invert(1); /* Change image color to white */
+        }
+    }
+`;
+
+export const OptionIcon = styled.div`
+    display: flex;
+    width: 20%;
+    align-items: center;
+    justify-content: center;
+`;
+
+export const OptionDetail = styled.div`
+    width: 80%;
+    justify-content: end;
+`;
+
+export const OptionP = styled.p`
+    font-size: 13px;
+    font-weight: bold;
+    padding: 0px;
+    margin: 0px;
+`;
+
