@@ -22,6 +22,8 @@ import natural from 'natural';
 // article component
 const Article = () => {
 
+  const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
+
   // useEffect
   useEffect(() => {
     document.title = 'Home';
@@ -96,6 +98,8 @@ const Article = () => {
         return index === self.findIndex((obj) => obj.site_id === site.site_id);
       });
 
+      distinctSites.sort ((s1, s2) => s1.site_id.localeCompare(s2.site_id));
+
       setSites(distinctSites);
       setFilteredSites(distinctSites);
       setAdvanceFilteredSites(distinctSites);
@@ -143,22 +147,118 @@ const Article = () => {
     setAdvanceFilteredPrograms([]);
   }, [filteredSites])
 
-  // useEffect(() => {
+  const fetchRouteData = async (site) => {
+    try {
+          const direction_url = 'https://api.mapbox.com/directions/v5/mapbox/driving/';
+          const response = await axios.get(
+          direction_url +
+              `${departureAddress.lng},${departureAddress.lat};${site.lng},${site.lat}` +
+              `?alternatives=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_TOKEN}`
+          );
+      
+          const routes = response.data.routes;
+          let pickedRoute = routes[0];
+      
+          for (let i = 1; i < routes.length; i++) {
+              if (routes[i].distance < pickedRoute.distance) {
+                  pickedRoute = routes[i]; // pick the quickest
+              }
+          }
 
-  //   if(programTypeList.length > 0 && searchOptions.length <= 0)
-  //   {
-  //     const programTypeOptions = programTypeList.map((programType) => {
-  //       return {
-  //         value: programType.prgm_type,
-  //         type: 'Program Types'
-  //       }
-  //     })
-  //     programTypeOptions.unshift({ value: ' --All Program Types & Group--',type: 'All'});
-  //     setSearchOptions(programTypeOptions);
-  //   }
+          const coordinates = pickedRoute.geometry.coordinates;
+          const geojson = {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                  type: 'LineString',
+                  coordinates: coordinates
+              }
+          }
+      
+          return {
+              ...site,
+              duration: pickedRoute.duration,
+              distance: pickedRoute.distance,
+              geojson
 
-  // }, [programTypeList])
-  
+          };
+
+        } catch (error) {
+
+          console.error(error);
+          return null; // Handle the error as needed
+
+        }
+  };
+
+
+  useEffect(() => {
+
+    let cancel = false;
+
+    if(departureAddress === null) {
+
+      const newFilteredSitesData = filteredSites.map((site) => {
+
+        const tmpSite = {...site};
+
+        delete tmpSite.distance;
+        delete tmpSite.duration;
+        delete tmpSite.geojson;
+
+        return tmpSite;
+
+      })
+
+      if(mapRef.current) {
+        const map = mapRef.current.getMap();
+        if (map.getLayer('route')) {
+          map.removeLayer('route');
+        }
+        if (map.getSource('route')) {
+          map.removeSource('route');
+        }
+      }
+
+      newFilteredSitesData.sort ((s1, s2) => s1.site_id.localeCompare(s2.site_id));
+
+      setFilteredSites(newFilteredSitesData);
+
+
+    } else {
+
+      if(filteredSites.length <=0) return;
+
+        const fetchData = async () => {
+
+            const newFilteredSitesData = await Promise.all(
+              filteredSites.map(async (site) => {
+                const routeData = await fetchRouteData(site);
+                return routeData;
+              })
+            );
+
+            if(cancel ===false && newFilteredSitesData.length === filteredSites.length) {
+
+              newFilteredSitesData.sort((s1, s2) => s1.distance - s2.distance);
+              setFilteredSites(newFilteredSitesData);
+
+              const tmpFilteredSiteIds = advancefilteredSites.map((site) => site.site_id);
+              const newAvailableSite = newFilteredSitesData.filter((site) => tmpFilteredSiteIds.includes(site.site_id));
+
+              setAdvanceFilteredSites(newAvailableSite);
+            }
+
+        };
+        
+        fetchData();
+      //departure not equal to null
+
+    }
+
+    return () => (cancel = true);
+
+  }, [departureAddress]);
   // =============================Data Collect Method From Database====================================
 
   /* get a list of sites from the backend and display it */
@@ -430,17 +530,7 @@ const Article = () => {
 
     return filteredOptions;
   }
-
-  // reset the filters
-  // const clear = () => {
-  //   setFilteredSites(sites);
-  //   setValues({
-  //     prgm_type: '',
-  //     group_name: ''
-  //   });
-  // }
   
-
   const FreeTextSearch = () => {
     return (
       <ColSearchContainer>
@@ -487,6 +577,17 @@ const Article = () => {
   }
 
   const applyFilter = (advanceFilteredSites) => {
+
+    if(mapRef.current) {
+      const map = mapRef.current.getMap();
+      if (map.getLayer('route')) {
+        map.removeLayer('route');
+      }
+      if (map.getSource('route')) {
+        map.removeSource('route');
+      }
+    }
+
     setAdvanceFilteredSites(advanceFilteredSites);
   }
 

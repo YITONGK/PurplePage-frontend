@@ -113,6 +113,13 @@ export const SiteOption = styled.div`
     }
 `;
 
+export const SiteOptionRoutingContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+`;
+
 export const SearchInputContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -219,7 +226,6 @@ export const OptionContainer = styled.div`
     gap: 5px;
     padding: 10px;
     transition: all 0.3s ease-in-out;
-    overflow: hidden;
 
     &:hover {
         background-color: #A20066; /* Change this to your desired hover background color */

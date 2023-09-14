@@ -1,6 +1,31 @@
 import axios from 'axios';
 import React, {memo, useEffect, useState} from 'react';
-import { MapFilterContainer, FilterContainer, SelectDiv, ButtonContainer, ResultContainer, SearchContainer, SitesContainer, SiteOption, ProgramDropDownContainer, GroupDropDownContainer, BreakingLine, SearchInputContainer, BreakingLine2, LabelContainer, CollapseButtonContainer, CollapseButton, ApplyButton, ResetButton, ButtonLabel, OptionContainer, OptionDetail, OptionIcon, OptionP} from './MapFilterElements';
+import { 
+    MapFilterContainer, 
+    FilterContainer, 
+    SelectDiv,
+    ButtonContainer, 
+    ResultContainer, 
+    SearchContainer, 
+    SitesContainer, 
+    SiteOption, 
+    SiteOptionRoutingContainer,
+    ProgramDropDownContainer, 
+    GroupDropDownContainer, 
+    BreakingLine, 
+    SearchInputContainer,
+    BreakingLine2, 
+    LabelContainer, 
+    CollapseButtonContainer, 
+    CollapseButton, 
+    ApplyButton, 
+    ResetButton, 
+    ButtonLabel, 
+    OptionContainer, 
+    OptionDetail, 
+    OptionIcon, 
+    OptionP,
+} from './MapFilterElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
@@ -49,7 +74,7 @@ const MapFilter = ({filteredPrograms,
 
     const [suggestAddressOptions, setSuggestAddressOptions] = useState([]);
     const [routingAddressValue, setRoutingAddressValue] = useState({});
-    const [tmpAddressValue, setTmpAddressValue] = useState('');
+    const [tmpAddressValue, setTmpAddressValue] = useState(null);
     const [onChangeAddressValue, setOnChangeAddressValue] = useState('');
 
     const [serviceStreams, setServiceStreams] = useState([]);
@@ -79,7 +104,12 @@ const MapFilter = ({filteredPrograms,
 
     const dropDownStyle = { minWidth: '13vw', maxWidth: '13vw', fontSize: '14px'};
 
-    const textFieldStyle = { minWidth: "16vw", fontSize: '15px', borderRadius: '5px'};
+    const textFieldStyle = { 
+        minWidth: "16vw", 
+        fontSize: '15px', 
+        borderRadius: '5px'
+    };
+
     const textStyle = { fontSize: '20px', fontWeight: 'bold', color: '#A20066'};
     const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
     const toolTipsStyleClicked = {backgroundColor: '#A20066',  color: 'white', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
@@ -128,10 +158,17 @@ const MapFilter = ({filteredPrograms,
     useEffect(() => {
 
         if(isLoading) return;
-
-
         setAdvanceFilteredSites(filteredSites);
-        setAvailableSearchSites(filteredSites);
+
+        if(availableSearchSites.length <= 0) {
+            setAvailableSearchSites(filteredSites);
+        }
+        else {
+            const tmpAvailableSiteIds = availableSearchSites.map(site => site.site_id);
+            const tmpAvailableSites = filteredSites.filter((site) => tmpAvailableSiteIds.includes(site.site_id));
+            setAvailableSearchSites(tmpAvailableSites);
+        }
+
 
     },[filteredSites])
 
@@ -303,78 +340,6 @@ const MapFilter = ({filteredPrograms,
         }
 
     }, [routingAddressValue]);
-
-    const fetchRouteData = async (site) => {
-        try {
-            const direction_url = 'https://api.mapbox.com/directions/v5/mapbox/driving/';
-            const response = await axios.get(
-            direction_url +
-                `${routingAddressValue.lng},${routingAddressValue.lat};${site.lng},${site.lat}` +
-                `?alternatives=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_TOKEN}`
-            );
-        
-            const routes = response.data.routes;
-            let pickedRoute = routes[0];
-        
-            for (let i = 1; i < routes.length; i++) {
-                if (routes[i].duration < pickedRoute.duration) {
-                    pickedRoute = routes[i]; // pick the quickest
-                }
-            }
-
-            const coordinates = pickedRoute.geometry.coordinates;
-            const geojson = {
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                    type: 'LineString',
-                    coordinates: coordinates
-                }
-            }
-        
-            return {
-                ...site,
-                duration: pickedRoute.duration,
-                distance: pickedRoute.distance,
-                geojson
-
-            };
-        } catch (error) {
-          console.error(error);
-          return null; // Handle the error as needed
-        }
-    };
-
-    useEffect(() => {
-
-        if(!routingAddressValue.address || advanceFilteredSites.length <=0) return;
-
-        let cancel = false;
-
-        const fetchData = async () => {
-            const newFilteredSitesData = await Promise.all(
-              advanceFilteredSites.map(async (site) => {
-                if(cancel) return;
-                const routeData = await fetchRouteData(site);
-                return routeData;
-              })
-            );
-
-            setAdvanceFilteredSites(newFilteredSitesData); //this will run invinity loop
-
-            const tmpAvailableSiteIds = availableSearchSites.map((site) => site.site_id);
-
-            const newAvailableSite = newFilteredSitesData.filter((site) => tmpAvailableSiteIds.includes(site.site_id));
-
-            setAvailableSearchSites(newAvailableSite);
-        };
-        
-        fetchData();
-
-        return () => (cancel = true);
-
-    }, [routingAddressValue])
-
 
     const filteringServiceStreams= (programList) => {
 
@@ -662,6 +627,29 @@ const MapFilter = ({filteredPrograms,
 
     //=============================End Dropdown===================================
     
+    //Hours Diplay
+    const timeCalculation = (seconds) => {
+
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = Math.round(seconds % 60);
+
+        let formattedTime = '';
+
+        if (hours > 0) {
+            formattedTime += `${hours}h `;
+        }
+
+        if (minutes > 0 || (hours === 0 && seconds < 60)) {
+            formattedTime += `${minutes}m `;
+        }
+
+        formattedTime += `${remainingSeconds}s`;
+
+        return formattedTime.trim(); // Trim any leading or trailing spaces
+
+    }
+    
     //Sites Results
     const AvailableSites = () => {
         return (
@@ -676,9 +664,38 @@ const MapFilter = ({filteredPrograms,
                                 <Typography variant='body1'>
                                     {site.site_id}
                                 </Typography>
+                                <SiteOptionRoutingContainer>
                                 {
-                                    (site.distance) ? <p style={{fontSize: '10px'}}>{site.distance}</p> : null
+                                    (site.distance) ? 
+                                    <Typography variant='caption' style={captionStyle}>
+                                        {
+                                            `Distance: `
+                                        }
+                                        <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                        {
+                                            `${Math.round((site.distance / 1000) * 10) / 10} km`
+                                        }
+                                        </Typography> 
+                                    </Typography> 
+                                    : null
                                 }
+                                {
+
+                                    (site.duration) ? 
+                                    <Typography variant='caption' style={captionStyle}>
+                                        {
+                                            `Duration: `
+                                        }
+                                        <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                        {
+                                            `${timeCalculation(site.duration)}`
+                                        }
+                                        </Typography> 
+                                    </Typography> 
+                                    : null
+                                }
+
+                                </SiteOptionRoutingContainer>
                                 <Typography variant='caption' style={captionStyle}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>
                             </SiteOption>
                         </Tooltip>
@@ -989,6 +1006,29 @@ const MapFilter = ({filteredPrograms,
 
     //============================== Event Trigger Section ==================================
 
+    // reset the filters
+    const clear = () => {
+        setServiceStreamValue ('All Service Stream');
+        setServiceTypeValue('All Service Type');
+        setProgramTypeValue('All Program Type');
+        setProgramValue('All Program');
+        setDivisionValue('All Divisions');
+        setGroupValue('All Group');
+
+        setFilteredServiceStreams(filteringServiceStreams(filteredPrograms));
+        setFilteredServiceTypes(filteringServiceTypes(filteredPrograms));
+        setFilteredProgramTypes(filteringProgramTypes(filteredPrograms));
+        setLocalFilteredProgram(filteredPrograms);
+
+        setFilteredDivisions(filteringDivisions(filteredPrograms));
+        setFilteredGroups(filteringGroups(filteredPrograms));
+
+        exportAdvanceFilteredPrograms(filteredPrograms);
+        setAvailableSearchSites(filteredSites);
+        exportAdvanceFilteredSites(filteredSites);
+        
+    }
+
     const onClickSite = (site) => {
         setClickedSite(site); 
         flyingToLocation(site.lat, site.lng);
@@ -1012,10 +1052,10 @@ const MapFilter = ({filteredPrograms,
                     },
                     layout: {
                         'line-join': 'round',
-                        'line-cap': 'round'
+                        'line-cap': 'square',
                     },
                     paint: {
-                        'line-color': 'red',
+                        'line-color': '#A20066',
                         'line-width': 5,
                         'line-opacity': 0.75
                     }
@@ -1637,7 +1677,11 @@ const MapFilter = ({filteredPrograms,
     };
 
     const onInputDepartureValue = debounce((e, v) => {
-        setOnChangeAddressValue(v);
+        let value = v;
+        if(!value) {
+            value = null;
+        }
+        setOnChangeAddressValue(value);
     }, 500)
 
     const onChangeSiteSearch = debounce((e) => {
@@ -1680,7 +1724,7 @@ const MapFilter = ({filteredPrograms,
         exportAdvanceFilteredPrograms(tmpAdvancedFilteredPrograms);
         setAvailableSearchSites(tmpAdvanceFilteredSites);
         exportAdvanceFilteredSites(tmpAdvanceFilteredSites);
-
+    
 
     }
 
@@ -1747,7 +1791,7 @@ const MapFilter = ({filteredPrograms,
                         <SendIcon style= {{fontSize: '16px', marginRight: '5px'}}></SendIcon>
                         <ButtonLabel>Apply Filter</ButtonLabel>
                     </ApplyButton>
-                    <ResetButton>
+                    <ResetButton onClick={clear}>
                         <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
                         <ButtonLabel style={{color: '#A20066'}}>Clear</ButtonLabel>
                     </ResetButton>
@@ -1762,9 +1806,11 @@ const MapFilter = ({filteredPrograms,
                         <InputLabel style={{fontSize: '16px'}}>Departure Address</InputLabel>
                         <Autocomplete
                             disablePortal
-                            id="search-test"
+                            id="departureAddress"
+                            className=''
                             options={suggestAddressOptions.map((address) => address.address)}
                             onChange={onChangeDepartureAddress}
+                            isOptionEqualToValue={(option, value) => {if(value === "") {return false;} else { return (option === value);}}}
                             onInputChange={onInputDepartureValue}
                             value={tmpAddressValue}
                             style={textFieldStyle}
@@ -1781,13 +1827,15 @@ const MapFilter = ({filteredPrograms,
                     <BreakingLine2></BreakingLine2>
                     <SearchInputContainer>
                         <InputLabel style={{fontSize: '16px'}}>Search Sites</InputLabel>
-                        <OutlinedInput style={textFieldStyle} size='small' placeholder='E.g., Harris Street' onChange={onChangeSiteSearch}
-                            startAdornment= {
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            }
-                        ></OutlinedInput>
+                        <TextField sx={{...searchTextFieldStyle, ...textFieldStyle}} id="searchSite" size='small' placeholder='E.g., Harris Street' onChange={onChangeSiteSearch} 
+                            InputProps={{
+                                endAdornment : (
+                                    <InputAdornment position="end">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                )
+                            }}
+                        ></TextField>
                     </SearchInputContainer>
                 </SearchContainer>
                 <SitesContainer>
