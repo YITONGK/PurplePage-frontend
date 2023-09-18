@@ -49,6 +49,8 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SendIcon from '@mui/icons-material/Send';
 import ClearIcon from '@mui/icons-material/Clear';
 
+import ReactLoading from 'react-loading';
+
 const MapFilter = ({filteredPrograms, 
     filteredSites, 
     programTypeList, 
@@ -85,6 +87,7 @@ const MapFilter = ({filteredPrograms,
     const [groups, setGroups] = useState([]);
 
     const [isLoading, setIsLoading] = useState(true);
+    const [addressIsLoading, setAddressIsLoading] = useState(true);
 
     const [filteredServiceStreams, setFilteredServiceStreams] = useState([]);
     const [filteredServiceTypes, setFilteredServiceTypes] = useState([]);
@@ -158,6 +161,11 @@ const MapFilter = ({filteredPrograms,
     useEffect(() => {
 
         if(isLoading) return;
+
+        if(filteredSites && !filteredSites[0].distance) {
+            setTmpAddressValue("");
+        }
+
         setAdvanceFilteredSites(filteredSites);
 
         if(availableSearchSites.length <= 0) {
@@ -169,6 +177,7 @@ const MapFilter = ({filteredPrograms,
             setAvailableSearchSites(tmpAvailableSites);
         }
 
+        setAddressIsLoading(false);
 
     },[filteredSites])
 
@@ -324,6 +333,7 @@ const MapFilter = ({filteredPrograms,
                     lat: feature.geometry.coordinates[1],
                 }
             });
+            console.log(addressSuggestions);
             setSuggestAddressOptions(addressSuggestions);
         })
 
@@ -334,6 +344,7 @@ const MapFilter = ({filteredPrograms,
     useEffect(()=> {
         if(routingAddressValue.address && tmpAddressValue === routingAddressValue.address) {
             exportDepartureAddress(routingAddressValue);
+            setAddressIsLoading(true);
         }
         else {
             exportDepartureAddress(null);
@@ -661,24 +672,24 @@ const MapFilter = ({filteredPrograms,
                             style={(clickedSite && site.site_id === clickedSite.site_id)? toolTipsStyleClicked: toolTipsStyle}
                         >
                             <SiteOption onClick={() => onClickSite(site)}>
-                                <Typography variant='body1'>
-                                    {site.site_id}
-                                </Typography>
                                 <SiteOptionRoutingContainer>
-                                {
-                                    (site.distance) ? 
-                                    <Typography variant='caption' style={captionStyle}>
-                                        {
-                                            `Distance: `
-                                        }
-                                        <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
-                                        {
-                                            `${Math.round((site.distance / 1000) * 10) / 10} km`
-                                        }
-                                        </Typography> 
-                                    </Typography> 
-                                    : null
-                                }
+                                    <Typography variant='body1'>
+                                        {site.site_id}
+                                    </Typography>
+
+                                    {
+                                        (site.distance) ? 
+                                            <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                            {
+                                                `${Math.round((site.distance / 1000) * 10) / 10} km`
+                                            }
+                                            </Typography> 
+                                        : null
+                                    }
+
+                                </SiteOptionRoutingContainer>
+
+                                <SiteOptionRoutingContainer>
                                 {
 
                                     (site.duration) ? 
@@ -1838,9 +1849,14 @@ const MapFilter = ({filteredPrograms,
                         ></TextField>
                     </SearchInputContainer>
                 </SearchContainer>
-                <SitesContainer>
+                <SitesContainer style={addressIsLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center' } : {}}>
                     <List sx={listStyle}>
+                    {
+                        (addressIsLoading) ? 
+                        <ReactLoading type={'spin'} color={'#A20066'} height={80} width={60}></ReactLoading> 
+                        : 
                         <AvailableSites></AvailableSites>
+                    }
                     </List>
                 </SitesContainer>      
             </ResultContainer>

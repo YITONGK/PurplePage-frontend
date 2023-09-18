@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef} from 'react';
 import { ArticleContainer, ArticleH1 } from './ArticleElements';
 import Footer from '../../components/Footer';
 
-import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer} from './ArticleElements';
+import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer, LoadindContainer} from './ArticleElements';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
@@ -18,6 +18,8 @@ import Map from '../Map';
 import MapInfo from '../MapInfo';
 import MapFilter from '../MapFilter';
 import natural from 'natural';
+
+import ReactLoading from 'react-loading';
 
 // article component
 const Article = () => {
@@ -43,6 +45,7 @@ const Article = () => {
   const [divisionList, setDivisionList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [addressIsLoading, setAddressIsLoading] = useState(false);
 
   const [filteredSites, setFilteredSites] = useState([]);
   const [filteredPrograms, setFilteredPrograms] = useState([]);
@@ -77,6 +80,8 @@ const Article = () => {
   
 
   const getAllData = async () => {
+
+    setIsLoading(true);
 
     try {
       const [programTypes, groups, programs, sites, serviceStreams, serviceTypes, divisions] = await Promise.all ([
@@ -230,6 +235,7 @@ const Article = () => {
       if(filteredSites.length <=0) return;
 
         const fetchData = async () => {
+            setAddressIsLoading(true);
 
             const newFilteredSitesData = await Promise.all(
               filteredSites.map(async (site) => {
@@ -238,7 +244,9 @@ const Article = () => {
               })
             );
 
-            if(cancel ===false && newFilteredSitesData.length === filteredSites.length) {
+            setAddressIsLoading(false);
+
+            if(cancel === false && newFilteredSitesData.length === filteredSites.length) {
 
               newFilteredSitesData.sort((s1, s2) => s1.distance - s2.distance);
               setFilteredSites(newFilteredSitesData);
@@ -476,6 +484,18 @@ const Article = () => {
         
       }
 
+      if(mapRef.current) {
+        const map = mapRef.current.getMap();
+        if (map.getLayer('route')) {
+          map.removeLayer('route');
+        }
+        if (map.getSource('route')) {
+          map.removeSource('route');
+        }
+      }
+
+      setDepartureAddress(null);
+
     }
  
   }
@@ -621,11 +641,19 @@ const Article = () => {
             exportAdvanceFilteredPrograms = {sendAdvanceFilteredPrograms}
             exportDepartureAddress={transferDepartureAddress}
           />
-          <Map 
-            sites={advancefilteredSites} exportSite={selectedSite} exportRef={mapRef} importSite={site} departureLocation={departureAddress}
-          />
+          {
+            (addressIsLoading || isLoading) ? 
+              <LoadindContainer>
+                <ReactLoading type={'bars'} color={'white'} height={130} width={130}></ReactLoading>
+              </LoadindContainer>
+              : 
+              <Map 
+                sites={advancefilteredSites} exportSite={selectedSite} exportRef={mapRef} importSite={site} departureLocation={departureAddress}
+              />
+          }
+
           <MapInfoContainer>
-            <MapInfo site={site} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms }/>
+            <MapInfo site={site} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms } groupList= {groupList} programTypeList={programTypeList}/>
           </MapInfoContainer>
         </MapElement>
     </ArticleContainer>

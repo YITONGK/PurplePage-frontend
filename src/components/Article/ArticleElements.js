@@ -4,7 +4,7 @@ export const ArticleContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  margin-left: 5%;
+  ${'' /* margin-left: 5%; */}
   padding-left: 2%;
   overflow-x: auto;
   margin-bottom: 60px;
@@ -90,5 +90,17 @@ export const MapInfoContainer = styled.div`
   justify-content: start;
   flex: 1;
   width: 'fit-content';
+`;
+
+export const LoadindContainer = styled.div`
+  display: flex;
+  min-width: 55vw; 
+  min-height: 64.5vh;
+  max-width: 55vw;
+  max-height: 64.5vh;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: grey;
 `;
 

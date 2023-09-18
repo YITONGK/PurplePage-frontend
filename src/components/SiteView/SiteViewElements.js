@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 export const SiteViewContainer = styled.div`
   margin-top: 2%;
-  margin-left: 5%;
   padding-left: 2rem;
 `;
 

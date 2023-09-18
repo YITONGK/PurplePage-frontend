@@ -61,6 +61,8 @@ function App() {
   const [groupList, setGroupList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [sideNavShow, setSideNavShow] = useState(false);
+
   // useEffect(() => {
 
   //   getAllData();
@@ -132,11 +134,17 @@ function App() {
     return result;
   }
 
+  const showSideNav = () => {
+    setSideNavShow(prev => !prev);
+  }
+
 
   return (
     <Router>
-      <MySidebar/>
-      <Header/>
+      <div className={(sideNavShow) ? 'slide-in': 'slide-out'}>
+        <MySidebar showSideNav = {showSideNav}/>
+      </div>
+      <Header showSideNav = {showSideNav}/>
       <Routes>
         <Route>
           <Route path="/" element={<Home/>} exact />

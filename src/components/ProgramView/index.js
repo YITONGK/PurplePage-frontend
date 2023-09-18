@@ -54,44 +54,6 @@ const ProgramView = () => {
     })
   }
 
-  /* Handle going to edit page */
-  const edit = () => {
-    window.location = '/program/' + id + '/edit';
-  }
-
-  /* delete the program */
-  const deleteProgram = () => {
-    const BASE_URL = 'http://localhost:8888';
-    Swal.fire({
-      title: "Warning!",
-      text: "Are you sure you want to delete this program?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      showClass: {
-        icon: ''
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await axios.delete(BASE_URL + "/program/" + id).then(() => {
-          Swal.fire({
-            title: "Success!",
-            text: "Program has been successfully deleted!",
-            icon: "success",
-            showClass: {
-              icon: ''
-            }
-          });
-          setTimeout(() => {
-            window.location = '/program';
-          }, 1500);
-        })
-      }
-    })
-  }
-
   const ExportSite = (site) => {
     setSelectedSite(site);
 

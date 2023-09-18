@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { Link as LinkRouter } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import MenuIcon from '@mui/icons-material/Menu';
 
 export const Nav = styled.nav`
   height: 80px;
@@ -11,11 +13,11 @@ export const Nav = styled.nav`
 
 export const HeaderContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   height: 80px;
   width: 100%;
-  padding: 0 24px;
+  padding: 0 10px;
   position: sticky;
+  align-items: center;
   top: 0;
 `;
 
@@ -26,7 +28,6 @@ export const HeaderLogo = styled(LinkRouter)`
   font-size: 1.8rem;
   display: flex;
   align-items: center;
-  margin-left: 5%;
   font-weight: bold;
   text-decoration: none;
 `;
@@ -46,4 +47,14 @@ export const HeaderLogin = styled(LinkRouter)`
   margin-right: 2%;
   font-weight: bold;
   text-decoration: none;
+`;
+
+export const SideNavButton = styled(Button)`
+  &&{
+    &:hover {
+      && svg {
+        filter: drop-shadow(0px 0px 10px black);
+      }
+    }
+  }
 `;

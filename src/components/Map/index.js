@@ -181,13 +181,13 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
                   <MarkerAnimation
                     onClick={(e) => markersClick(e, site)}
                   >
-                    <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
+                    <img src={require('../../images/marker_2.png')} style= {{width: "30px", height: "auto"}} alt="Marker Icon" />
                   </MarkerAnimation> )    
                   : (
                   <BasicMarker
                     onClick={(e) => markersClick(e, site)}
                   >
-                    <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
+                    <img src={require('../../images/marker_2.png')} style= {{width: "30px", height: "auto"}} alt="Marker Icon" />
                   </BasicMarker>
 
                 ) : (
@@ -195,7 +195,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
                   <BasicMarker
                     onClick={(e) => markersClick(e, site)}
                   >
-                    <img src={require('../../images/marker.png')} style= {{width: "20px", height: "auto"}} alt="Marker Icon" />
+                    <img src={require('../../images/marker_2.png')} style= {{width: "30px", height: "auto"}} alt="Marker Icon" />
                   </BasicMarker>
                 )
 
@@ -210,7 +210,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
                 longitude={departureLocationMarker.lng}
             >
               <MarkerAnimation>
-                  <img src={require('../../images/redMarker.png')} style= {{width: "40px", height: "auto"}} alt="Marker Icon" />
+                  <img src={require('../../images/userLocation_2.png')} style= {{width: "40px", height: "auto"}} alt="Marker Icon" />
               </MarkerAnimation>
 
             </Marker>
@@ -239,7 +239,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
           ref={exportRef}
           {...viewPort}
           mapboxAccessToken={MAPBOX_TOKEN}
-          mapStyle="mapbox://styles/vhartono/clhsoimq200o901q1ffkjg8ky?optimize=true"
+          mapStyle="mapbox://styles/mapbox/streets-v12"
           onMove={(evt) => {
             setViewPort({
               latitude: evt.viewState.latitude,

@@ -99,8 +99,9 @@ export const ListItemButton = styled.div`
     cursor: pointer;
     
     &:hover {
-        box-shadow: 4px -5px 10px #5C5C66; /* Add the box-shadow */
-        /*background-color: #e0e0e0;*/ /* Darker background color on hover */
+        box-shadow: 8px 5px 8px #5C5C66; /* Add the box-shadow */
+        background-color: #A20066;
+        color: white;
     }
 `;
 
@@ -144,7 +145,7 @@ const fadeIn = keyframes`
   }
   to {
     opacity: 1;
-    transform: translate(0%, 50%);
+    transform: translate(0%, 30%);
   }
 `;
 
@@ -152,7 +153,7 @@ const fadeIn = keyframes`
 export const AnimatedModalContent = styled(Modal)`
   &.ReactModal__Content {
     animation: ${fadeIn} 0.3s ease-in-out;
-    transform: translate(0%, 50%);
+    transform: translate(0%, 30%);
     background-color: white;
     display: flex;
     background-color: white;
@@ -165,17 +166,18 @@ export const ProgramCardContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 1.5rem;
+  z-index: 2;
 `;
 
 export const ProgramCardHaader = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  ${'' /* border: 1px solid black; */}
   padding: 0.5rem 0.5rem 0.5rem 1rem;
   border-bottom: 1px solid grey;
   background-color: #A20066;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 `;
 
 export const ProgramCardHeaderLeft = styled.div`
@@ -201,5 +203,92 @@ export const CustomClearIcon = styled(ClearIcon)`
   &:hover {
     color: black; /* Your hover effect color */
   }
+`;
+
+export const ProgramInfoDetail = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding-right: 0.5rem;
+  align-items: center;
+  gap: 1rem;
+`;
+
+export const Icon = styled.div`
+  display: flex;
+  flex-direction: row;
+  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
+  border-right: 1px solid grey;
+  border-radius: 50px;
+  min-width: 48%;
+  max-width: 48%;
+`;
+
+export const IconContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid transparent;
+  border-left: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-radius: 50px;
+  padding: 0.8rem 0.8rem 0.8rem 0.8rem;
+  color: white;
+  background-color: #333333;
+  margin-right: 0.2rem;
+  box-shadow: 5px 0px 8px rgba(0, 0, 0, 0.4);
+`;
+
+export const IconDescription = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center vertically */
+  text-align: center; /* Center horizontally */
+  width: 100%;
+  padding: 0rem 0.8rem 0rem 0rem;
+  min-height: 40px;
+`;
+
+export const ProgramInfoDetailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  ${'' /* border: 1px solid grey; */}
+  padding: 1rem;
+  min-height: 53vh;
+  overflow-y: auto;
+  gap: 0.7rem;
+`;
+
+export const ProgramViewP2 = styled.p`
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+`;
+
+export const ProgramViewCaption = styled.p`
+  font-size: 12px;
+  color: white;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+`;
+
+export const ProgramViewGreenP = styled.p`
+  color: green;
+  font-size: 18px;
+  text-transform: uppercase;
+  margin-left: 5px;
+  margin-top: 1px;
+  margin-bottom: 0;
+`;
+
+export const SiteButtonContainer= styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 

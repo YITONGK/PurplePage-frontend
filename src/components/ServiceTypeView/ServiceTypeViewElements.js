@@ -3,7 +3,6 @@ import { Link as LinkRouter } from 'react-router-dom';
 
 export const ServiceTypeViewContainer = styled.div`
   margin-top: 2%;
-  margin-left: 5%;
   padding-left: 2rem;
 `;
 

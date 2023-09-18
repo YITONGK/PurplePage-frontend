@@ -117,7 +117,7 @@ export const SiteOptionRoutingContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 1rem;
+    justify-content: space-between;
 `;
 
 export const SearchInputContainer = styled.div`
