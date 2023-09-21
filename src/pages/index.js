@@ -3,10 +3,10 @@ import Article from '../components/Article';
 
 import './index.css';
 
-const Home = () => {
+const Home = ({sites, programs, programTypes, groups, serviceStreams, serviceTypes, divisions}) => {
   return (
     <div className="home">
-      <Article />
+      <Article sites = {sites} programs= {programs} programTypes = {programTypes} groups = {groups} serviceStreams = {serviceStreams} serviceTypes = {serviceTypes} divisions = {divisions}/>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import styled, {keyframes} from 'styled-components';
+import styled from 'styled-components';
 
 export const ArticleContainer = styled.div`
   height: 100%;
@@ -7,7 +7,7 @@ export const ArticleContainer = styled.div`
   ${'' /* margin-left: 5%; */}
   padding-left: 2%;
   overflow-x: auto;
-  margin-bottom: 60px;
+  margin-bottom: 75px;
 
   /* Styling for the scrollbar */
   &::-webkit-scrollbar {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Grid} from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import { InfoContainer, 
@@ -11,16 +11,19 @@ import { InfoContainer,
     SiteTitle, 
     SiteContainer, 
     SiteInfo, 
+    SiteInfoDetailContainer,
     ListItemButton, 
     CollapseInfoContainer, 
     ProgramDetailsContainer, 
-    InfoP2, CustomCallIcon, 
+    InfoP2, 
+    CustomCallIcon, 
     CustomPersonIcon, 
     CustomListItemText, 
     InfoAndPopupContainer, 
-    AnimatedModalContent, 
+    AnimatedModalContent,
+    AnimatedModalContent_2,
     ProgramCardContainer, 
-    ProgramCardHaader, 
+    ProgramCardHeader, 
     ProgramCardHeaderLeft, 
     ProgramCardHeaderRight, 
     CustomClearIcon,
@@ -32,7 +35,19 @@ import { InfoContainer,
     ProgramViewCaption,
     ProgramViewP2,
     ProgramViewGreenP,
-    SiteButtonContainer
+    SiteButtonContainer,
+    SiteViewH1, 
+    SiteViewP, 
+    SiteViewMapAndInfoContainer, 
+    SiteViewInfoContainer, 
+    SiteViewMapContainer, 
+    SiteViewIconContainer, 
+    SiteViewInfoDetailColumn, 
+    SiteViewInfoDetailContainer, 
+    SiteViewInfoDetailRow, 
+    SiteViewH2, 
+    SiteViewP2, 
+    SperateLine
 } from './MapInfoElements';
 import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
@@ -46,15 +61,22 @@ import CallIcon from '@mui/icons-material/Call';
 import WorkIcon from '@mui/icons-material/Work';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 
+import Map from '../Map';
+
+
 const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) => {
     
     const [relatedPrograms, setRelatedPrograms] = useState([]);
 
     const [programPopUpOpen, setProgramPopUpOpen] = useState(false);
+
     const [selectedPrograms, setSelectedPrograms] = useState({});
+    const [popUpSite, setPopUpSite] = useState({});
 
     const [sitePopUpOpen, setSitePopUpOpen] = useState(false);
-    const [selectedSite, setSelectedSite] = useState(false);
+    const [selectedSite, setSelectedSite] = useState({});
+
+    const mapRef = useRef();
 
     useEffect (() => {
 
@@ -87,10 +109,10 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
         return (
             <ProgramInfoContainer>
                 {
-                    relatedPrograms.map((program) =>{
+                    relatedPrograms.map((program, index) =>{
                         return (
                             <>
-                                <ListItemButton onClick= {() => onClickProgram(program)}>
+                                <ListItemButton key={index} onClick= {() => onClickProgram(program)}>
                                     <ListItemText primary= {program.program_nme}/>
                                     <ExpandMore style={{transform: 'rotate(-90deg)'}}></ExpandMore>
                                 </ListItemButton>
@@ -132,15 +154,19 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
     const onClickSiteDetail = (site) => {
         setSelectedSite(site);
         setSitePopUpOpen(true);
+        document.body.style.overflow = 'hidden';
     }
 
     const closeProgramModal = () => {
         setProgramPopUpOpen(false);
         setSelectedPrograms({});
+        document.body.style.overflow = 'auto';
     };
 
     const closeSiteModal = () => {
         setSitePopUpOpen(false);
+        setSelectedSite({});
+        document.body.style.overflow = 'auto';
     };
 
     const stringFilterPrefix = (string) => {
@@ -174,21 +200,37 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                             <InfoH2>{site.site_id}</InfoH2>
                         </SiteTitle>
                         <SiteInfo>
-                            {site.site_contact_name ? (
-                                <InfoP><strong>Contact Name:</strong> <br/> {site.site_contact_name.replace(".", " ")}</InfoP>
-                            ) : (
-                                <InfoP><strong>Contact Name:</strong>  -</InfoP>
-                            )}
-                            <InfoP><strong>Address:</strong> <br/> {site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</InfoP>
-                            <InfoP><strong>Program Offer: </strong></InfoP>
+                            <SiteInfoDetailContainer>
+                                <InfoP>Contact Name:</InfoP>
+                                <InfoP2>{stringFilterPrefix(site.site_contact_name)}</InfoP2>
+                            </SiteInfoDetailContainer>
+                            <SiteInfoDetailContainer>
+                                <InfoP>Address:</InfoP>
+                                <InfoP2>
+                                    {site.street_nbr} {site.street_name}, <br/>
+                                    {site.suburb}, <br/>
+                                    {site.state} {site.postcode}
+                                </InfoP2>
+                            </SiteInfoDetailContainer>
+
+                            <InfoP>Program Offer:</InfoP>
                             <List style={{marginTop: '-0.3rem'}}>
                                 <ProgramInfo></ProgramInfo>
                             </List>
-                            <InfoP><strong>Local Government Area:</strong> <br/>{site.lga}</InfoP>
-                            <InfoP><strong>Department of Families, Fairness and Housing:</strong> <br/>{site.dffh_area}</InfoP>
+
+                            <SiteInfoDetailContainer style={{marginTop: '-5px'}}>
+                                <InfoP>Local Government Area:</InfoP>
+                                <InfoP2>{stringFilterPrefix(site.lga)}</InfoP2>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <InfoP>Department of Families, Fairness and Housing:</InfoP>
+                                <InfoP2>{stringFilterPrefix(site.dffh_area)}</InfoP2>
+                            </SiteInfoDetailContainer>
+
                         </SiteInfo>
                         <SiteButtonContainer>
-                            <Button style={{display: 'flex', justifyContent: 'center' , marginBottom: '1rem',color: 'white', backgroundColor: '#A20066', width: '10rem'}} onClick={onClickSiteDetail}>Show More</Button>
+                            <Button style={{borderRadius: '20px', display: 'flex', justifyContent: 'center' , marginBottom: '1rem',color: 'white', backgroundColor: '#A20066', width: '10rem', fontWeight: 'bold'}} onClick={(e) => onClickSiteDetail(site)}>Show More</Button>
                         </SiteButtonContainer>
                     </SiteContainer>
                     ) : (
@@ -212,7 +254,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                 }}
             >
                 <ProgramCardContainer>
-                    <ProgramCardHaader>
+                    <ProgramCardHeader>
                         <ProgramCardHeaderLeft>
                             <h2 style={{margin: '0', padding: '0', color: 'white'}}>Program Info</h2>
                             </ProgramCardHeaderLeft>
@@ -221,7 +263,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                                 <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
                             </Button>
                         </ProgramCardHeaderRight>
-                    </ProgramCardHaader>
+                    </ProgramCardHeader>
 
                     <ProgramInfoDetailContainer>
                         <ProgramInfoDetail>
@@ -298,30 +340,140 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                 </ProgramCardContainer>
             </AnimatedModalContent>
 
-            <AnimatedModalContent
+            <AnimatedModalContent_2
                 isOpen={sitePopUpOpen}
                 contentLabel="Site Information Modal"
                 style={{
-                content: {
-                    width: '50vw', // Set the desired width
-                    height: '50vh', // Set the desired height
-                    margin: 'auto', // Center the modal horizontally
-                },
+                    content: {
+                        width: '90vw', // Set the desired width
+                        height: '70vh', // Set the desired height
+                        margin: 'auto', // Center the modal horizontally
+                        borderRadius: '15px'
+                    },
                 }}
             >
                 <ProgramCardContainer>
-                <ProgramCardHaader>
-                    <ProgramCardHeaderLeft>
-                        <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Detail</h2>
-                        </ProgramCardHeaderLeft>
-                        <ProgramCardHeaderRight>
-                        <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeSiteModal}>
-                            <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
-                        </Button>
-                    </ProgramCardHeaderRight>
-                </ProgramCardHaader>
+                    <ProgramCardHeader>
+                        <ProgramCardHeaderLeft>
+                            <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Detail</h2>
+                            </ProgramCardHeaderLeft>
+                            <ProgramCardHeaderRight>
+                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeSiteModal}>
+                                <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                            </Button>
+                        </ProgramCardHeaderRight>
+                    </ProgramCardHeader>
+
+                    { (selectedSite) ?
+
+                        <SiteViewMapAndInfoContainer>
+
+                            <SiteViewInfoContainer>
+                                <SiteViewH1>{ selectedSite.site_id}</SiteViewH1>
+                                <SiteViewInfoDetailContainer style={{backgroundColor: '#f5f5f5', marginRight: '-10px', gap: '20px'}}>
+                                
+                                    <SiteViewInfoDetailRow style={{maxWidth: '50%'}}>
+
+                                    <SiteViewIconContainer>
+                                        <PersonIcon style={{fontSize: '55px'}}></PersonIcon>
+                                    </SiteViewIconContainer>
+
+                                    <SiteViewInfoDetailColumn>
+                                        <SiteViewP><strong>Site Manager:</strong></SiteViewP>
+                                        <SiteViewP>{ stringFilterPrefix(selectedSite.site_contact_name)}</SiteViewP>
+                                  
+                                    </SiteViewInfoDetailColumn>
+
+                                    </SiteViewInfoDetailRow>
+
+                                    <SiteViewInfoDetailRow style={{maxWidth:'50%'}}>
+
+                                    <SiteViewIconContainer>
+                                        <CallIcon style={{fontSize: '55px'}}></CallIcon>
+                                    </SiteViewIconContainer>
+
+                                    <SiteViewInfoDetailColumn>
+                                        <SiteViewP><strong>Contact Number:</strong></SiteViewP>
+                             
+                                        <SiteViewP>{ stringFilterPrefix(selectedSite.site_contact_nbr)}</SiteViewP>
+                                    </SiteViewInfoDetailColumn>
+
+                                    </SiteViewInfoDetailRow>
+
+                                </SiteViewInfoDetailContainer>
+                                
+                                <SiteViewH2>National Address:</SiteViewH2>
+
+                                <SiteViewInfoDetailContainer>
+
+                                    <SiteViewInfoDetailColumn>
+                                    <SiteViewP2>STREET NUMBER</SiteViewP2>
+                                    <SiteViewP>{ selectedSite.street_nbr}</SiteViewP>
+                                    </SiteViewInfoDetailColumn>
+
+                                    <SiteViewInfoDetailColumn>
+                                    <SiteViewP2>STREET NAME</SiteViewP2>
+                                    <SiteViewP>{ selectedSite.street_name}</SiteViewP>
+                                    </SiteViewInfoDetailColumn>
+
+                                </SiteViewInfoDetailContainer>
+
+                                <SiteViewInfoDetailContainer>
+
+                                    <SiteViewInfoDetailColumn>
+                                    <SiteViewP2>SUBURB</SiteViewP2>
+                                    <SiteViewP>{ selectedSite.suburb}</SiteViewP>
+                                    </SiteViewInfoDetailColumn>
+
+                                    <SiteViewInfoDetailColumn>
+                                    <SiteViewP2>STATE</SiteViewP2>
+                                    <SiteViewP>{ selectedSite.state}</SiteViewP>
+                                    </SiteViewInfoDetailColumn>
+
+                                </SiteViewInfoDetailContainer>
+
+                                <SiteViewInfoDetailContainer>
+
+                                    <SiteViewInfoDetailColumn>
+                                    <SiteViewP2>POSTCODE</SiteViewP2>
+                                    <SiteViewP>{ selectedSite.postcode}</SiteViewP>
+                                    </SiteViewInfoDetailColumn>
+
+                                    <SiteViewInfoDetailColumn>
+                                    <SiteViewP2>LOCAL GOVERNMENT AREA</SiteViewP2>
+                                    <SiteViewP>{stringFilterPrefix(selectedSite.lga)}</SiteViewP>
+                                    </SiteViewInfoDetailColumn>
+
+                                </SiteViewInfoDetailContainer>
+
+                                <SiteViewInfoDetailContainer>
+
+                                    <SiteViewInfoDetailColumn>
+                                    <SiteViewP2>DEPARTMENT OF FAMILIES,FAIRNESS AND HOUSING</SiteViewP2>
+                                    <SiteViewP>{stringFilterPrefix(selectedSite.dffh_area)}</SiteViewP>
+                                    </SiteViewInfoDetailColumn>
+
+                                </SiteViewInfoDetailContainer>
+
+                                <SperateLine></SperateLine>
+
+                                <SiteViewH2>Full Address:</SiteViewH2>
+
+                                <SiteViewP style={{paddingLeft: '0.8rem', marginBottom: '0.3rem'}}>{stringFilterPrefix(selectedSite.address)}</SiteViewP>
+
+                            </SiteViewInfoContainer>
+
+                            <SiteViewMapContainer>
+                                <Map sites={[ selectedSite]} exportSite={null} exportRef={mapRef} mapWidth={54} mapHeight={64.5}/>
+                            </SiteViewMapContainer>
+
+                        </SiteViewMapAndInfoContainer>
+
+                        : null
+                    }
+
                 </ProgramCardContainer>
-            </AnimatedModalContent>
+            </AnimatedModalContent_2>
         </InfoAndPopupContainer>
     );
 }

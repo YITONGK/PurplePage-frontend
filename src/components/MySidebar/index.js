@@ -11,14 +11,15 @@ const MySidebar = ({showSideNav}) => {
 
   // change selected tab
   const onSelect = (selected) => {
-    navigate('/' + selected)
+    navigate('/' + selected);
+    showSideNav();
   }
 
   // navigate
   const navigate = useNavigate();
 
   // styles
-  const sideNavStyle = { zIndex: 10000, backgroundColor: '#A20066'  ,fontFamily: "Helvetica", position: 'relative', opacity: 1}
+  const sideNavStyle = { zIndex: 10000, backgroundColor: '#A20066', fontFamily: "Helvetica", position: 'relative', opacity: 1}
 
   if (['/login', '/register'].includes(window.location.pathname)) {
     return null;
@@ -27,7 +28,7 @@ const MySidebar = ({showSideNav}) => {
     <SideNav
       onSelect={onSelect}
       style={sideNavStyle}
-      expanded={true}
+      defaultExpanded={true}
     >
       <ButtonContainer>
         <SideNavButton size='small' variant='text' onClick={showSideNav} disableRipple>

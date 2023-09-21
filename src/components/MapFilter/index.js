@@ -50,6 +50,8 @@ import SendIcon from '@mui/icons-material/Send';
 import ClearIcon from '@mui/icons-material/Clear';
 
 import ReactLoading from 'react-loading';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const MapFilter = ({filteredPrograms, 
     filteredSites, 
@@ -62,7 +64,8 @@ const MapFilter = ({filteredPrograms,
     importRef, 
     exportSite, 
     exportAdvanceFilteredPrograms,
-    exportDepartureAddress}) => {
+    exportDepartureAddress,
+    importSite}) => {
 
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
@@ -162,7 +165,7 @@ const MapFilter = ({filteredPrograms,
 
         if(isLoading) return;
 
-        if(filteredSites && !filteredSites[0].distance) {
+        if(filteredSites && filteredSites[0] && !filteredSites[0].distance) {
             setTmpAddressValue("");
         }
 
@@ -178,8 +181,10 @@ const MapFilter = ({filteredPrograms,
         }
 
         setAddressIsLoading(false);
+        setClickedSite(null);
 
     },[filteredSites])
+
 
     useEffect(() => {
 
@@ -217,6 +222,15 @@ const MapFilter = ({filteredPrograms,
         }
 
     }, [programTypes, serviceTypes, serviceStreams, groups, divisions])
+
+    useEffect(() => {
+        if(importSite && importSite.site_id){
+            if(clickedSite && clickedSite.site_id === importSite.site_id){
+                return;
+            }
+            setClickedSite(importSite);
+        }
+    },[importSite]);
 
     useEffect(() => {
 
@@ -324,7 +338,7 @@ const MapFilter = ({filteredPrograms,
 
         const geocoding_url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
 
-        axios.get(geocoding_url + onChangeAddressValue + `.json?country=au&types=address&language=en&access_token=${MAPBOX_TOKEN}`).then((res) =>{
+        axios.get(geocoding_url + onChangeAddressValue.split(' ').join('%20') + `.json?proximity=ip&&country=au&&language=en&access_token=${MAPBOX_TOKEN}`).then((res) =>{
             if(cancel) return;
             const addressSuggestions = res.data.features.map((feature) => {
                 return {
@@ -333,7 +347,6 @@ const MapFilter = ({filteredPrograms,
                     lat: feature.geometry.coordinates[1],
                 }
             });
-            console.log(addressSuggestions);
             setSuggestAddressOptions(addressSuggestions);
         })
 
@@ -351,6 +364,17 @@ const MapFilter = ({filteredPrograms,
         }
 
     }, [routingAddressValue]);
+
+    useEffect(() => {
+
+        if(addressIsLoading) return;
+
+        if(routingAddressValue && routingAddressValue.lat && routingAddressValue.lng) {
+            
+            flyingToLocation(routingAddressValue.lat, routingAddressValue.lng);
+        }
+
+    },[addressIsLoading]);
 
     const filteringServiceStreams= (programList) => {
 
@@ -450,6 +474,8 @@ const MapFilter = ({filteredPrograms,
     //==============================Related Dropdown==============================================
     const ServiceStreamDropdown = () => {
         return ( 
+
+            (filteredServiceStreams && filteredServiceStreams.length > 0)?
         
             <Select 
                 name="Service Stream"
@@ -476,12 +502,25 @@ const MapFilter = ({filteredPrograms,
                 }
 
             </Select>
+
+            :
+
+            <div>
+                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                    <Skeleton style={dropDownStyle} height={30}/>
+                </SkeletonTheme>
+            </div>
+
+
         )
 
     }
 
     const ServiceTypeDropdown = () => {
         return ( 
+
+            (filteredServiceTypes && filteredServiceTypes.length > 0) ?
+            
             <Select 
                 name="Service Type"
                 size='small'
@@ -507,11 +546,22 @@ const MapFilter = ({filteredPrograms,
                 }
 
             </Select>
+
+            :
+
+            <div>
+                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                    <Skeleton style={dropDownStyle} height={30}/>
+                </SkeletonTheme>
+            </div>
         )
     }
 
     const ProgramTypeDropdown = () => {
         return ( 
+
+            (filteredProgramTypes && filteredProgramTypes.length > 0) ?
+
             <Select 
                 name="Program Type"
                 size='small'
@@ -537,11 +587,22 @@ const MapFilter = ({filteredPrograms,
                 }
 
             </Select>
+
+            :
+
+            <div>
+                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                    <Skeleton style={dropDownStyle} height={30}/>
+                </SkeletonTheme>
+            </div>
         )
     }
 
     const ProgramDropdown = () => {
         return ( 
+
+            (localFilteredProgram && localFilteredProgram.length > 0) ?
+
             <Select 
                 name="Program"
                 size='small'
@@ -567,12 +628,21 @@ const MapFilter = ({filteredPrograms,
                 }
 
             </Select>
+
+            :
+
+            <div>
+                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                    <Skeleton style={dropDownStyle} height={30}/>
+                </SkeletonTheme>
+            </div>
         )
     }
 
     const DivisionDropdown = () => {
 
         return (
+            (filteredDivisions && filteredDivisions.length > 0) ?
 
             <Select 
                 name="Division"
@@ -599,6 +669,14 @@ const MapFilter = ({filteredPrograms,
                 }
 
             </Select>
+
+            :
+
+            <div>
+                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                    <Skeleton style={dropDownStyle} height={30}/>
+                </SkeletonTheme>
+            </div>
         )
 
     }
@@ -606,6 +684,8 @@ const MapFilter = ({filteredPrograms,
     const GroupDropdown = () => {
 
         return (
+
+            (filteredGroups && filteredGroups.length > 0) ?
 
             <Select 
                 name="Group"
@@ -632,6 +712,14 @@ const MapFilter = ({filteredPrograms,
                 }
 
             </Select>
+
+            :
+
+            <div>
+                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                    <Skeleton style={dropDownStyle} height={30} />
+                </SkeletonTheme>
+            </div>
         )
 
     }
@@ -1745,7 +1833,6 @@ const MapFilter = ({filteredPrograms,
 
     //=============================Render of the Options===================================
     const renderOptions = (option) => {
-        console.log(option);
         return (
             <OptionContainer {...option} className=''>
                 <OptionIcon>
@@ -1814,39 +1901,65 @@ const MapFilter = ({filteredPrograms,
                 </LabelContainer>
                 <SearchContainer>
                     <SearchInputContainer>
-                        <InputLabel style={{fontSize: '16px'}}>Departure Address</InputLabel>
-                        <Autocomplete
-                            disablePortal
-                            id="departureAddress"
-                            className=''
-                            options={suggestAddressOptions.map((address) => address.address)}
-                            onChange={onChangeDepartureAddress}
-                            isOptionEqualToValue={(option, value) => {if(value === "") {return false;} else { return (option === value);}}}
-                            onInputChange={onInputDepartureValue}
-                            value={tmpAddressValue}
-                            style={textFieldStyle}
-                            popupIcon={<CardTravelIcon/>}
-                            sx={{"& .MuiAutocomplete-popupIndicator": { transform: "none", pointerEvents: "none"}}}
-                            size='small'
-                            selectOnFocus
-                            clearOnBlur
-                            forcePopupIcon 
-                            renderInput={(params) => <TextField {...params} placeholder='Customer Address...' sx={searchTextFieldStyle}/>}
-                            renderOption={renderOptions}
-                        />
+                        <InputLabel style={{fontSize: '16px'}}>Search Address</InputLabel>
+                        {
+                            (addressIsLoading) ? 
+
+                            <div>
+                                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                    <Skeleton style={textFieldStyle} height={35} />
+                                </SkeletonTheme>
+                            </div>
+
+                            :
+
+                            <Autocomplete
+                                disablePortal
+                                id="departureAddress"
+                                className=''
+                                options={suggestAddressOptions.map((address) => address.address)}
+                                onChange={onChangeDepartureAddress}
+                                isOptionEqualToValue={(option, value) => {if(value === "") {return false;} else { return (option === value);}}}
+                                onInputChange={onInputDepartureValue}
+                                value={tmpAddressValue}
+                                style={textFieldStyle}
+                                popupIcon={ <SearchIcon />}
+                                sx={{
+                                    "& .MuiAutocomplete-popupIndicator": { transform: "none", pointerEvents: "none"}, 
+                                    "& .MuiAutocomplete-paper": { overflowX: "hidden"}
+                                    }}
+                                size='small'
+                                selectOnFocus
+                                clearOnBlur
+                                forcePopupIcon 
+                                renderInput={(params) => <TextField {...params} placeholder='E.g., Harris Street' sx={searchTextFieldStyle}/>}
+                                renderOption={renderOptions}
+                            />
+                        }
                     </SearchInputContainer>
                     <BreakingLine2></BreakingLine2>
                     <SearchInputContainer>
-                        <InputLabel style={{fontSize: '16px'}}>Search Sites</InputLabel>
-                        <TextField sx={{...searchTextFieldStyle, ...textFieldStyle}} id="searchSite" size='small' placeholder='E.g., Harris Street' onChange={onChangeSiteSearch} 
-                            InputProps={{
-                                endAdornment : (
-                                    <InputAdornment position="end">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                )
-                            }}
-                        ></TextField>
+                        <InputLabel style={{fontSize: '16px'}}>Search Uniting Sites</InputLabel>
+                        {
+                            (addressIsLoading) ? 
+
+                            <div>
+                                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                    <Skeleton style={textFieldStyle} height={35} />
+                                </SkeletonTheme>
+                            </div>
+                            :
+                            <TextField sx={{...searchTextFieldStyle, ...textFieldStyle}} id="searchSite" size='small' placeholder='E.g., Harris Street' onChange={onChangeSiteSearch} 
+                                InputProps={{
+                                    endAdornment : (
+                                        <InputAdornment position="end">
+                                            <SearchIcon />
+                                        </InputAdornment>
+                                    )
+                                }}
+                            ></TextField>
+                        }
+                        
                     </SearchInputContainer>
                 </SearchContainer>
                 <SitesContainer style={addressIsLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center' } : {}}>

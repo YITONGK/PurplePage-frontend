@@ -6,11 +6,12 @@ export const FooterContainer = styled.footer`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60px;
+  height: 75px;
   width: 100%;
   bottom: 0;
   left: 0;
   z-index: 999;
+  ${'' /* border: 1px solid yellow; */}
 `;
 
 export const FooterWrapper = styled.div`
