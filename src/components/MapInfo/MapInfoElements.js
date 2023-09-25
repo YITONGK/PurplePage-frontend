@@ -31,7 +31,7 @@ export const InfoH1 = styled.h1`
 `;
 
 export const InfoH2 = styled.h2`
-    font-size: 24px;
+    font-size: 24px; // origin 24
     color: #41424C;
     margin: 1rem 0 1rem 0;
     pading: 0;
@@ -151,11 +151,11 @@ export const InfoAndPopupContainer = styled.div`
 const fadeIn = keyframes`
   from {
     opacity: 0;
-    transform: translate(0%, 0%);
+    transform: translate(-10%, 0%);
   }
   to {
     opacity: 1;
-    transform: translate(0%, 30%);
+    transform: translate(0%, 2%);
   }
 `;
 
@@ -163,7 +163,7 @@ const fadeIn = keyframes`
 export const AnimatedModalContent = styled(Modal)`
   &.ReactModal__Content {
     animation: ${fadeIn} 0.3s ease-in-out;
-    transform: translate(0%, 30%);
+    transform: translate(0%, 2%);
     background-color: white;
     display: flex;
     background-color: white;
@@ -176,11 +176,11 @@ export const AnimatedModalContent = styled(Modal)`
 const fadeIn_2 = keyframes`
   from {
     opacity: 0;
-    transform: translate(0%, 0%);
+    transform: translate(-10%, 0%);
   }
   to {
     opacity: 1;
-    transform: translate(0%, 25%);
+    transform: translate(0%, 15%);
   }
 `;
 
@@ -188,7 +188,7 @@ const fadeIn_2 = keyframes`
 export const AnimatedModalContent_2 = styled(Modal)`
   &.ReactModal__Content {
     animation: ${fadeIn_2} 0.3s ease-in-out;
-    transform: translate(0%, 25%);
+    transform: translate(0%, 15%);
     background-color: white;
     display: flex;
     background-color: white;
@@ -214,6 +214,7 @@ export const ProgramCardHeader = styled.div`
   background-color: #A20066;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
+  //margin-bottom: 1rem;
 `;
 
 export const ProgramCardHeaderLeft = styled.div`
@@ -291,11 +292,11 @@ export const ProgramInfoDetailContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  ${'' /* border: 1px solid grey; */}
-  padding: 1rem;
-  min-height: 53vh;
+  padding: 1rem 1rem 1rem 1rem;
   overflow-y: auto;
   gap: 0.7rem;
+  //border: 1px solid red;
+  flex: 1;
 `;
 
 export const ProgramViewP2 = styled.p`

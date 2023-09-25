@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap');
+
 .App {
   text-align: center;
 }
@@ -89,6 +91,7 @@
   align-items: center;
   justify-content: center;
   z-index: 9999;
+  background-color: #282c34;
 }
 
 .loading-overlay::before {
@@ -101,16 +104,18 @@
   background-image: url('./images/login-img.png'); /* Replace with your image path */
   background-size: cover; /* This will cover the entire viewport */
   background-position: center; /* This will center the background image */
-  opacity: 0.7; /* This will make the image semi-transparent */
+  opacity: 0.8; /* This will make the image semi-transparent */
   z-index: -1; /* This places the image behind the loading text */
 }
 
 .loading-container {
-  background-color: #444444;
-  padding: 20px; /* Adjust as per your needs */
-  border-radius: 8px; /* Gives rounded corners, adjust as needed */
-  box-shadow: 0 5px 40px rgba(0, 0, 0, 0.8); /* Optional: adds a subtle shadow for depth */
-  border: 2px solid white;
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow:
+          0 0 20px 5px rgba(255, 255, 255, 0.6),   /* Inner centered glow */
+          0 0 40px rgba(255, 255, 255, 0.4),       /* Soft outer glow */
+          0 10px 20px rgba(0, 0, 0, 0.5);          /* Subtle bottom shadow for depth */
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -124,6 +129,7 @@
   color: white; /* Adjust color based on your preference */
   font-size: 24px;
   font-weight: bold;
+  font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
 }

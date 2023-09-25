@@ -138,10 +138,18 @@ function App() {
 
     const result = await axios.get(BASE_URL+ '/site');
 
+    // swap lat and lng
+    // const filteredResult = result.data.map(site => ({
+    //   ...site,
+    //   lat: site.lng,
+    //   lng: site.lat,
+    // }));
+
+    // origin
     const filteredResult = result.data.map(site => ({
       ...site,
-      lat: site.lng,
-      lng: site.lat,
+      lat: site.lat,
+      lng: site.lng,
     }));
 
     return filteredResult.filter(site => site.lng !== null && site.lat != null);
@@ -207,6 +215,7 @@ function App() {
       let result = await axios.get(BASE_URL + '/servicetype');
       result = result.data[0];
       return result;
+
   }
 
 

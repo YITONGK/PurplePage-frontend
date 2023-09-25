@@ -60,6 +60,9 @@ import CategoryIcon from '@mui/icons-material/Category';
 import CallIcon from '@mui/icons-material/Call';
 import WorkIcon from '@mui/icons-material/Work';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import CodeIcon from '@mui/icons-material/Code';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 import Map from '../Map';
 
@@ -149,6 +152,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
         setSelectedPrograms(newProgram);
 
         setProgramPopUpOpen(true);
+        document.body.style.overflow = 'hidden';
     };
 
     const onClickSiteDetail = (site) => {
@@ -197,19 +201,40 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                     {site ? (
                     <SiteContainer>
                         <SiteTitle>
-                            <InfoH2>{site.site_id}</InfoH2>
+                            <InfoH2>
+                                {site.street_name} - {site.suburb}
+                            </InfoH2>
                         </SiteTitle>
                         <SiteInfo>
+                            <SiteInfoDetailContainer>
+                                <InfoP>Address</InfoP>
+                                <InfoP2>
+                                    {site.street_nbr} {site.street_name}, <br/>
+                                    {site.suburb}, <br/>
+                                    {site.state} {site.postcode}
+                                </InfoP2>
+                            </SiteInfoDetailContainer>
+                            <SiteInfoDetailContainer>
+                                <InfoP>Hours</InfoP>
+                                <InfoP2>
+                                    Opening 2am - 5pm <br/>
+                                    Closing Weekend & Public Holiday
+                                </InfoP2>
+                            </SiteInfoDetailContainer>
+                            <SiteInfoDetailContainer>
+                                <InfoP>Accessibility</InfoP>
+                                <InfoP2>
+                                    Free Access
+                                </InfoP2>
+                            </SiteInfoDetailContainer>
                             <SiteInfoDetailContainer>
                                 <InfoP>Contact Name:</InfoP>
                                 <InfoP2>{stringFilterPrefix(site.site_contact_name)}</InfoP2>
                             </SiteInfoDetailContainer>
                             <SiteInfoDetailContainer>
-                                <InfoP>Address:</InfoP>
+                                <InfoP>Contact Number</InfoP>
                                 <InfoP2>
-                                    {site.street_nbr} {site.street_name}, <br/>
-                                    {site.suburb}, <br/>
-                                    {site.state} {site.postcode}
+                                    {stringFilterPrefix(site.site_contact_nbr)}
                                 </InfoP2>
                             </SiteInfoDetailContainer>
 
@@ -247,9 +272,11 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                 style={{
                     content: {
                         width: '50vw', // Set the desired width
-                        height: '65vh', // Set the desired height
+                        height: '88vh', // Set the desired height
                         margin: 'auto', // Center the modal horizontally
-                        borderRadius: '15px'
+                        borderRadius: '15px',
+                        overflow: 'hidden',
+                        zIndex: 100000
                     },
                 }}
             >
@@ -266,6 +293,19 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                     </ProgramCardHeader>
 
                     <ProgramInfoDetailContainer>
+                        <ProgramInfoDetail>
+                            <Icon style={{minWidth:'100%'}}>
+                                <IconContainer>
+                                    <CodeIcon style={{fontSize: '25px', margin: '0'}}/>
+                                    <ProgramViewCaption>Program</ProgramViewCaption>
+                                    <ProgramViewCaption>Name</ProgramViewCaption>
+                                </IconContainer>
+                                <IconDescription style={{padding: "1rem", textAlign: 'justify'}}>
+                                    <ProgramViewP2>{stringFilterPrefix(selectedPrograms.program_nme)}</ProgramViewP2>
+                                </IconDescription>
+                            </Icon>
+                        </ProgramInfoDetail>
+
                         <ProgramInfoDetail>
                             <Icon style={{minWidth:'100%'}}>
                                 <IconContainer>
@@ -304,6 +344,31 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                         </ProgramInfoDetail>
 
                         <ProgramInfoDetail>
+
+                            <Icon>
+                                <IconContainer style={{minWidth: '70px'}}>
+                                    <PersonIcon style={{fontSize: '25px', margin: '0'}}/>
+                                    <ProgramViewCaption>General</ProgramViewCaption>
+                                    <ProgramViewCaption>Manager</ProgramViewCaption>
+                                </IconContainer>
+                                <IconDescription>
+                                    <ProgramViewP2>{stringFilterPrefix("Manager")}</ProgramViewP2>
+                                </IconDescription>
+                            </Icon>
+
+                            <Icon>
+                                <IconContainer style={{minWidth: '70px'}}>
+                                    <PersonIcon style={{fontSize: '25px', margin: '0'}}/>
+                                    <ProgramViewCaption>Exec</ProgramViewCaption>
+                                    <ProgramViewCaption>Officer</ProgramViewCaption>
+                                </IconContainer>
+                                <IconDescription>
+                                    <ProgramViewP2>{stringFilterPrefix('Exec Officer')}</ProgramViewP2>
+                                </IconDescription>
+                            </Icon>
+                        </ProgramInfoDetail>
+                        <ProgramInfoDetail>
+
                             <Icon>
                                 <IconContainer style={{minWidth: '70px'}}>
                                     <CategoryIcon style={{fontSize: '25px', margin: '0'}}/>
@@ -316,23 +381,25 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                             </Icon>
 
                             <Icon>
-                                <IconContainer style={{minWidth: '70px', minHeight: '55px'}}>
-                                    <WorkIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Group</ProgramViewCaption>
+                                <IconContainer style={{minWidth: '70px'}}>
+                                    <VpnKeyIcon style={{fontSize: '25px', margin: '0'}}/>
+                                    <ProgramViewCaption>Access</ProgramViewCaption>
+                                    <ProgramViewCaption>Type</ProgramViewCaption>
                                 </IconContainer>
                                 <IconDescription>
-                                    <ProgramViewP2>{stringFilterPrefix(selectedPrograms.group_name)}</ProgramViewP2>
+                                    <ProgramViewP2>{stringFilterPrefix("Access")}</ProgramViewP2>
                                 </IconDescription>
                             </Icon>
                         </ProgramInfoDetail>
                         <ProgramInfoDetail>
                             <Icon style={{minWidth:'100%'}}>
                                 <IconContainer style={{minWidth: '70px'}}>
-                                    <QueryStatsIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Status</ProgramViewCaption>
+                                    <LocalShippingIcon style={{fontSize: '25px', margin: '0'}}/>
+                                    <ProgramViewCaption>Delivery</ProgramViewCaption>
+                                    <ProgramViewCaption>Method</ProgramViewCaption>
                                 </IconContainer>
                                 <IconDescription>
-                                    <ProgramViewP2><ProgramViewGreenP><strong>{stringFilterPrefix(selectedPrograms.prgm_status)}</strong></ProgramViewGreenP></ProgramViewP2>
+                                    <ProgramViewP2><ProgramViewGreenP><strong>{stringFilterPrefix("Online/Duo")}</strong></ProgramViewGreenP></ProgramViewP2>
                                 </IconDescription>
                             </Icon>
                         </ProgramInfoDetail>
@@ -346,7 +413,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                 style={{
                     content: {
                         width: '90vw', // Set the desired width
-                        height: '70vh', // Set the desired height
+                        height: '75vh', // Set the desired height
                         margin: 'auto', // Center the modal horizontally
                         borderRadius: '15px'
                     },
@@ -464,7 +531,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                             </SiteViewInfoContainer>
 
                             <SiteViewMapContainer>
-                                <Map sites={[ selectedSite]} exportSite={null} exportRef={mapRef} mapWidth={54} mapHeight={64.5}/>
+                                <Map sites={[ selectedSite]} exportSite={null} exportRef={mapRef} mapWidth={54} mapHeight={68}/>
                             </SiteViewMapContainer>
 
                         </SiteViewMapAndInfoContainer>

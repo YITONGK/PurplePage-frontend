@@ -385,9 +385,15 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
         const filteringSites = siteList.filter(site => siteIds.includes(site.site_id));
 
-        setFilteredPrograms(filteringPrograms);
-        setFilteredSites(filteringSites);
-        setAdvanceFilteredSites(filteringSites);
+        if(filteringSites.length > 0) {
+          setFilteredPrograms(filteringPrograms);
+          setFilteredSites(filteringSites);
+          setAdvanceFilteredSites(filteringSites);
+
+        } else {
+          console.log("None Result"); // need to through some error out... at the bottom of the search
+        }
+
       }
       else if (typeof value === 'object') 
       {
@@ -543,7 +549,21 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
                   )}
                 /> 
             </SelectDiv>
-            <Button variant='contained' onClick={searchClearOnClick}>Clear</Button>
+            <Button variant='contained' onClick={searchClearOnClick} sx={{
+              backgroundColor: '#A20066',
+              color: 'white',
+              textTransform: 'capitalize',
+              fontSize: '15px',
+              borderRadius: '10px',
+              boxShadow: '0px 5px 10px rgba(0, 0, 0, 0.4)', // Add your desired boxShadow value here
+              ':hover': {
+                boxShadow: '5px 0 10px rgba(0, 0, 0, 0.8)', // Add your desired boxShadow value here
+                backgroundColor: '#A20066',
+                color: 'white'
+              }
+            }}>
+              Clear
+            </Button>
           </>
           :
           <div>

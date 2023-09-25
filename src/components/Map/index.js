@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { MapContainer, MapP, InfoWindowContainer, InfoWindowH1, InfoWindowP, MarkerAnimation, BasicMarker, InterContainer} from './MapElements';
-import ReactMapGl, { Marker, Popup} from "react-map-gl";
+import ReactMapGl, { Marker, Popup, AttributionControl} from "react-map-gl";
 import mapboxgl from 'mapbox-gl';
 
 // The following is required to stop "npm build" from transpiling mapbox code.
@@ -236,6 +236,8 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
     <InterContainer>
       <MapContainer style={{width: (mapWidth && mapWidth > 0)? `${mapWidth}vw`: `55vw`, height: (mapHeight && mapHeight > 0)? `${mapHeight}vh` : `64.5vh`}}>
         <ReactMapGl
+          attributionControl={false}
+          style={{zIndex: '0'}}
           ref={exportRef}
           {...viewPort}
           mapboxAccessToken={MAPBOX_TOKEN}

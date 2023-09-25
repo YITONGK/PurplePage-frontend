@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef} from 'react';
 import { useParams } from 'react-router-dom';
 import { ProgramViewContainer, ProgramViewH1, ProgramViewP, ActionsButtonLink, ProgramViewGreenP, MapAndInfoContainer, ProgramViewInfo, ProgramViewMapContainer, InfoDetail, IconContainer, ProgramViewCaption, IconDescription, ProgramViewP2, Icon, InfoDetailContainer, TitleContainer, AnimatedRoomIcon, AnimatedTableCell } from './ProgramViewElements';
 import Button from '@mui/material/Button';
-import Swal from 'sweetalert2';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';

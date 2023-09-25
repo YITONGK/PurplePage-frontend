@@ -68,7 +68,7 @@ export const MapP = styled.p`
 `;
 
 export const SelectDiv = styled.div`
-  margin-right: 0.1rem;
+  margin-right: 0.5rem;
 `;
 
 export const GroupHeader = styled.div`
