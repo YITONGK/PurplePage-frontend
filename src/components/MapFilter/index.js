@@ -65,7 +65,8 @@ const MapFilter = ({filteredPrograms,
     exportSite, 
     exportAdvanceFilteredPrograms,
     exportDepartureAddress,
-    importSite}) => {
+    importSite,
+    readyChecking}) => {
 
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
@@ -181,6 +182,7 @@ const MapFilter = ({filteredPrograms,
         }
 
         setAddressIsLoading(false);
+        readyChecking(false);
         setClickedSite(null);
 
     },[filteredSites])

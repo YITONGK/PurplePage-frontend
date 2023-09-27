@@ -1,13 +1,10 @@
 import './App.css';
 import axios from 'axios';
-import React, {useState, useEffect} from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ProtectedRoute from './components/ProtectedRoute';
+import React, {useEffect, useState} from 'react';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages';
-import LoginPage from './pages/login';
-import RegisterPage from './pages/register';
 
 import Profile from './components/Profile';
 import Users from './components/Users';
@@ -51,6 +48,7 @@ import SiteView from './components/SiteView';
 import SiteEdit from './components/SiteEdit';
 import SiteCreate from './components/SiteCreate';
 import ReactLoading from 'react-loading';
+import {find} from "styled-components/test-utils";
 
 
 //export NODE_OPTIONS=--openssl-legacy-provider //use this comment id digital routine unsupport
@@ -65,158 +63,255 @@ function App() {
   const [serviceTypeList, setServiceTypeList] = useState([]);
   const [divisionList, setDivisionList] = useState([]);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [sideNavShow, setSideNavShow] = useState(false);
 
-  useEffect(() => {
-
-    setIsLoading(true);
-    getAllData();
-
-  }, [])
-
-  useEffect(() => {
-
-    if(siteList.length > 0 
-      && programList.length > 0
-      && programTypeList.length > 0
-      && groupList.length > 0
-      && serviceStreamList.length > 0
-      && serviceTypeList.length > 0
-      && divisionList.length > 0 )
-    {
-      setIsLoading(false);
-    }
-
-  }, [siteList, programList, programTypeList, groupList, serviceStreamList, serviceTypeList, divisionList])
-
-
-  const getAllData = async () => {
-
-
-    try {
-      const [programTypes, groups, programs, sites, serviceStreams, serviceTypes, divisions] = await Promise.all ([
-        getProgramTypes(),
-        getGroups(),
-        getPrograms(),
-        getSites(),
-        getServiceStreams(),
-        getServiceTypes(),
-        getDivisions(),
-      ]);
-
-      setProgramTypeList(programTypes);
-      setGroupList(groups);
-      setProgramList(programs);
-
-      const distinctSites = sites.filter((site, index, self) => {
-        return index === self.findIndex((obj) => obj.site_id === site.site_id);
-      });
-
-      distinctSites.sort ((s1, s2) => s1.site_id.localeCompare(s2.site_id));
-
-      setSiteList(distinctSites);
-
-      setServiceStreamList(serviceStreams);
-      setServiceTypeList(serviceTypes);
-      setDivisionList(divisions);
-
-
-    } catch (error) {
-
-      console.log(error);
-    }
-    
-  }
-
-  // =============================Data Collect Method From Database====================================
-
-  /* get a list of sites from the backend and display it */
-  const getSites = async () => {
-    const BASE_URL = "http://localhost:8888";
-
-    const result = await axios.get(BASE_URL+ '/site');
-
-    // swap lat and lng
-    // const filteredResult = result.data.map(site => ({
-    //   ...site,
-    //   lat: site.lng,
-    //   lng: site.lat,
-    // }));
-
-    // origin
-    const filteredResult = result.data.map(site => ({
-      ...site,
-      lat: site.lat,
-      lng: site.lng,
-    }));
-
-    return filteredResult.filter(site => site.lng !== null && site.lat != null);
-  }
-
-  /* get list of programs from the backend and display them */
-  const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
-
-    const result = await axios.get(BASE_URL + '/program');
-    return result.data[0];
-  }
-
-  /* get list of program types from the backend and display them */
-  const getProgramTypes = async () => {
-    const BASE_URL = 'http://localhost:8888';
-
-    let result = await axios.get(BASE_URL + '/programtype');
-    result = result.data[0];
-
-    result.sort((a, b) => {
-      if (a.prgm_type === null && b.prgm_type === null) return 0;
-      if (a.prgm_type === null) return -1;
-      if (b.prgm_type === null) return 1;
-      return a.prgm_type.localeCompare(b.prgm_type);
-    });
-
-    return result;
-  }
-
-  /* get list of groups from the backend and display them */
-  const getGroups = async () => {
-    const BASE_URL = 'http://localhost:8888';
-
-    let result =  await axios.get(BASE_URL + '/group');
-    result = result.data[0];
-    result.sort ((a, b) => a.group_name.localeCompare(b.group_name));
-    return result;
-  }
-
-  const getServiceStreams = async() => {
-    const BASE_URL = 'http://localhost:8888';
-
-    let result = await axios.get(BASE_URL + '/servicestream');
-    result = result.data;
-    result.sort((a, b) => a.ser_stream.localeCompare(b.ser_stream));
-    return result;
-  }
-
-  const getDivisions = async() => {
-      const BASE_URL = 'http://localhost:8888';
-
-      let result = await axios.get(BASE_URL + '/division');
-      result = result.data;
-      result.sort((a, b) => a.division_name.localeCompare(b.division_name));
-      return result;
-
-  }
-
-  const getServiceTypes = async() => {
-      const BASE_URL = 'http://localhost:8888';
-
-      let result = await axios.get(BASE_URL + '/servicetype');
-      result = result.data[0];
-      return result;
-
-  }
+  // useEffect(() => {
+  //
+  //   getAllData();
+  //
+  // }, [])
+  //
+  // useEffect(() => {
+  //
+  //   if(siteList.length > 0
+  //     && programList.length > 0
+  //     && programTypeList.length > 0
+  //     && groupList.length > 0
+  //     && serviceStreamList.length > 0
+  //     && serviceTypeList.length > 0
+  //     && divisionList.length > 0 )
+  //   {
+  //     setIsLoading(false);
+  //   }
+  //
+  // }, [siteList, programList, programTypeList, groupList, serviceStreamList, serviceTypeList, divisionList])
+  //
+  // const findMatchInProgramAtAndSdm = (list, findingTitle) => {
+  //   if (list && findingTitle) {
+  //
+  //     const tmpValue = list.find((v) => v && v.title === findingTitle);
+  //
+  //     return tmpValue || null;
+  //   }
+  //   return null;
+  // };
+  //
+  // const findMatchInSiteAccess = (list, findingId) => {
+  //   if (list && findingId) {
+  //
+  //     const tmpValue = list.find((v) => v && v.site_id === findingId);
+  //
+  //     return tmpValue || null;
+  //   }
+  //   return null;
+  // };
+  //
+  // const findGmInDivision = (list, findingId) => {
+  //   if (list && findingId) {
+  //
+  //     let tmpValue = list.find((v) => v && v.division_id === findingId);
+  //
+  //     if(tmpValue) {
+  //       tmpValue = tmpValue.gm;
+  //     }
+  //
+  //     return tmpValue || null;
+  //   }
+  //   return null;
+  // };
+  //
+  // const findOEInGroup = (list, findingId) => {
+  //   if (list && findingId) {
+  //
+  //     let tmpValue = list.find((v) => v && v.group_id === findingId);
+  //
+  //     if(tmpValue) {
+  //       tmpValue = tmpValue.eo;
+  //     }
+  //
+  //     return tmpValue || null;
+  //   }
+  //   return null;
+  // };
+  //
+  // const getAllData = async () => {
+  //
+  //   try {
+  //     const [programTypes, groups, programs, programAts, programSdms, sites, siteAccessibilities ,serviceStreams, serviceTypes, divisions] = await Promise.all ([
+  //       getProgramTypes(),
+  //       getGroups(),
+  //       getPrograms(),
+  //       getProgramAts(),
+  //       getProgramSdms(),
+  //       getSites(),
+  //       getSiteAccessibilities(),
+  //       getServiceStreams(),
+  //       getServiceTypes(),
+  //       getDivisions(),
+  //     ]);
+  //
+  //
+  //     setProgramTypeList(programTypes);
+  //     setGroupList(groups);
+  //     // setProgramList(programs);
+  //
+  //     const tmpProgramList = programs.map((program) => {
+  //       const programTitle = program.title;
+  //
+  //       let programDivisionId = groups.find((group) => group && group.group_id === program.group_id);
+  //       programDivisionId = (programDivisionId)? programDivisionId.division_id : null;
+  //       return {
+  //         ...program,
+  //         at: findMatchInProgramAtAndSdm(programAts, programTitle),
+  //         sdm: findMatchInProgramAtAndSdm(programSdms, programTitle),
+  //         eo: findOEInGroup(groups, program.group_id),
+  //         gm: (programDivisionId) ? findGmInDivision(divisions, programDivisionId) : null
+  //       }
+  //     })
+  //
+  //     setProgramList(tmpProgramList);
+  //
+  //     const distinctSites = sites.filter((site, index, self) => {
+  //       return index === self.findIndex((obj) => obj.site_id === site.site_id);
+  //     });
+  //
+  //     distinctSites.sort ((s1, s2) => s1.site_id.localeCompare(s2.site_id));
+  //
+  //     const tmpSites = distinctSites.map((site) => {
+  //       let siteId = site.site_id;
+  //       return {
+  //         ...site,
+  //         accessibility: findMatchInSiteAccess(siteAccessibilities, siteId),
+  //       }
+  //     });
+  //
+  //     setSiteList(tmpSites);
+  //
+  //     setServiceStreamList(serviceStreams);
+  //     setServiceTypeList(serviceTypes);
+  //     setDivisionList(divisions);
+  //
+  //
+  //   } catch (error) {
+  //
+  //     console.log(error);
+  //   }
+  //
+  // }
+  //
+  // // =============================Data Collect Method From Database====================================
+  //
+  // /* get a list of sites from the backend and display it */
+  // const getSites = async () => {
+  //   const BASE_URL = "http://localhost:8888";
+  //
+  //   const result = await axios.get(BASE_URL+ '/site');
+  //
+  //   // swap lat and lng
+  //   const filteredResult = result.data.map(site => ({
+  //     ...site,
+  //     lat: site.lng,
+  //     lng: site.lat,
+  //   }));
+  //
+  //   // origin
+  //   // const filteredResult = result.data.map(site => ({
+  //   //   ...site,
+  //   //   lat: site.lat,
+  //   //   lng: site.lng,
+  //   // }));
+  //
+  //   return filteredResult.filter(site => site.lng !== null && site.lat != null);
+  // }
+  //
+  // /* get list of site accessibility from the db */
+  // const getSiteAccessibilities = async () => {
+  //   const BASE_URL = 'http://localhost:8888';
+  //
+  //   const result = await axios.get(BASE_URL + '/siteaccess');
+  //   return result.data;
+  // }
+  //
+  // /* get list of programs from the backend and display them */
+  // const getPrograms = async () => {
+  //   const BASE_URL = 'http://localhost:8888';
+  //
+  //   const result = await axios.get(BASE_URL + '/program');
+  //   return result.data[0];
+  // }
+  //
+  // /* get list of programs Access Type from the db */
+  // const getProgramAts = async () => {
+  //   const BASE_URL = 'http://localhost:8888';
+  //
+  //   const result = await axios.get(BASE_URL + '/programat');
+  //   return result.data;
+  // }
+  //
+  // /* get list of programs delivery method from the db */
+  // const getProgramSdms = async () => {
+  //   const BASE_URL = 'http://localhost:8888';
+  //
+  //   const result = await axios.get(BASE_URL + '/programsdm');
+  //   return result.data;
+  // }
+  //
+  // /* get list of program types from the backend and display them */
+  // const getProgramTypes = async () => {
+  //   const BASE_URL = 'http://localhost:8888';
+  //
+  //   let result = await axios.get(BASE_URL + '/programtype');
+  //   result = result.data[0];
+  //
+  //   result.sort((a, b) => {
+  //     if (a.prgm_type === null && b.prgm_type === null) return 0;
+  //     if (a.prgm_type === null) return -1;
+  //     if (b.prgm_type === null) return 1;
+  //     return a.prgm_type.localeCompare(b.prgm_type);
+  //   });
+  //
+  //   return result;
+  // }
+  //
+  // /* get list of groups from the backend and display them */
+  // const getGroups = async () => {
+  //   const BASE_URL = 'http://localhost:8888';
+  //
+  //   let result =  await axios.get(BASE_URL + '/group');
+  //   result = result.data[0];
+  //   result.sort ((a, b) => a.group_name.localeCompare(b.group_name));
+  //   return result;
+  // }
+  //
+  // const getServiceStreams = async() => {
+  //   const BASE_URL = 'http://localhost:8888';
+  //
+  //   let result = await axios.get(BASE_URL + '/servicestream');
+  //   result = result.data;
+  //   result.sort((a, b) => a.ser_stream.localeCompare(b.ser_stream));
+  //   return result;
+  // }
+  //
+  // const getDivisions = async() => {
+  //     const BASE_URL = 'http://localhost:8888';
+  //
+  //     let result = await axios.get(BASE_URL + '/division');
+  //     result = result.data;
+  //     result.sort((a, b) => a.division_name.localeCompare(b.division_name));
+  //     return result;
+  //
+  // }
+  //
+  // const getServiceTypes = async() => {
+  //     const BASE_URL = 'http://localhost:8888';
+  //
+  //     let result = await axios.get(BASE_URL + '/servicetype');
+  //     result = result.data[0];
+  //     return result;
+  //
+  // }
 
 
   const showSideNav = () => {

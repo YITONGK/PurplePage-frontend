@@ -112,17 +112,25 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
         return (
             <ProgramInfoContainer>
                 {
-                    relatedPrograms.map((program, index) =>{
-                        return (
-                            <>
-                                <ListItemButton key={index} onClick= {() => onClickProgram(program)}>
-                                    <ListItemText primary= {program.program_nme}/>
-                                    <ExpandMore style={{transform: 'rotate(-90deg)'}}></ExpandMore>
-                                </ListItemButton>
-                            </>
-                        
-                        )
-                    })
+                    (relatedPrograms && relatedPrograms.length > 0) ?
+                        relatedPrograms.map((program, index) =>{
+                            return (
+                                <React.Fragment key={index}>
+                                    <ListItemButton key={index} onClick= {() => onClickProgram(program)}>
+                                        <ListItemText primary= {program.program_nme}/>
+                                        <ExpandMore style={{transform: 'rotate(-90deg)'}}></ExpandMore>
+                                    </ListItemButton>
+                                </React.Fragment>
+
+                            )
+                        })
+                        :
+                        <React.Fragment>
+                            <ListItemButton>
+                                <ListItemText primary= {'No Program'}/>
+                            </ListItemButton>
+                        </React.Fragment>
+
                 }
             </ProgramInfoContainer>
         )
@@ -217,14 +225,14 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                             <SiteInfoDetailContainer>
                                 <InfoP>Hours</InfoP>
                                 <InfoP2>
-                                    Opening 2am - 5pm <br/>
-                                    Closing Weekend & Public Holiday
+                                    Opening- {(stringFilterPrefix(site.site_open) === 'None') ? 'TBA' : stringFilterPrefix(site.site_open)} <br/>
+                                    Closing- {(stringFilterPrefix(site.site_close) === 'None') ? 'TBA' : stringFilterPrefix(site.site_close)}
                                 </InfoP2>
                             </SiteInfoDetailContainer>
                             <SiteInfoDetailContainer>
                                 <InfoP>Accessibility</InfoP>
                                 <InfoP2>
-                                    Free Access
+                                    {(site.accessibility) ? stringFilterPrefix(site.accessibility.accessibility) : 'None'}
                                 </InfoP2>
                             </SiteInfoDetailContainer>
                             <SiteInfoDetailContainer>
@@ -352,7 +360,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                                     <ProgramViewCaption>Manager</ProgramViewCaption>
                                 </IconContainer>
                                 <IconDescription>
-                                    <ProgramViewP2>{stringFilterPrefix("Manager")}</ProgramViewP2>
+                                    <ProgramViewP2>{stringFilterPrefix(selectedPrograms.gm)}</ProgramViewP2>
                                 </IconDescription>
                             </Icon>
 
@@ -363,7 +371,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                                     <ProgramViewCaption>Officer</ProgramViewCaption>
                                 </IconContainer>
                                 <IconDescription>
-                                    <ProgramViewP2>{stringFilterPrefix('Exec Officer')}</ProgramViewP2>
+                                    <ProgramViewP2>{stringFilterPrefix(selectedPrograms.eo)}</ProgramViewP2>
                                 </IconDescription>
                             </Icon>
                         </ProgramInfoDetail>
@@ -387,7 +395,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                                     <ProgramViewCaption>Type</ProgramViewCaption>
                                 </IconContainer>
                                 <IconDescription>
-                                    <ProgramViewP2>{stringFilterPrefix("Access")}</ProgramViewP2>
+                                    <ProgramViewP2>{(selectedPrograms.at) ? stringFilterPrefix(selectedPrograms.at.at) : 'None'}</ProgramViewP2>
                                 </IconDescription>
                             </Icon>
                         </ProgramInfoDetail>
@@ -399,7 +407,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                                     <ProgramViewCaption>Method</ProgramViewCaption>
                                 </IconContainer>
                                 <IconDescription>
-                                    <ProgramViewP2><ProgramViewGreenP><strong>{stringFilterPrefix("Online/Duo")}</strong></ProgramViewGreenP></ProgramViewP2>
+                                    <ProgramViewP2>{(selectedPrograms.sdm) ? stringFilterPrefix(selectedPrograms.sdm.sdm) : 'None'}</ProgramViewP2>
                                 </IconDescription>
                             </Icon>
                         </ProgramInfoDetail>

@@ -58,11 +58,9 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
   }, [mapZoom]);
 
   useEffect(() => {
-    
 
     setPopUpMarker(null);
     setSelectedMarker(null);
-
 
   }, [sites]);
 
@@ -118,49 +116,48 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
 
 
 
-  const markersClick = useCallback (
+  const markersClick =
     (e, site) => {
-      e.stopPropagation();
-      e.preventDefault();
-      setSelectedMarker(site);
-      setPopUpMarker(site);
+        e.stopPropagation();
+        e.preventDefault();
 
-      if(exportSite) {
-        exportSite(site);
-      }
+        if (exportSite) {
+            exportSite(site);
+        }
 
-      if(site.geojson) {
-          if(exportRef.current) {
-              const map = exportRef.current.getMap();
-              // if the route already exists on the map, we'll reset it using setData
-              if (map.getSource('route')) {
-                  map.getSource('route').setData(site.geojson);
-              }
-              // otherwise, we'll make a new request
-              else {
-                  map.addLayer({
-                  id: 'route',
-                  type: 'line',
-                  source: {
-                      type: 'geojson',
-                      data: site.geojson
-                  },
-                  layout: {
-                      'line-join': 'round',
-                      'line-cap': 'square',
-                  },
-                  paint: {
-                      'line-color': '#A20066',
-                      'line-width': 5,
-                      'line-opacity': 0.75
-                  }
-                  });
-              }
-          }
-      }
-      
-    },[sites]
-  );
+        setSelectedMarker(site);
+        setPopUpMarker(site);
+
+        if (site.geojson && departureLocation) {
+            if (exportRef.current) {
+                const map = exportRef.current.getMap();
+                // if the route already exists on the map, we'll reset it using setData
+                if (map.getSource('route')) {
+                    map.getSource('route').setData(site.geojson);
+                }
+                // otherwise, we'll make a new request
+                else {
+                    map.addLayer({
+                        id: 'route',
+                        type: 'line',
+                        source: {
+                            type: 'geojson',
+                            data: site.geojson
+                        },
+                        layout: {
+                            'line-join': 'round',
+                            'line-cap': 'square',
+                        },
+                        paint: {
+                            'line-color': '#A20066',
+                            'line-width': 5,
+                            'line-opacity': 0.75
+                        }
+                    });
+                }
+            }
+        }
+    };
 
   // display all the markers based on lat and lng of each site
   const Markers = () => {

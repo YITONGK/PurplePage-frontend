@@ -22,6 +22,7 @@ import natural from 'natural';
 import ReactLoading from 'react-loading';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import '../../App.css';
 
 // article component
 const Article = ({sites, programs, programTypes, groups, serviceStreams, serviceTypes, divisions}) => {
@@ -47,12 +48,12 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   const [divisionList, setDivisionList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [addressIsLoading, setAddressIsLoading] = useState(false);
+  const [addressIsLoading, setAddressIsLoading] = useState(true);
 
   const [filteredSites, setFilteredSites] = useState([]);
   const [filteredPrograms, setFilteredPrograms] = useState([]);
 
-  const [site, setSite] = useState(null);
+  const [selectedSite, setSelectedSite] = useState(null);
 
   const [departureAddress, setDepartureAddress] = useState(null);
 
@@ -79,23 +80,101 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     },
   };
 
+
   useEffect(() => {
 
     getAllData();
 
-  }, [sites, programs, programTypes, groups, serviceStreams, serviceTypes, divisions])
+  // when it run second time it will not run any more it will keep the old one...
+  }, [])
 
+  const findMatchInProgramAtAndSdm = (list, findingTitle) => {
+    if (list && findingTitle) {
+
+      const tmpValue = list.find((v) => v && v.title === findingTitle);
+
+      return tmpValue || null;
+    }
+    return null;
+  };
+
+  const findMatchInSiteAccess = (list, findingId) => {
+    if (list && findingId) {
+
+      const tmpValue = list.find((v) => v && v.site_id === findingId);
+
+      return tmpValue || null;
+    }
+    return null;
+  };
+
+  const findGmInDivision = (list, findingId) => {
+    if (list && findingId) {
+
+      let tmpValue = list.find((v) => v && v.division_id === findingId);
+
+      if(tmpValue) {
+        tmpValue = tmpValue.gm;
+      }
+
+      return tmpValue || null;
+    }
+    return null;
+  };
+
+  const findOEInGroup = (list, findingId) => {
+    if (list && findingId) {
+
+      let tmpValue = list.find((v) => v && v.group_id === findingId);
+
+      if(tmpValue) {
+        tmpValue = tmpValue.eo;
+      }
+
+      return tmpValue || null;
+    }
+    return null;
+  };
 
   const getAllData = async () => {
 
     setIsLoading(true);
-
     try {
+
+      const [programTypes, groups, programs, programAts, programSdms, sites, siteAccessibilities ,serviceStreams, serviceTypes, divisions] = await Promise.all ([
+        getProgramTypes(),
+        getGroups(),
+        getPrograms(),
+        getProgramAts(),
+        getProgramSdms(),
+        getSites(),
+        getSiteAccessibilities(),
+        getServiceStreams(),
+        getServiceTypes(),
+        getDivisions(),
+      ]);
+
 
       setProgramTypeList(programTypes);
       setGroupList(groups);
-      setProgramList(programs);
-      setFilteredPrograms(programs); //keeps in artical only
+      // setProgramList(programs);
+
+      const tmpProgramList = programs.map((program) => {
+        const programTitle = program.title;
+
+        let programDivisionId = groups.find((group) => group && group.group_id === program.group_id);
+        programDivisionId = (programDivisionId)? programDivisionId.division_id : null;
+        return {
+          ...program,
+          at: findMatchInProgramAtAndSdm(programAts, programTitle),
+          sdm: findMatchInProgramAtAndSdm(programSdms, programTitle),
+          eo: findOEInGroup(groups, program.group_id),
+          gm: (programDivisionId) ? findGmInDivision(divisions, programDivisionId) : null
+        }
+      })
+
+      setProgramList(tmpProgramList);
+      setFilteredPrograms(tmpProgramList); //keeps in artical only
 
       const distinctSites = sites.filter((site, index, self) => {
         return index === self.findIndex((obj) => obj.site_id === site.site_id);
@@ -103,7 +182,15 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
       distinctSites.sort ((s1, s2) => s1.site_id.localeCompare(s2.site_id));
 
-      setSiteList(distinctSites);
+      const tmpSites = distinctSites.map((site) => {
+        let siteId = site.site_id;
+        return {
+          ...site,
+          accessibility: findMatchInSiteAccess(siteAccessibilities, siteId),
+        }
+      });
+
+      setSiteList(tmpSites);
       setFilteredSites(distinctSites); //keeps in artical only
       setAdvanceFilteredSites(distinctSites); //keeps in artical only
 
@@ -151,6 +238,119 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
   }
 
+  // =============================Data Collect Method From Database====================================
+
+  /* get a list of sites from the backend and display it */
+  const getSites = async () => {
+    const BASE_URL = "http://localhost:8888";
+
+    const result = await axios.get(BASE_URL+ '/site');
+
+    // swap lat and lng
+    const filteredResult = result.data.map(site => ({
+      ...site,
+      lat: site.lng,
+      lng: site.lat,
+    }));
+
+    // origin
+    // const filteredResult = result.data.map(site => ({
+    //   ...site,
+    //   lat: site.lat,
+    //   lng: site.lng,
+    // }));
+
+    return filteredResult.filter(site => site.lng !== null && site.lat != null);
+  }
+
+  /* get list of site accessibility from the db */
+  const getSiteAccessibilities = async () => {
+    const BASE_URL = 'http://localhost:8888';
+
+    const result = await axios.get(BASE_URL + '/siteaccess');
+    return result.data;
+  }
+
+  /* get list of programs from the backend and display them */
+  const getPrograms = async () => {
+    const BASE_URL = 'http://localhost:8888';
+
+    const result = await axios.get(BASE_URL + '/program');
+    return result.data[0];
+  }
+
+  /* get list of programs Access Type from the db */
+  const getProgramAts = async () => {
+    const BASE_URL = 'http://localhost:8888';
+
+    const result = await axios.get(BASE_URL + '/programat');
+    return result.data;
+  }
+
+  /* get list of programs delivery method from the db */
+  const getProgramSdms = async () => {
+    const BASE_URL = 'http://localhost:8888';
+
+    const result = await axios.get(BASE_URL + '/programsdm');
+    return result.data;
+  }
+
+  /* get list of program types from the backend and display them */
+  const getProgramTypes = async () => {
+    const BASE_URL = 'http://localhost:8888';
+
+    let result = await axios.get(BASE_URL + '/programtype');
+    result = result.data[0];
+
+    result.sort((a, b) => {
+      if (a.prgm_type === null && b.prgm_type === null) return 0;
+      if (a.prgm_type === null) return -1;
+      if (b.prgm_type === null) return 1;
+      return a.prgm_type.localeCompare(b.prgm_type);
+    });
+
+    return result;
+  }
+
+  /* get list of groups from the backend and display them */
+  const getGroups = async () => {
+    const BASE_URL = 'http://localhost:8888';
+
+    let result =  await axios.get(BASE_URL + '/group');
+    result = result.data[0];
+    result.sort ((a, b) => a.group_name.localeCompare(b.group_name));
+    return result;
+  }
+
+  const getServiceStreams = async() => {
+    const BASE_URL = 'http://localhost:8888';
+
+    let result = await axios.get(BASE_URL + '/servicestream');
+    result = result.data;
+    result.sort((a, b) => a.ser_stream.localeCompare(b.ser_stream));
+    return result;
+  }
+
+  const getDivisions = async() => {
+    const BASE_URL = 'http://localhost:8888';
+
+    let result = await axios.get(BASE_URL + '/division');
+    result = result.data;
+    result.sort((a, b) => a.division_name.localeCompare(b.division_name));
+    return result;
+
+  }
+
+  const getServiceTypes = async() => {
+    const BASE_URL = 'http://localhost:8888';
+
+    let result = await axios.get(BASE_URL + '/servicetype');
+    result = result.data[0];
+    return result;
+
+  }
+
+  //-------------------------------------------------------------
 
   useEffect(() => {
     setAdvanceFilteredPrograms([]);
@@ -443,7 +643,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
       }
 
       setDepartureAddress(null);
-      setSite(null);
+      setSelectedSite(null);
 
     }
  
@@ -519,7 +719,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
         </InputLabel>
         <SearchContainer>
         {
-          (programTypeList.length > 0 && groupList.length > 0 && filteredPrograms.length >0 && filteredSites.length > 0) ?
+          (!addressIsLoading) ?
           <>
             <SelectDiv>
                 <Autocomplete
@@ -539,7 +739,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
                   selectOnFocus
                   disableClearable={true}
                   freeSolo
-                  forcePopupIcon 
+                  forcePopupIcon
                   renderInput={(params) => <TextField {...params}  sx={searchTextFieldStyle}/>}
                   renderGroup={(params) => (
                     <li key={params.key}>
@@ -547,7 +747,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
                       <GroupItems>{params.children}</GroupItems>
                     </li>
                   )}
-                /> 
+                />
             </SelectDiv>
             <Button variant='contained' onClick={searchClearOnClick} sx={{
               backgroundColor: '#A20066',
@@ -578,8 +778,9 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   }
 
   //===================== Export Function ===========================================
-  const selectedSite = (site) => {
-    setSite(site);
+  const selectingSite = (site) => {
+
+    setSelectedSite(site);
   }
 
   const applyFilter = (advanceFilteredSites) => {
@@ -595,7 +796,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     }
 
     setAdvanceFilteredSites(advanceFilteredSites);
-    setSite(null);
+    setSelectedSite(null);
   }
 
   const sendAdvanceFilteredPrograms = (programs) => {
@@ -604,11 +805,26 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
   const transferDepartureAddress = (address) => {
     setDepartureAddress(address);
-    setSite(null);
+    setSelectedSite(null);
+  }
+
+  const filterReadyCheck = (bool) => {
+    setAddressIsLoading(bool);
   }
 
   
   return (
+
+    (isLoading) ?
+
+    <div className="loading-overlay">
+      <div className="loading-container">
+        <span className="loading-text"><img src='http://rev.u22s2101.monash-ie.me/img/uniting-logo-white.png' style={{width: '150px', height: 'auto', marginBottom: '10px'}} /> </span>
+        <ReactLoading type={'spin'} color={'#A20066'} height={150} width={110}></ReactLoading>
+        <span className="loading-text">Loading...</span>
+      </div>
+    </div>
+    :
     <ArticleContainer>
       <ArticleH1>Find a Uniting service near you</ArticleH1>
         <FilterContainer>
@@ -625,24 +841,25 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
             divisionList = {divisionList}
             exportAdvanceFilteredSites={applyFilter}
             importRef={mapRef}
-            exportSite={selectedSite}
+            exportSite={selectingSite}
             exportAdvanceFilteredPrograms = {sendAdvanceFilteredPrograms}
             exportDepartureAddress={transferDepartureAddress}
-            importSite={site}
+            importSite={selectedSite}
+            readyChecking={filterReadyCheck}
           />
           {
-            (addressIsLoading || isLoading) ? 
+            (addressIsLoading) ?
               <LoadindContainer>
                 <ReactLoading type={'bars'} color={'white'} height={130} width={130}></ReactLoading>
               </LoadindContainer>
               : 
               <Map 
-                sites={advancefilteredSites} exportSite={selectedSite} exportRef={mapRef} importSite={site} departureLocation={departureAddress}
+                sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef} importSite={selectedSite} departureLocation={departureAddress}
               />
           }
 
           <MapInfoContainer>
-            <MapInfo site={site} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms } groupList= {groupList} programTypeList={programTypeList}/>
+            <MapInfo site={selectedSite} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms } groupList= {groupList} programTypeList={programTypeList}/>
           </MapInfoContainer>
         </MapElement>
     </ArticleContainer>
