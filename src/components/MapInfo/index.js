@@ -47,7 +47,8 @@ import { InfoContainer,
     SiteViewInfoDetailRow, 
     SiteViewH2, 
     SiteViewP2, 
-    SperateLine
+    SperateLine,
+    ProgramCardHeader_2
 } from './MapInfoElements';
 import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
@@ -167,6 +168,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
         setSelectedSite(site);
         setSitePopUpOpen(true);
         document.body.style.overflow = 'hidden';
+
     }
 
     const closeProgramModal = () => {
@@ -263,7 +265,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
 
                         </SiteInfo>
                         <SiteButtonContainer>
-                            <Button style={{borderRadius: '20px', display: 'flex', justifyContent: 'center' , marginBottom: '1rem',color: 'white', backgroundColor: '#A20066', width: '10rem', fontWeight: 'bold'}} onClick={(e) => onClickSiteDetail(site)}>Show More</Button>
+                            <Button style={{borderRadius: '20px', display: 'flex', justifyContent: 'center' , marginBottom: '0.2rem',color: 'white', backgroundColor: '#A20066', width: '10rem', fontWeight: 'bold'}} onClick={(e) => onClickSiteDetail(site)}>Show More</Button>
                         </SiteButtonContainer>
                     </SiteContainer>
                     ) : (
@@ -275,16 +277,19 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
             </InfoContainer>
 
             <AnimatedModalContent
+                appElement={document.getElementById('root')}
                 isOpen={programPopUpOpen}
                 contentLabel="Program Information Modal"
                 style={{
                     content: {
-                        width: '50vw', // Set the desired width
-                        height: '88vh', // Set the desired height
+                        width: '75vw', // Set the desired width
+                        height: 'fit-content', // Set the desired height
+                        maxHeight: '70vh',
                         margin: 'auto', // Center the modal horizontally
                         borderRadius: '15px',
-                        overflow: 'hidden',
-                        zIndex: 100000
+                        overflowY: 'auto',
+                        overflowX: 'hidden',
+                        backgroundColor: '#A20066'
                     },
                 }}
             >
@@ -303,7 +308,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                     <ProgramInfoDetailContainer>
                         <ProgramInfoDetail>
                             <Icon style={{minWidth:'100%'}}>
-                                <IconContainer>
+                                <IconContainer style={{minWidth: '70px'}}>
                                     <CodeIcon style={{fontSize: '25px', margin: '0'}}/>
                                     <ProgramViewCaption>Program</ProgramViewCaption>
                                     <ProgramViewCaption>Name</ProgramViewCaption>
@@ -342,7 +347,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                             <Icon>
                                 <IconContainer style={{minWidth: '70px'}}>
                                     <CallIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Manager</ProgramViewCaption>
+                                    <ProgramViewCaption>Program</ProgramViewCaption>
                                     <ProgramViewCaption>Contact</ProgramViewCaption>
                                 </IconContainer>
                                 <IconDescription>
@@ -367,7 +372,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                             <Icon>
                                 <IconContainer style={{minWidth: '70px'}}>
                                     <PersonIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Exec</ProgramViewCaption>
+                                    <ProgramViewCaption>Executive</ProgramViewCaption>
                                     <ProgramViewCaption>Officer</ProgramViewCaption>
                                 </IconContainer>
                                 <IconDescription>
@@ -416,6 +421,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
             </AnimatedModalContent>
 
             <AnimatedModalContent_2
+                appElement={document.getElementById('root')}
                 isOpen={sitePopUpOpen}
                 contentLabel="Site Information Modal"
                 style={{
@@ -423,12 +429,13 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                         width: '90vw', // Set the desired width
                         height: '75vh', // Set the desired height
                         margin: 'auto', // Center the modal horizontally
-                        borderRadius: '15px'
+                        borderRadius: '15px',
+                        zIndex: '10000',
                     },
                 }}
             >
                 <ProgramCardContainer>
-                    <ProgramCardHeader>
+                    <ProgramCardHeader_2>
                         <ProgramCardHeaderLeft>
                             <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Detail</h2>
                             </ProgramCardHeaderLeft>
@@ -437,7 +444,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                                 <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
                             </Button>
                         </ProgramCardHeaderRight>
-                    </ProgramCardHeader>
+                    </ProgramCardHeader_2>
 
                     { (selectedSite) ?
 
@@ -534,12 +541,12 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
 
                                 <SiteViewH2>Full Address:</SiteViewH2>
 
-                                <SiteViewP style={{paddingLeft: '0.8rem', marginBottom: '0.3rem'}}>{stringFilterPrefix(selectedSite.address)}</SiteViewP>
+                                <SiteViewP style={{paddingLeft: '0.8rem', marginBottom: '0.3rem'}}>{stringFilterPrefix(`${selectedSite.street_nbr} ${selectedSite.street_name}, ${selectedSite.suburb}, ${selectedSite.state}, ${selectedSite.postcode}`)}</SiteViewP>
 
                             </SiteViewInfoContainer>
 
                             <SiteViewMapContainer>
-                                <Map sites={[ selectedSite]} exportSite={null} exportRef={mapRef} mapWidth={54} mapHeight={68}/>
+                                <Map sites={[selectedSite]} exportSite={null} exportRef={mapRef} mapWidth={54} mapHeight={70} mapZoom={15} centerLng={selectedSite.lng} centerLat={selectedSite.lat}/>
                             </SiteViewMapContainer>
 
                         </SiteViewMapAndInfoContainer>

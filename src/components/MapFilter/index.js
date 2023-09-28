@@ -66,7 +66,7 @@ const MapFilter = ({filteredPrograms,
     exportAdvanceFilteredPrograms,
     exportDepartureAddress,
     importSite,
-    readyChecking}) => {
+    loadingChecking}) => {
 
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
@@ -143,7 +143,7 @@ const MapFilter = ({filteredPrograms,
 
     useEffect(()=> {
 
-        if(isLoading) return;
+        // if(isLoading) return;
 
         setServiceStreamValue ('All Service Stream');
         setServiceTypeValue('All Service Type');
@@ -164,7 +164,7 @@ const MapFilter = ({filteredPrograms,
 
     useEffect(() => {
 
-        if(isLoading) return;
+        // if(isLoading) return;
 
         if(filteredSites && filteredSites[0] && !filteredSites[0].distance) {
             setTmpAddressValue("");
@@ -182,7 +182,7 @@ const MapFilter = ({filteredPrograms,
         }
 
         setAddressIsLoading(false);
-        readyChecking(false);
+        loadingChecking(false);
         setClickedSite(null);
 
     },[filteredSites])
@@ -477,7 +477,7 @@ const MapFilter = ({filteredPrograms,
     const ServiceStreamDropdown = () => {
         return ( 
 
-            (filteredServiceStreams && filteredServiceStreams.length > 0)?
+            (!addressIsLoading && filteredServiceStreams && filteredServiceStreams.length > 0)?
         
             <Select 
                 name="Service Stream"
@@ -521,7 +521,7 @@ const MapFilter = ({filteredPrograms,
     const ServiceTypeDropdown = () => {
         return ( 
 
-            (filteredServiceTypes && filteredServiceTypes.length > 0) ?
+            (!addressIsLoading && filteredServiceTypes && filteredServiceTypes.length > 0) ?
             
             <Select 
                 name="Service Type"
@@ -562,7 +562,7 @@ const MapFilter = ({filteredPrograms,
     const ProgramTypeDropdown = () => {
         return ( 
 
-            (filteredProgramTypes && filteredProgramTypes.length > 0) ?
+            (!addressIsLoading && filteredProgramTypes && filteredProgramTypes.length > 0) ?
 
             <Select 
                 name="Program Type"
@@ -603,7 +603,7 @@ const MapFilter = ({filteredPrograms,
     const ProgramDropdown = () => {
         return ( 
 
-            (localFilteredProgram && localFilteredProgram.length > 0) ?
+            (!addressIsLoading && localFilteredProgram && localFilteredProgram.length > 0) ?
 
             <Select 
                 name="Program"
@@ -644,7 +644,7 @@ const MapFilter = ({filteredPrograms,
     const DivisionDropdown = () => {
 
         return (
-            (filteredDivisions && filteredDivisions.length > 0) ?
+            (!addressIsLoading && filteredDivisions && filteredDivisions.length > 0) ?
 
             <Select 
                 name="Division"
@@ -687,7 +687,7 @@ const MapFilter = ({filteredPrograms,
 
         return (
 
-            (filteredGroups && filteredGroups.length > 0) ?
+            (!addressIsLoading && filteredGroups && filteredGroups.length > 0) ?
 
             <Select 
                 name="Group"

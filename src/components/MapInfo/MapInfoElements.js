@@ -34,7 +34,7 @@ export const InfoH2 = styled.h2`
     font-size: 24px; // origin 24
     color: #41424C;
     margin: 1rem 0 1rem 0;
-    pading: 0;
+    padding: 0;
 `;
 
 export const InfoP = styled.p`
@@ -49,14 +49,13 @@ export const InfoP2 = styled.p`
     font-size: 16px;
     font-weight: bold;
     margin: 0;
-    pardding: 0;
-    margin: 0;
+    padding: 0;
 `;
 
 export const ProgramInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 0rem;
+  padding: 0 0;
   background-color: white;
   justify-content: center; 
 `;
@@ -97,7 +96,7 @@ export const SiteInfoDetailContainer = styled.div`
 
 export const ListItemButton = styled.div`
     display: flex;
-    flex-direction: space-between;
+    flex-direction: row;
     align-items: center;
     margin: 0 0 0.3rem 0;
     padding: 0.3rem 0 0 0.3rem;
@@ -121,7 +120,7 @@ export const CollapseInfoContainer = styled.div`
     align-items: center;
     justify-content: space-between;
     border-radius: 10px;
-    margin: -0.1rem 0 0rem 0;
+    margin: -0.1rem 0 0 0;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
 `;
@@ -155,7 +154,7 @@ const fadeIn = keyframes`
   }
   to {
     opacity: 1;
-    transform: translate(0%, 2%);
+    transform: translate(0%, 10%);
   }
 `;
 
@@ -163,7 +162,7 @@ const fadeIn = keyframes`
 export const AnimatedModalContent = styled(Modal)`
   &.ReactModal__Content {
     animation: ${fadeIn} 0.3s ease-in-out;
-    transform: translate(0%, 2%);
+    transform: translate(0%, 10%);
     background-color: white;
     display: flex;
     background-color: white;
@@ -206,6 +205,31 @@ export const ProgramCardContainer = styled.div`
 `;
 
 export const ProgramCardHeader = styled.div`
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  border-bottom: 1px solid grey;
+  background-color: #A20066;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+
+  @media (max-width: 600px) {
+    // Your small screen styles go here
+    width: 97%;
+    // Any other styles you want to change for small screens
+
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+`;
+
+export const ProgramCardHeader_2 = styled.div`
+  position: sticky;
+  top: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -214,7 +238,6 @@ export const ProgramCardHeader = styled.div`
   background-color: #A20066;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
-  //margin-bottom: 1rem;
 `;
 
 export const ProgramCardHeaderLeft = styled.div`
@@ -257,8 +280,8 @@ export const Icon = styled.div`
   border-bottom: 1px solid grey;
   border-right: 1px solid grey;
   border-radius: 50px;
-  min-width: 48%;
-  max-width: 48%;
+  min-width: 49.5%;
+  max-width: 49.5%;
 `;
 
 export const IconContainer = styled.div`
@@ -293,7 +316,7 @@ export const ProgramInfoDetailContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: 1rem 1rem 1rem 1rem;
-  overflow-y: auto;
+  background-color: white;
   gap: 0.7rem;
   //border: 1px solid red;
   flex: 1;
@@ -327,6 +350,7 @@ export const SiteButtonContainer= styled.p`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: fit-content;
 `;
 
 export const SiteViewH1 = styled.h1`
@@ -371,8 +395,7 @@ export const SiteViewInfoContainer = styled.div`
   justify-content: start;
   width: 40%;
   max-height: 80vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: auto;
 `;
 
 export const SiteViewMapContainer = styled.div`

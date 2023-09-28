@@ -11,21 +11,8 @@ mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoidmhhcnRvbm8iLCJhIjoiY2xoc2l1Z2VzMDd0dTNlcGtwbXYwaGx2cyJ9.C77GVU3YPPgscvXrTGHWfg';
 
-const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom, departureLocation}) => {
+const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom, centerLat, centerLng, departureLocation}) => {
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
-
-  // const address = '247 Peel Street, North Melbourne, Australia'; 
-
-  // const geocoding = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${MAPBOX_ACCESS_TOKEN}`;
-
-  // axios.get(geocoding)
-  //   .then(response => {
-  //     const coordinates = response.data.features[0].center; // [longitude, latitude]
-  //     console.log('Coordinates:', coordinates);
-  //   })
-  //   .catch(error => {
-  //     console.error('Error:', error);
-  //   });
 
   // useState hooks
   const [selectedMarker, setSelectedMarker] = useState(null);
@@ -38,24 +25,24 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
   const debounceDelay = 300; //delay amount
 
   const [viewPort, setViewPort] = useState({
-    latitude: -37.80995133438894,
-    longitude: 144.96871464972733,
-    zoom: 10,
+    latitude: centerLat || -37.80995133438894,
+    longitude: centerLng || 144.96871464972733,
+    zoom: mapZoom || 10,
     width: (20 * window.innerWidth) /100,
     height: (20 * window.innerWidth) /100,
     transitionDuration: 200
   });
 
-  useEffect(() => {
-
-    if(mapZoom > 0) {
-      setViewPort((prevViewPort) => ({
-        ...prevViewPort,
-        zoom: mapZoom
-      }));
-    }
-
-  }, [mapZoom]);
+  // useEffect(() => {
+  //
+  //   if(mapZoom > 0) {
+  //     setViewPort((prevViewPort) => ({
+  //       ...prevViewPort,
+  //       zoom: mapZoom
+  //     }));
+  //   }
+  //
+  // }, [mapZoom]);
 
   useEffect(() => {
 
@@ -128,7 +115,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
         setSelectedMarker(site);
         setPopUpMarker(site);
 
-        if (site.geojson && departureLocation) {
+        if (site.geojson) {
             if (exportRef.current) {
                 const map = exportRef.current.getMap();
                 // if the route already exists on the map, we'll reset it using setData

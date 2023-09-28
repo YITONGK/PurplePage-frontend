@@ -35,7 +35,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   }, []);
 
   const [searchValues, setSearchValues] = useState({
-    value: ' --Anythings--',
+    value: '--Search Anything--',
     type: 'All',
   })
 
@@ -48,7 +48,9 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   const [divisionList, setDivisionList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [addressIsLoading, setAddressIsLoading] = useState(true);
+  const [addressIsLoading, setAddressIsLoading] = useState(false);
+  const [mapFilterIsLoading, setMapFilterIsLoading] = useState(true);
+  const [searchError, setSearchError] = useState(false);
 
   const [filteredSites, setFilteredSites] = useState([]);
   const [filteredPrograms, setFilteredPrograms] = useState([]);
@@ -66,7 +68,6 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
   // styles
   const textFieldStyle = { minWidth: "400px"};
-  const buttonFieldStyle = {minWidth: '150px'};
 
   const searchTextFieldStyle = {
     '& .MuiOutlinedInput-root': {
@@ -141,14 +142,24 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     setIsLoading(true);
     try {
 
-      const [programTypes, groups, programs, programAts, programSdms, sites, siteAccessibilities ,serviceStreams, serviceTypes, divisions] = await Promise.all ([
+      // const [programTypes, groups, programs, programAts, programSdms, sites, siteAccessibilities ,serviceStreams, serviceTypes, divisions] = await Promise.all ([
+      //   getProgramTypes(),
+      //   getGroups(),
+      //   getPrograms(),
+      //   getProgramAts(),
+      //   getProgramSdms(),
+      //   getSites(),
+      //   getSiteAccessibilities(),
+      //   getServiceStreams(),
+      //   getServiceTypes(),
+      //   getDivisions(),
+      // ]);
+
+      const [programTypes, groups, programs, sites, serviceStreams, serviceTypes, divisions] = await Promise.all ([
         getProgramTypes(),
         getGroups(),
         getPrograms(),
-        getProgramAts(),
-        getProgramSdms(),
         getSites(),
-        getSiteAccessibilities(),
         getServiceStreams(),
         getServiceTypes(),
         getDivisions(),
@@ -157,24 +168,25 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
       setProgramTypeList(programTypes);
       setGroupList(groups);
-      // setProgramList(programs);
+      setProgramList(programs);
+      setFilteredPrograms(programs); //keeps in artical only
 
-      const tmpProgramList = programs.map((program) => {
-        const programTitle = program.title;
+      // const tmpProgramList = programs.map((program) => {
+      //   const programTitle = program.title;
+      //
+      //   let programDivisionId = groups.find((group) => group && group.group_id === program.group_id);
+      //   programDivisionId = (programDivisionId)? programDivisionId.division_id : null;
+      //   return {
+      //     ...program,
+      //     at: findMatchInProgramAtAndSdm(programAts, programTitle),
+      //     sdm: findMatchInProgramAtAndSdm(programSdms, programTitle),
+      //     eo: findOEInGroup(groups, program.group_id),
+      //     gm: (programDivisionId) ? findGmInDivision(divisions, programDivisionId) : null
+      //   }
+      // })
 
-        let programDivisionId = groups.find((group) => group && group.group_id === program.group_id);
-        programDivisionId = (programDivisionId)? programDivisionId.division_id : null;
-        return {
-          ...program,
-          at: findMatchInProgramAtAndSdm(programAts, programTitle),
-          sdm: findMatchInProgramAtAndSdm(programSdms, programTitle),
-          eo: findOEInGroup(groups, program.group_id),
-          gm: (programDivisionId) ? findGmInDivision(divisions, programDivisionId) : null
-        }
-      })
-
-      setProgramList(tmpProgramList);
-      setFilteredPrograms(tmpProgramList); //keeps in artical only
+      // setProgramList(tmpProgramList);
+      // setFilteredPrograms(tmpProgramList); //keeps in artical only
 
       const distinctSites = sites.filter((site, index, self) => {
         return index === self.findIndex((obj) => obj.site_id === site.site_id);
@@ -182,15 +194,19 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
       distinctSites.sort ((s1, s2) => s1.site_id.localeCompare(s2.site_id));
 
-      const tmpSites = distinctSites.map((site) => {
-        let siteId = site.site_id;
-        return {
-          ...site,
-          accessibility: findMatchInSiteAccess(siteAccessibilities, siteId),
-        }
-      });
+      // const tmpSites = distinctSites.map((site) => {
+      //   let siteId = site.site_id;
+      //   return {
+      //     ...site,
+      //     accessibility: findMatchInSiteAccess(siteAccessibilities, siteId),
+      //   }
+      // });
 
-      setSiteList(tmpSites);
+      // setSiteList(tmpSites);
+      // setFilteredSites(tmpSites); //keeps in artical only
+      // setAdvanceFilteredSites(tmpSites); //keeps in artical only
+
+      setSiteList(distinctSites);
       setFilteredSites(distinctSites); //keeps in artical only
       setAdvanceFilteredSites(distinctSites); //keeps in artical only
 
@@ -223,10 +239,10 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
       const filteredOptions = [];
     
       filteredOptions.push(...programTypesOptions, ...groupsOptions);
-      filteredOptions.unshift({ value: ' --Anythings--',type: 'All'});
+      filteredOptions.unshift({ value: ' --Search Anything--',type: 'All'});
 
       setSearchOptions(filteredOptions);
-      setSearchValues({value: ' --Anythings--', type: 'All'});
+      setSearchValues({value: ' --Search Anything--', type: 'All'});
 
       setIsLoading(false);
 
@@ -247,18 +263,18 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     const result = await axios.get(BASE_URL+ '/site');
 
     // swap lat and lng
-    const filteredResult = result.data.map(site => ({
-      ...site,
-      lat: site.lng,
-      lng: site.lat,
-    }));
-
-    // origin
     // const filteredResult = result.data.map(site => ({
     //   ...site,
-    //   lat: site.lat,
-    //   lng: site.lng,
+    //   lat: site.lng,
+    //   lng: site.lat,
     // }));
+
+    // origin
+    const filteredResult = result.data.map(site => ({
+      ...site,
+      lat: site.lat,
+      lng: site.lng,
+    }));
 
     return filteredResult.filter(site => site.lng !== null && site.lat != null);
   }
@@ -433,6 +449,11 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
       setFilteredSites(newFilteredSitesData);
 
+      const tmpFilteredSiteIds = advancefilteredSites.map((site) => site.site_id);
+      const newAvailableSite = newFilteredSitesData.filter((site) => tmpFilteredSiteIds.includes(site.site_id));
+
+      setAdvanceFilteredSites(newAvailableSite);
+
 
     } else {
 
@@ -544,7 +565,6 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   // handle the change for the search
   const onChangeSearch = (event, value, reason) => {
 
-    console.log(reason);
 
     if(value)
     {
@@ -589,9 +609,10 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
           setFilteredPrograms(filteringPrograms);
           setFilteredSites(filteringSites);
           setAdvanceFilteredSites(filteringSites);
+          setSearchError(false);
 
         } else {
-          console.log("None Result"); // need to through some error out... at the bottom of the search
+          setSearchError(true);
         }
 
       }
@@ -599,6 +620,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
       {
 
         setSearchValues(value);
+        setSearchError(false);
 
         if(value.type === 'All')
         {
@@ -703,11 +725,12 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   const searchClearOnClick = (e) => {
     e.preventDefault();
 
+    setSearchError(false);
     setFilteredPrograms(programList);
     setFilteredSites(siteList);
     setAdvanceFilteredSites(siteList);
 
-    setSearchValues({value: ' --Anythings--', type: 'All'});
+    setSearchValues({value: ' --Search Anything--', type: 'All'});
 
   }
   
@@ -719,7 +742,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
         </InputLabel>
         <SearchContainer>
         {
-          (!addressIsLoading) ?
+          (!(mapFilterIsLoading || addressIsLoading)) ?
           <>
             <SelectDiv>
                 <Autocomplete
@@ -808,8 +831,8 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     setSelectedSite(null);
   }
 
-  const filterReadyCheck = (bool) => {
-    setAddressIsLoading(bool);
+  const mapFilterLoadingCheck = (bool) => {
+    setMapFilterIsLoading(bool)
   }
 
   
@@ -829,6 +852,10 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
       <ArticleH1>Find a Uniting service near you</ArticleH1>
         <FilterContainer>
           <FreeTextSearch />
+          {
+            (searchError) ?
+              <Typography variant="subtitle" sx={{color: 'red', marginBottom: '-0.8rem'}}>--Search No Result--</Typography> : null
+          }
         </FilterContainer>
         <MapElement>
           <MapFilter 
@@ -845,10 +872,10 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
             exportAdvanceFilteredPrograms = {sendAdvanceFilteredPrograms}
             exportDepartureAddress={transferDepartureAddress}
             importSite={selectedSite}
-            readyChecking={filterReadyCheck}
+            loadingChecking={mapFilterLoadingCheck}
           />
           {
-            (addressIsLoading) ?
+            (addressIsLoading || mapFilterIsLoading) ?
               <LoadindContainer>
                 <ReactLoading type={'bars'} color={'white'} height={130} width={130}></ReactLoading>
               </LoadindContainer>

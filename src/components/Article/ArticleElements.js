@@ -36,8 +36,9 @@ export const ArticleH1 = styled.h1`
 
 export const FilterContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  //border: 1px solid red;
 `;
 
 export const ColSearchContainer = styled.div`

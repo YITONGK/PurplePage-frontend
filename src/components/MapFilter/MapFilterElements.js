@@ -25,7 +25,7 @@ export const ResultContainer = styled.div`
     flex-direction: column;
     height: 100%;
     position: relative;
-    overflow: hiddden;
+    overflow: hidden;
 `;
 
 export const ButtonContainer = styled.div`
