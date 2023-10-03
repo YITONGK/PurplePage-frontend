@@ -246,8 +246,8 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
         programDivisionId = (programDivisionId)? programDivisionId.division_id : null;
         return {
           ...program,
-          at: (programAts.length > 0 ) ? findMatchInProgramAtAndSdm(programAts, programTitle) : 'None',
-          sdm: (programSdms.length > 0 ) ? findMatchInProgramAtAndSdm(programSdms, programTitle) : 'None',
+          at: (programAts.length > 0 ) ? findMatchInProgramAtAndSdm(programAts, programTitle) : null,
+          sdm: (programSdms.length > 0 ) ? findMatchInProgramAtAndSdm(programSdms, programTitle) : null,
           eo: findOEInGroup(groups, program.group_id),
           gm: (programDivisionId) ? findGmInDivision(divisions, programDivisionId) : null
         }
@@ -266,7 +266,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
         let siteId = site.site_id;
         return {
           ...site,
-          accessibility: (siteAccessibilities.length > 0) ? findMatchInSiteAccess(siteAccessibilities, siteId) : 'None',
+          accessibility: (siteAccessibilities.length > 0) ? findMatchInSiteAccess(siteAccessibilities, siteId) : null,
         }
       });
 

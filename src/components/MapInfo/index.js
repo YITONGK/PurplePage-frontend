@@ -233,7 +233,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                             <SiteInfoDetailContainer>
                                 <InfoP>Accessibility</InfoP>
                                 <InfoP2>
-                                    {(site.accessibility) ? stringFilterPrefix(site.accessibility.accessibility) : 'None'}
+                                    {(site.accessibility && site.accessibility.accessibility) ? stringFilterPrefix(site.accessibility.accessibility) : 'None'}
                                 </InfoP2>
                             </SiteInfoDetailContainer>
                             <SiteInfoDetailContainer>

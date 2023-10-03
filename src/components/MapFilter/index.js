@@ -163,6 +163,7 @@ const MapFilter = ({filteredPrograms,
         setFilteredDivisions(filteringDivisions(filteredPrograms));
         setFilteredGroups(filteringGroups(filteredPrograms));
 
+
     },[filteredPrograms])
 
     useEffect(() => {
@@ -183,8 +184,6 @@ const MapFilter = ({filteredPrograms,
         }
 
         setAddressIsLoading(false);
-        loadingChecking(false);
-        setIsLoading(false);
         setClickedSite(null);
 
     },[filteredSites])
@@ -213,6 +212,20 @@ const MapFilter = ({filteredPrograms,
         }
         
     }, [programTypeList, serviceTypeList,serviceStreamList, groupList, divisionList ]);
+
+    useEffect(() => {
+
+        if(filteredServiceStreams.length > 0 &&
+        filteredServiceTypes.length > 0 &&
+        filteredProgramTypes.length > 0 &&
+        filteredDivisions.length > 0 &&
+        filteredGroups.length > 0) {
+
+            setIsLoading(false);
+            loadingChecking(false);
+        }
+
+    } , [filteredServiceStreams, filteredServiceTypes, filteredProgramTypes, filteredDivisions, filteredGroups])
 
 
     // Setting the clicked site
@@ -472,9 +485,9 @@ const MapFilter = ({filteredPrograms,
 
     //============================== Filter Dropdown ==============================================
     const ServiceStreamDropdown = () => {
-        return ( 
+        return (
 
-            (!(addressIsLoading || isLoading))?
+            (addressIsLoading === false && isLoading === false)?
         
             <Select 
                 name="Service Stream"
@@ -518,7 +531,7 @@ const MapFilter = ({filteredPrograms,
     const ServiceTypeDropdown = () => {
         return (
 
-            (!(addressIsLoading || isLoading))?
+            (addressIsLoading === false && isLoading === false)?
             
             <Select 
                 name="Service Type"
@@ -559,7 +572,7 @@ const MapFilter = ({filteredPrograms,
     const ProgramTypeDropdown = () => {
         return (
 
-            (!(addressIsLoading || isLoading))?
+            (addressIsLoading === false && isLoading === false)?
 
             <Select 
                 name="Program Type"
@@ -600,7 +613,7 @@ const MapFilter = ({filteredPrograms,
     const ProgramDropdown = () => {
         return (
 
-            (!(addressIsLoading || isLoading))?
+            (addressIsLoading === false && isLoading === false)?
 
             <Select 
                 name="Program"
@@ -641,7 +654,7 @@ const MapFilter = ({filteredPrograms,
     const DivisionDropdown = () => {
 
         return (
-            (!(addressIsLoading || isLoading))?
+            (addressIsLoading === false && isLoading === false)?
 
             <Select 
                 name="Division"
@@ -684,7 +697,7 @@ const MapFilter = ({filteredPrograms,
 
         return (
 
-            (!(addressIsLoading || isLoading))?
+            (addressIsLoading === false && isLoading === false)?
 
             <Select 
                 name="Group"
@@ -1885,11 +1898,11 @@ const MapFilter = ({filteredPrograms,
                     </SelectDiv> 
                 </GroupDropDownContainer>
                 <ButtonContainer>
-                    <ApplyButton onClick={applyingFilter}>
+                    <ApplyButton onClick={applyingFilter} style={ (addressIsLoading || isLoading)? {pointerEvents: 'none'} : {}}>
                         <SendIcon style= {{fontSize: '16px', marginRight: '5px'}}></SendIcon>
                         <ButtonLabel>Apply Filter</ButtonLabel>
                     </ApplyButton>
-                    <ResetButton onClick={clear}>
+                    <ResetButton onClick={clear} style={ (addressIsLoading || isLoading)? {pointerEvents: 'none'} : {}}>
                         <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
                         <ButtonLabel style={{color: '#A20066'}}>Clear</ButtonLabel>
                     </ResetButton>
@@ -1903,7 +1916,7 @@ const MapFilter = ({filteredPrograms,
                     <SearchInputContainer>
                         <InputLabel style={{fontSize: '16px'}}>Search Address</InputLabel>
                         {
-                            (addressIsLoading) ? 
+                            (addressIsLoading || isLoading)?
 
                             <div>
                                 <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
@@ -1941,7 +1954,7 @@ const MapFilter = ({filteredPrograms,
                     <SearchInputContainer>
                         <InputLabel style={{fontSize: '16px'}}>Search Uniting Sites</InputLabel>
                         {
-                            (addressIsLoading) ? 
+                            (addressIsLoading || isLoading)?
 
                             <div>
                                 <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
@@ -1962,10 +1975,10 @@ const MapFilter = ({filteredPrograms,
                         
                     </SearchInputContainer>
                 </SearchContainer>
-                <SitesContainer style={addressIsLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center' } : {}}>
+                <SitesContainer style={addressIsLoading || isLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center' } : {}}>
                     <List sx={listStyle}>
                     {
-                        (addressIsLoading) ? 
+                        (addressIsLoading || isLoading)?
                         <ReactLoading type={'spin'} color={'#A20066'} height={80} width={60}></ReactLoading> 
                         : 
                         <AvailableSites></AvailableSites>

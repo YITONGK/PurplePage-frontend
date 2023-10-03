@@ -179,7 +179,7 @@ export const ApplyButton = styled.button`
     background-color: #A20066;
     border: 1px solid #A20066;
     border-radius: 10px;
-    width: fix-content;
+    width: fit-content;
     height: 2.5rem;
     align-items: center;
     cursor: pointer;
