@@ -139,51 +139,51 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     setIsLoading(true);
     try {
 
-      const [programTypes, groups, programs, programAts, programSdms, sites, siteAccessibilities ,serviceStreams, serviceTypes, divisions] = await Promise.all ([
-        getProgramTypes(),
-        getGroups(),
-        getPrograms(),
-        getProgramAts(),
-        getProgramSdms(),
-        getSites(),
-        getSiteAccessibilities(),
-        getServiceStreams(),
-        getServiceTypes(),
-        getDivisions(),
-      ]);
-
-      // const [programTypes, groups, programs, sites, serviceStreams, serviceTypes, divisions] = await Promise.all ([
+      // const [programTypes, groups, programs, programAts, programSdms, sites, siteAccessibilities ,serviceStreams, serviceTypes, divisions] = await Promise.all ([
       //   getProgramTypes(),
       //   getGroups(),
       //   getPrograms(),
+      //   getProgramAts(),
+      //   getProgramSdms(),
       //   getSites(),
+      //   getSiteAccessibilities(),
       //   getServiceStreams(),
       //   getServiceTypes(),
       //   getDivisions(),
       // ]);
 
+      const [programTypes, groups, programs, sites, serviceStreams, serviceTypes, divisions] = await Promise.all ([
+        getProgramTypes(),
+        getGroups(),
+        getPrograms(),
+        getSites(),
+        getServiceStreams(),
+        getServiceTypes(),
+        getDivisions(),
+      ]);
+
 
       setProgramTypeList(programTypes);
       setGroupList(groups);
-      // setProgramList(programs);
-      // setFilteredPrograms(programs); //keeps in artical only
+      setProgramList(programs);
+      setFilteredPrograms(programs); //keeps in artical only
 
-      const tmpProgramList = programs.map((program) => {
-        const programTitle = program.title;
-
-        let programDivisionId = groups.find((group) => group && group.group_id === program.group_id);
-        programDivisionId = (programDivisionId)? programDivisionId.division_id : null;
-        return {
-          ...program,
-          at: findMatchInProgramAtAndSdm(programAts, programTitle),
-          sdm: findMatchInProgramAtAndSdm(programSdms, programTitle),
-          eo: findOEInGroup(groups, program.group_id),
-          gm: (programDivisionId) ? findGmInDivision(divisions, programDivisionId) : null
-        }
-      })
-
-      setProgramList(tmpProgramList);
-      setFilteredPrograms(tmpProgramList); //keeps in artical only
+      // const tmpProgramList = programs.map((program) => {
+      //   const programTitle = program.title;
+      //
+      //   let programDivisionId = groups.find((group) => group && group.group_id === program.group_id);
+      //   programDivisionId = (programDivisionId)? programDivisionId.division_id : null;
+      //   return {
+      //     ...program,
+      //     at: findMatchInProgramAtAndSdm(programAts, programTitle),
+      //     sdm: findMatchInProgramAtAndSdm(programSdms, programTitle),
+      //     eo: findOEInGroup(groups, program.group_id),
+      //     gm: (programDivisionId) ? findGmInDivision(divisions, programDivisionId) : null
+      //   }
+      // })
+      //
+      // setProgramList(tmpProgramList);
+      // setFilteredPrograms(tmpProgramList); //keeps in artical only
 
       const distinctSites = sites.filter((site, index, self) => {
         return index === self.findIndex((obj) => obj.site_id === site.site_id);
@@ -191,21 +191,21 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
       distinctSites.sort ((s1, s2) => s1.site_id.localeCompare(s2.site_id));
 
-      const tmpSites = distinctSites.map((site) => {
-        let siteId = site.site_id;
-        return {
-          ...site,
-          accessibility: findMatchInSiteAccess(siteAccessibilities, siteId),
-        }
-      });
+      // const tmpSites = distinctSites.map((site) => {
+      //   let siteId = site.site_id;
+      //   return {
+      //     ...site,
+      //     accessibility: findMatchInSiteAccess(siteAccessibilities, siteId),
+      //   }
+      // });
+      //
+      // setSiteList(tmpSites);
+      // setFilteredSites(tmpSites); //keeps in artical only
+      // setAdvanceFilteredSites(tmpSites); //keeps in artical only
 
-      setSiteList(tmpSites);
-      setFilteredSites(tmpSites); //keeps in artical only
-      setAdvanceFilteredSites(tmpSites); //keeps in artical only
-
-      // setSiteList(distinctSites);
-      // setFilteredSites(distinctSites); //keeps in artical only
-      // setAdvanceFilteredSites(distinctSites); //keeps in artical only
+      setSiteList(distinctSites);
+      setFilteredSites(distinctSites); //keeps in artical only
+      setAdvanceFilteredSites(distinctSites); //keeps in artical only
 
       setServiceStreamList(serviceStreams);
       setServiceTypeList(serviceTypes);
