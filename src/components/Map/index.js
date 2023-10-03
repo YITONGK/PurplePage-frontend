@@ -14,7 +14,7 @@ mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom, centerLat, centerLng, departureLocation}) => {
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
-  // useState hooks
+  // useState hooks variable initialise
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [popUpMarker, setPopUpMarker] = useState(null);
 
@@ -33,17 +33,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
     transitionDuration: 200
   });
 
-  // useEffect(() => {
-  //
-  //   if(mapZoom > 0) {
-  //     setViewPort((prevViewPort) => ({
-  //       ...prevViewPort,
-  //       zoom: mapZoom
-  //     }));
-  //   }
-  //
-  // }, [mapZoom]);
-
+  // Set the marker to null when the sites refresh
   useEffect(() => {
 
     setPopUpMarker(null);
@@ -60,9 +50,6 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
 
       const latitudeDelta = (height / width) * (360 / (2 ** zoom));
       const longitudeDelta = (360 / width) * (360 / (2 ** zoom));
-
-      // console.log('Latitude Delta:', latitudeDelta);
-      // console.log('Longitude Delta:', longitudeDelta);
 
       // Filter the markers that are within the current viewport
       const markersWithinViewport = sites.filter((site) => {
@@ -83,6 +70,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
 
   }, [sites, viewPort]);
 
+  // If site is selected outside the map, the map should show the same result
   useEffect(() => {
     if(importSite) {
       setSelectedMarker(importSite);
@@ -91,6 +79,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
     
   },[importSite])
 
+  // Add marker to user current location
   useEffect(() => {
     setDepartureLocationMarker(departureLocation);
   },[departureLocation]);
@@ -101,8 +90,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
     setPopUpMarker(null);
   }
 
-
-
+  // event on click handle marker on click
   const markersClick =
     (e, site) => {
         e.stopPropagation();
@@ -118,7 +106,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
         if (site.geojson) {
             if (exportRef.current) {
                 const map = exportRef.current.getMap();
-                // if the route already exists on the map, we'll reset it using setData
+                // if the route already exists on the map, we'll reset it using setData adding routing path to map
                 if (map.getSource('route')) {
                     map.getSource('route').setData(site.geojson);
                 }
@@ -216,6 +204,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
     )
   }
 
+  // Return UI
   return (
     <InterContainer>
       <MapContainer style={{width: (mapWidth && mapWidth > 0)? `${mapWidth}vw`: `55vw`, height: (mapHeight && mapHeight > 0)? `${mapHeight}vh` : `64.5vh`}}>

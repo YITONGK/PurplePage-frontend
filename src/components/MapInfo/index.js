@@ -5,20 +5,14 @@ import { InfoContainer,
     InfoH1, 
     InfoH2, 
     InfoP, 
-    ProgramInfoContainer, 
-    ProgramInfoItem, 
+    ProgramInfoContainer,
     InfoDetail, 
     SiteTitle, 
     SiteContainer, 
     SiteInfo, 
     SiteInfoDetailContainer,
-    ListItemButton, 
-    CollapseInfoContainer, 
-    ProgramDetailsContainer, 
-    InfoP2, 
-    CustomCallIcon, 
-    CustomPersonIcon, 
-    CustomListItemText, 
+    ListItemButton,
+    InfoP2,
     InfoAndPopupContainer, 
     AnimatedModalContent,
     AnimatedModalContent_2,
@@ -34,7 +28,6 @@ import { InfoContainer,
     IconDescription,
     ProgramViewCaption,
     ProgramViewP2,
-    ProgramViewGreenP,
     SiteButtonContainer,
     SiteViewH1, 
     SiteViewP, 
@@ -59,8 +52,6 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import PersonIcon from '@mui/icons-material/Person';
 import CategoryIcon from '@mui/icons-material/Category';
 import CallIcon from '@mui/icons-material/Call';
-import WorkIcon from '@mui/icons-material/Work';
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import CodeIcon from '@mui/icons-material/Code';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
@@ -69,19 +60,20 @@ import Map from '../Map';
 
 
 const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) => {
-    
+
+    // Initialise Variable
     const [relatedPrograms, setRelatedPrograms] = useState([]);
 
     const [programPopUpOpen, setProgramPopUpOpen] = useState(false);
 
     const [selectedPrograms, setSelectedPrograms] = useState({});
-    const [popUpSite, setPopUpSite] = useState({});
 
     const [sitePopUpOpen, setSitePopUpOpen] = useState(false);
     const [selectedSite, setSelectedSite] = useState({});
 
     const mapRef = useRef();
 
+    // site program sorting
     useEffect (() => {
 
         if(advanceFilteredPrograms && site) {
@@ -108,6 +100,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
 
     }, [advanceFilteredPrograms, site]);
 
+    // showing program info of a site
     const ProgramInfo = () => {
 
         return (
@@ -136,6 +129,8 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
             </ProgramInfoContainer>
         )
     }
+
+    //============================== Event Trigger ============================================
 
     const onClickProgram = (program) => {
 
@@ -183,6 +178,9 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
         document.body.style.overflow = 'auto';
     };
 
+    //============================== End Event Trigger ============================================
+
+    // String Prefix Checking
     const stringFilterPrefix = (string) => {
 
         if(!string) return 'None';
@@ -200,6 +198,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
     // styles
     const gridStyle = { display: "flex", flexDirection: "row", alignItems: "center", marginBottom: "-1rem", color: "#A20066"};
 
+    // Return UI
     return (
         <InfoAndPopupContainer>
             <InfoContainer>

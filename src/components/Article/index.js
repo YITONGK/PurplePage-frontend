@@ -21,12 +21,13 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import '../../App.css';
 
-// article component
 const Article = ({sites, programs, programTypes, groups, serviceStreams, serviceTypes, divisions}) => {
+
+  // Variable Initialise and Declaration
 
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
   const [searchValues, setSearchValues] = useState({
-    value: '--Search Anything--',
+    value: 'what are you looking for',
     type: 'All',
   })
 
@@ -73,7 +74,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   };
 
 
-  // Declare page title
+  // Declare Page Title
   useEffect(() => {
     document.title = 'Home';
   }, []);
@@ -81,8 +82,89 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   // Retrieve All data
   useEffect(() => {
     getAllData();
-  // when it run second time it will not run any more it will keep the old one...
   }, [])
+
+  // Reset Filter Program
+  useEffect(() => {
+    setAdvanceFilteredPrograms([]);
+  }, [filteredSites])
+
+  // Filter The Departure Address For Map Routing
+
+  useEffect(() => {
+
+    let cancel = false;
+
+    if(departureAddress === null) {
+
+      const newFilteredSitesData = filteredSites.map((site) => {
+
+        const tmpSite = {...site};
+
+        delete tmpSite.distance;
+        delete tmpSite.duration;
+        delete tmpSite.geojson;
+
+        return tmpSite;
+
+      })
+
+      if(mapRef.current) {
+        const map = mapRef.current.getMap();
+        if (map.getLayer('route')) {
+          map.removeLayer('route');
+        }
+        if (map.getSource('route')) {
+          map.removeSource('route');
+        }
+      }
+
+      newFilteredSitesData.sort ((s1, s2) => s1.site_id.localeCompare(s2.site_id));
+
+      setFilteredSites(newFilteredSitesData);
+
+      const tmpFilteredSiteIds = advancefilteredSites.map((site) => site.site_id);
+      const newAvailableSite = newFilteredSitesData.filter((site) => tmpFilteredSiteIds.includes(site.site_id));
+
+      setAdvanceFilteredSites(newAvailableSite);
+
+
+    } else {
+
+      if(filteredSites.length <=0) return;
+
+      const fetchData = async () => {
+        setAddressIsLoading(true);
+
+        const newFilteredSitesData = await Promise.all(
+            filteredSites.map(async (site) => {
+              const routeData = await fetchRouteData(site);
+              return routeData;
+            })
+        );
+
+        setAddressIsLoading(false);
+
+        if(cancel === false && newFilteredSitesData.length === filteredSites.length) {
+
+          newFilteredSitesData.sort((s1, s2) => s1.distance - s2.distance);
+          setFilteredSites(newFilteredSitesData);
+
+          const tmpFilteredSiteIds = advancefilteredSites.map((site) => site.site_id);
+          const newAvailableSite = newFilteredSitesData.filter((site) => tmpFilteredSiteIds.includes(site.site_id));
+
+          setAdvanceFilteredSites(newAvailableSite);
+        }
+
+      };
+
+      fetchData();
+    }
+
+    return () => (cancel = true);
+
+  }, [departureAddress]);
+
 
   // Finding Program Access Type Based On Title
   const findMatchInProgramAtAndSdm = (list, findingTitle) => {
@@ -119,7 +201,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     return null;
   };
 
-  //
+  // Finding Executive from Group
   const findOEInGroup = (list, findingId) => {
     if (list && findingId) {
 
@@ -134,56 +216,45 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     return null;
   };
 
+  // Function to obtain all data from db via api call
   const getAllData = async () => {
 
     setIsLoading(true);
     try {
 
-      // const [programTypes, groups, programs, programAts, programSdms, sites, siteAccessibilities ,serviceStreams, serviceTypes, divisions] = await Promise.all ([
-      //   getProgramTypes(),
-      //   getGroups(),
-      //   getPrograms(),
-      //   getProgramAts(),
-      //   getProgramSdms(),
-      //   getSites(),
-      //   getSiteAccessibilities(),
-      //   getServiceStreams(),
-      //   getServiceTypes(),
-      //   getDivisions(),
-      // ]);
-
-      const [programTypes, groups, programs, sites, serviceStreams, serviceTypes, divisions] = await Promise.all ([
+      // This for the mssql version the actual test db --Important--
+      const [programTypes, groups, programs, programAts, programSdms, sites, siteAccessibilities ,serviceStreams, serviceTypes, divisions] = await Promise.all ([
         getProgramTypes(),
         getGroups(),
         getPrograms(),
+        getProgramAts(),
+        getProgramSdms(),
         getSites(),
+        getSiteAccessibilities(),
         getServiceStreams(),
         getServiceTypes(),
         getDivisions(),
       ]);
 
-
       setProgramTypeList(programTypes);
       setGroupList(groups);
-      setProgramList(programs);
-      setFilteredPrograms(programs); //keeps in artical only
 
-      // const tmpProgramList = programs.map((program) => {
-      //   const programTitle = program.title;
-      //
-      //   let programDivisionId = groups.find((group) => group && group.group_id === program.group_id);
-      //   programDivisionId = (programDivisionId)? programDivisionId.division_id : null;
-      //   return {
-      //     ...program,
-      //     at: findMatchInProgramAtAndSdm(programAts, programTitle),
-      //     sdm: findMatchInProgramAtAndSdm(programSdms, programTitle),
-      //     eo: findOEInGroup(groups, program.group_id),
-      //     gm: (programDivisionId) ? findGmInDivision(divisions, programDivisionId) : null
-      //   }
-      // })
-      //
-      // setProgramList(tmpProgramList);
-      // setFilteredPrograms(tmpProgramList); //keeps in artical only
+      const tmpProgramList = programs.map((program) => {
+        const programTitle = program.title;
+
+        let programDivisionId = groups.find((group) => group && group.group_id === program.group_id);
+        programDivisionId = (programDivisionId)? programDivisionId.division_id : null;
+        return {
+          ...program,
+          at: (programAts.length > 0 ) ? findMatchInProgramAtAndSdm(programAts, programTitle) : 'None',
+          sdm: (programSdms.length > 0 ) ? findMatchInProgramAtAndSdm(programSdms, programTitle) : 'None',
+          eo: findOEInGroup(groups, program.group_id),
+          gm: (programDivisionId) ? findGmInDivision(divisions, programDivisionId) : null
+        }
+      })
+
+      setProgramList(tmpProgramList);
+      setFilteredPrograms(tmpProgramList); //keeps in artical only
 
       const distinctSites = sites.filter((site, index, self) => {
         return index === self.findIndex((obj) => obj.site_id === site.site_id);
@@ -191,17 +262,17 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
       distinctSites.sort ((s1, s2) => s1.site_id.localeCompare(s2.site_id));
 
-      // const tmpSites = distinctSites.map((site) => {
-      //   let siteId = site.site_id;
-      //   return {
-      //     ...site,
-      //     accessibility: findMatchInSiteAccess(siteAccessibilities, siteId),
-      //   }
-      // });
-      //
-      // setSiteList(tmpSites);
-      // setFilteredSites(tmpSites); //keeps in artical only
-      // setAdvanceFilteredSites(tmpSites); //keeps in artical only
+      const tmpSites = distinctSites.map((site) => {
+        let siteId = site.site_id;
+        return {
+          ...site,
+          accessibility: (siteAccessibilities.length > 0) ? findMatchInSiteAccess(siteAccessibilities, siteId) : 'None',
+        }
+      });
+
+      setSiteList(tmpSites);
+      setFilteredSites(tmpSites); //keeps in artical only
+      setAdvanceFilteredSites(tmpSites); //keeps in artical only
 
       setSiteList(distinctSites);
       setFilteredSites(distinctSites); //keeps in artical only
@@ -211,6 +282,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
       setServiceTypeList(serviceTypes);
       setDivisionList(divisions);
 
+      // build the part of search
       const programTypesOptions = programTypes
         .filter((programType, index, self) =>
           programType.prgm_type !== null && 
@@ -221,7 +293,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
           type: 'Program Types'
         }));
 
-    
+
       const groupsOptions = groups
         .filter((group, index, self) => 
           group.group_name !== null &&
@@ -232,14 +304,14 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
           type: 'Group'
         }));
       
-
+      // building search option
       const filteredOptions = [];
     
       filteredOptions.push(...programTypesOptions, ...groupsOptions);
-      filteredOptions.unshift({ value: ' --Search Anything--',type: 'All'});
+      filteredOptions.unshift({ value: '-- what are you looking for? --',type: 'All'});
 
       setSearchOptions(filteredOptions);
-      setSearchValues({value: ' --Search Anything--', type: 'All'});
+      setSearchValues({value: '-- what are you looking for? --', type: 'All'});
 
       setIsLoading(false);
 
@@ -256,38 +328,29 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   /* get a list of sites from the backend and display it */
   const getSites = async () => {
     const BASE_URL = "http://localhost:8888";
-
     const result = await axios.get(BASE_URL+ '/site');
-
-    // swap lat and lng
-    // const filteredResult = result.data.map(site => ({
-    //   ...site,
-    //   lat: site.lng,
-    //   lng: site.lat,
-    // }));
-
-    // origin
-    const filteredResult = result.data.map(site => ({
-      ...site,
-      lat: site.lat,
-      lng: site.lng,
-    }));
-
+    const filteredResult = result.data;
     return filteredResult.filter(site => site.lng !== null && site.lat != null);
   }
 
   /* get list of site accessibility from the db */
   const getSiteAccessibilities = async () => {
     const BASE_URL = 'http://localhost:8888';
+    try {
 
-    const result = await axios.get(BASE_URL + '/siteaccess');
-    return result.data;
+      const result = await axios.get(BASE_URL + '/siteaccess');
+      return result.data;
+
+    } catch (err){
+
+      return [];
+
+    }
   }
 
   /* get list of programs from the backend and display them */
   const getPrograms = async () => {
     const BASE_URL = 'http://localhost:8888';
-
     const result = await axios.get(BASE_URL + '/program');
     return result.data[0];
   }
@@ -295,17 +358,27 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   /* get list of programs Access Type from the db */
   const getProgramAts = async () => {
     const BASE_URL = 'http://localhost:8888';
+    try{
+      const result = await axios.get(BASE_URL + '/programat');
+      return result.data;
 
-    const result = await axios.get(BASE_URL + '/programat');
-    return result.data;
+    } catch (err) {
+      return [];
+    }
   }
 
   /* get list of programs delivery method from the db */
   const getProgramSdms = async () => {
     const BASE_URL = 'http://localhost:8888';
 
-    const result = await axios.get(BASE_URL + '/programsdm');
-    return result.data;
+    try {
+      const result = await axios.get(BASE_URL + '/programsdm');
+      return result.data;
+
+    } catch (err) {
+      return [];
+
+    }
   }
 
   /* get list of program types from the backend and display them */
@@ -335,6 +408,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     return result;
   }
 
+  /* get list of service stream from the backend and display them */
   const getServiceStreams = async() => {
     const BASE_URL = 'http://localhost:8888';
 
@@ -344,6 +418,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     return result;
   }
 
+  /* get list of divisions from the backend and display them */
   const getDivisions = async() => {
     const BASE_URL = 'http://localhost:8888';
 
@@ -354,6 +429,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
   }
 
+  /* get list of service type from the backend and display them */
   const getServiceTypes = async() => {
     const BASE_URL = 'http://localhost:8888';
 
@@ -363,12 +439,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
   }
 
-  //-------------------------------------------------------------
-
-  useEffect(() => {
-    setAdvanceFilteredPrograms([]);
-  }, [filteredSites])
-
+  // Getting the routing address from the api call base on user current location
   const fetchRouteData = async (site) => {
     try {
           const direction_url = 'https://api.mapbox.com/directions/v5/mapbox/driving/';
@@ -414,83 +485,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   };
 
 
-  useEffect(() => {
-
-    let cancel = false;
-
-    if(departureAddress === null) {
-
-      const newFilteredSitesData = filteredSites.map((site) => {
-
-        const tmpSite = {...site};
-
-        delete tmpSite.distance;
-        delete tmpSite.duration;
-        delete tmpSite.geojson;
-
-        return tmpSite;
-
-      })
-
-      if(mapRef.current) {
-        const map = mapRef.current.getMap();
-        if (map.getLayer('route')) {
-          map.removeLayer('route');
-        }
-        if (map.getSource('route')) {
-          map.removeSource('route');
-        }
-      }
-
-      newFilteredSitesData.sort ((s1, s2) => s1.site_id.localeCompare(s2.site_id));
-
-      setFilteredSites(newFilteredSitesData);
-
-      const tmpFilteredSiteIds = advancefilteredSites.map((site) => site.site_id);
-      const newAvailableSite = newFilteredSitesData.filter((site) => tmpFilteredSiteIds.includes(site.site_id));
-
-      setAdvanceFilteredSites(newAvailableSite);
-
-
-    } else {
-
-      if(filteredSites.length <=0) return;
-
-        const fetchData = async () => {
-            setAddressIsLoading(true);
-
-            const newFilteredSitesData = await Promise.all(
-              filteredSites.map(async (site) => {
-                const routeData = await fetchRouteData(site);
-                return routeData;
-              })
-            );
-
-            setAddressIsLoading(false);
-
-            if(cancel === false && newFilteredSitesData.length === filteredSites.length) {
-
-              newFilteredSitesData.sort((s1, s2) => s1.distance - s2.distance);
-              setFilteredSites(newFilteredSitesData);
-
-              const tmpFilteredSiteIds = advancefilteredSites.map((site) => site.site_id);
-              const newAvailableSite = newFilteredSitesData.filter((site) => tmpFilteredSiteIds.includes(site.site_id));
-
-              setAdvanceFilteredSites(newAvailableSite);
-            }
-
-        };
-        
-        fetchData();
-      //departure not equal to null
-
-    }
-
-    return () => (cancel = true);
-
-  }, [departureAddress]);
-
-  //============================Data Collect Method in App====================================
+  //============================Free Text Search Filtering Group and Program Type ====================================
 
   const getSitesWithProgramType = (matchedProgramTypes) => {
 
@@ -520,11 +515,6 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
         result.push(siteList[i]);
       }
     }
-    
-    // //delete duplicates
-    // result = result.filter((site, index, self) => {
-    //   return index === self.findIndex((obj) => obj.site_id === site.site_id);
-    // });
 
     return result;
 
@@ -559,7 +549,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
   };
 
 
-  // handle the change for the search
+  // Handle search change
   const onChangeSearch = (event, value, reason) => {
 
 
@@ -719,6 +709,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     return filteredOptions;
   }
 
+  // Clear the search when user click clear button
   const searchClearOnClick = (e) => {
     e.preventDefault();
 
@@ -727,10 +718,11 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     setFilteredSites(siteList);
     setAdvanceFilteredSites(siteList);
 
-    setSearchValues({value: ' --Search Anything--', type: 'All'});
+    setSearchValues({value: '-- what are you looking for? --', type: 'All'});
 
   }
-  
+
+  // Free text search component
   const FreeTextSearch = () => {
     return (
       <ColSearchContainer>
@@ -832,7 +824,9 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
     setMapFilterIsLoading(bool)
   }
 
-  
+
+  //===================== Main Return Features ===========================================
+
   return (
 
     (isLoading) ?

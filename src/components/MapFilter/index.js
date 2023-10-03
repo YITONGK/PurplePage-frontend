@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {memo, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { 
     MapFilterContainer, 
     FilterContainer, 
@@ -29,21 +29,16 @@ import {
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/Button';
-import ListItemText from '@mui/material/ListItemText';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
 import Autocomplete from '@mui/material/Autocomplete';
 
-import CardTravelIcon from '@mui/icons-material/CardTravel';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import SendIcon from '@mui/icons-material/Send';
@@ -68,8 +63,10 @@ const MapFilter = ({filteredPrograms,
     importSite,
     loadingChecking}) => {
 
+    // Variable Declaration
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
+    // user's input value
     const [serviceStreamValue, setServiceStreamValue] = useState('');
     const [serviceTypeValue, setServiceTypeValue] = useState('');
     const [programTypeValue, setProgramTypeValue] = useState('');
@@ -83,6 +80,7 @@ const MapFilter = ({filteredPrograms,
     const [tmpAddressValue, setTmpAddressValue] = useState(null);
     const [onChangeAddressValue, setOnChangeAddressValue] = useState('');
 
+    //data from db
     const [serviceStreams, setServiceStreams] = useState([]);
     const [serviceTypes, setServiceTypes] = useState([]);
     const [programTypes, setProgramTypes] = useState([]);
@@ -93,6 +91,7 @@ const MapFilter = ({filteredPrograms,
     const [isLoading, setIsLoading] = useState(true);
     const [addressIsLoading, setAddressIsLoading] = useState(true);
 
+    // drop down option
     const [filteredServiceStreams, setFilteredServiceStreams] = useState([]);
     const [filteredServiceTypes, setFilteredServiceTypes] = useState([]);
     const [filteredProgramTypes, setFilteredProgramTypes] = useState([]);
@@ -101,14 +100,19 @@ const MapFilter = ({filteredPrograms,
     const [filteredDivisions, setFilteredDivisions] = useState([]);
     const [filteredGroups, setFilteredGroups] = useState([]);
 
+    // site data ori
     const [advanceFilteredSites, setAdvanceFilteredSites] = useState([]);
+
+    // site data that may effect by filter
     const [availableSearchSites, setAvailableSearchSites] = useState([]);
 
+    // program data filtered by drop down option
     const [advancedFilteredPrograms, setAdvancedFilteredPrograms] = useState([]);
 
     const [clickedSite, setClickedSite] = useState(null);
     const [isCollapse, setIsCollapse] = useState(false);
 
+    // style
     const dropDownStyle = { minWidth: '13vw', maxWidth: '13vw', fontSize: '14px'};
 
     const textFieldStyle = { 
@@ -141,9 +145,8 @@ const MapFilter = ({filteredPrograms,
         },
     };
 
+    // Loading all data on the first load
     useEffect(()=> {
-
-        // if(isLoading) return;
 
         setServiceStreamValue ('All Service Stream');
         setServiceTypeValue('All Service Type');
@@ -164,8 +167,6 @@ const MapFilter = ({filteredPrograms,
 
     useEffect(() => {
 
-        // if(isLoading) return;
-
         if(filteredSites && filteredSites[0] && !filteredSites[0].distance) {
             setTmpAddressValue("");
         }
@@ -183,6 +184,7 @@ const MapFilter = ({filteredPrograms,
 
         setAddressIsLoading(false);
         loadingChecking(false);
+        setIsLoading(false);
         setClickedSite(null);
 
     },[filteredSites])
@@ -212,19 +214,8 @@ const MapFilter = ({filteredPrograms,
         
     }, [programTypeList, serviceTypeList,serviceStreamList, groupList, divisionList ]);
 
-    useEffect(() => {
 
-        if(programTypes.length > 0 
-            && serviceStreams.length > 0 
-            && serviceTypes.length > 0 
-            && groups.length > 0
-            && divisions.length > 0 ) {
-
-            setIsLoading(false);
-        }
-
-    }, [programTypes, serviceTypes, serviceStreams, groups, divisions])
-
+    // Setting the clicked site
     useEffect(() => {
         if(importSite && importSite.site_id){
             if(clickedSite && clickedSite.site_id === importSite.site_id){
@@ -234,6 +225,7 @@ const MapFilter = ({filteredPrograms,
         }
     },[importSite]);
 
+    // Filtering the Program Based on the filter
     useEffect(() => {
 
         if( serviceStreamValue === '' || serviceTypeValue === '' || programTypeValue === '' || divisionValue === '' || groupValue === '' ) {
@@ -332,6 +324,7 @@ const MapFilter = ({filteredPrograms,
 
     },[serviceStreamValue, serviceTypeValue, programTypeValue, divisionValue, groupValue])
 
+    // Geting the relevant address drop down base on the user current address
     useEffect(() => {
 
         if(!onChangeAddressValue) return setSuggestAddressOptions([]);
@@ -356,6 +349,7 @@ const MapFilter = ({filteredPrograms,
 
     },[onChangeAddressValue])
 
+    // Getting the map routing and distance from Article
     useEffect(()=> {
         if(routingAddressValue.address && tmpAddressValue === routingAddressValue.address) {
             exportDepartureAddress(routingAddressValue);
@@ -367,6 +361,7 @@ const MapFilter = ({filteredPrograms,
 
     }, [routingAddressValue]);
 
+    // Zoom to the current user location after getting they current address
     useEffect(() => {
 
         if(addressIsLoading) return;
@@ -377,6 +372,9 @@ const MapFilter = ({filteredPrograms,
         }
 
     },[addressIsLoading]);
+
+
+    //===================================== Filter Component =====================================================
 
     const filteringServiceStreams= (programList) => {
 
@@ -445,7 +443,6 @@ const MapFilter = ({filteredPrograms,
         for(let i=0; i< programList.length; i++) {
             groupIds.push(programList[i].group_id);
         }
-        // console.log("groupIds: " + groupIds)
 
        const filteredGroups = groups.filter((group) => {
             return groupIds.includes(group.group_id);
@@ -473,11 +470,11 @@ const MapFilter = ({filteredPrograms,
         return tmpFilteredGroups;
     }
 
-    //==============================Related Dropdown==============================================
+    //============================== Filter Dropdown ==============================================
     const ServiceStreamDropdown = () => {
         return ( 
 
-            (!addressIsLoading && filteredServiceStreams && filteredServiceStreams.length > 0)?
+            (!(addressIsLoading || isLoading))?
         
             <Select 
                 name="Service Stream"
@@ -519,9 +516,9 @@ const MapFilter = ({filteredPrograms,
     }
 
     const ServiceTypeDropdown = () => {
-        return ( 
+        return (
 
-            (!addressIsLoading && filteredServiceTypes && filteredServiceTypes.length > 0) ?
+            (!(addressIsLoading || isLoading))?
             
             <Select 
                 name="Service Type"
@@ -560,9 +557,9 @@ const MapFilter = ({filteredPrograms,
     }
 
     const ProgramTypeDropdown = () => {
-        return ( 
+        return (
 
-            (!addressIsLoading && filteredProgramTypes && filteredProgramTypes.length > 0) ?
+            (!(addressIsLoading || isLoading))?
 
             <Select 
                 name="Program Type"
@@ -601,9 +598,9 @@ const MapFilter = ({filteredPrograms,
     }
 
     const ProgramDropdown = () => {
-        return ( 
+        return (
 
-            (!addressIsLoading && localFilteredProgram && localFilteredProgram.length > 0) ?
+            (!(addressIsLoading || isLoading))?
 
             <Select 
                 name="Program"
@@ -644,7 +641,7 @@ const MapFilter = ({filteredPrograms,
     const DivisionDropdown = () => {
 
         return (
-            (!addressIsLoading && filteredDivisions && filteredDivisions.length > 0) ?
+            (!(addressIsLoading || isLoading))?
 
             <Select 
                 name="Division"
@@ -687,7 +684,7 @@ const MapFilter = ({filteredPrograms,
 
         return (
 
-            (!addressIsLoading && filteredGroups && filteredGroups.length > 0) ?
+            (!(addressIsLoading || isLoading))?
 
             <Select 
                 name="Group"
@@ -726,32 +723,9 @@ const MapFilter = ({filteredPrograms,
 
     }
 
-    //=============================End Dropdown===================================
+    //============================= End Filter Dropdown ===================================
     
-    //Hours Diplay
-    const timeCalculation = (seconds) => {
-
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const remainingSeconds = Math.round(seconds % 60);
-
-        let formattedTime = '';
-
-        if (hours > 0) {
-            formattedTime += `${hours}h `;
-        }
-
-        if (minutes > 0 || (hours === 0 && seconds < 60)) {
-            formattedTime += `${minutes}m `;
-        }
-
-        formattedTime += `${remainingSeconds}s`;
-
-        return formattedTime.trim(); // Trim any leading or trailing spaces
-
-    }
-    
-    //Sites Results
+    // Available Site Result
     const AvailableSites = () => {
         return (
             availableSearchSites && availableSearchSites.map((site, index) => {
@@ -806,13 +780,37 @@ const MapFilter = ({filteredPrograms,
         )
     }
 
+    // Hours Diplay
+    const timeCalculation = (seconds) => {
+
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = Math.round(seconds % 60);
+
+        let formattedTime = '';
+
+        if (hours > 0) {
+            formattedTime += `${hours}h `;
+        }
+
+        if (minutes > 0 || (hours === 0 && seconds < 60)) {
+            formattedTime += `${minutes}m `;
+        }
+
+        formattedTime += `${remainingSeconds}s`;
+
+        return formattedTime.trim(); // Trim any leading or trailing spaces
+
+    }
+
+    // Fly to a specific location of a map base on lat and lng
     const flyingToLocation = (lat, lng) => {
         if(importRef.current) {
             importRef.current.getMap().flyTo({ center: [lng, lat], zoom: 16, essential: true });
         }
     }
 
-    //================================= Assistance Method ====================================
+    //================================= Filter Assistance Method ====================================
 
     const currentDToPG = (DValue) => {
 
@@ -1103,6 +1101,8 @@ const MapFilter = ({filteredPrograms,
 
         return psToPG;
     }
+
+    //================================= End Filter Assistance Method ====================================
     
 
     //============================== Event Trigger Section ==================================
@@ -1292,9 +1292,6 @@ const MapFilter = ({filteredPrograms,
             setFilteredProgramTypes(tmpFilteredProgramTypes);
 
             // division and group
-
-            // cannot set the division or group back to all since there are filtered... so no need to worry about all
-
             
             const tmpFilteredDivisions = filteringDivisions(tmpFilteredPrograms);
             let tmpFilteredGroups = filteringGroups(tmpFilteredPrograms);
@@ -1347,8 +1344,6 @@ const MapFilter = ({filteredPrograms,
 
             if(serviceStreamValue === 'All Service Stream') {
 
-                // setFilteredServiceStreams(filteringServiceStreams(tmpDGFilteredProgram));
-                // setFilteredServiceTypes(filteringServiceTypes(tmpDGFilteredProgram));
                 setFilteredProgramTypes(filteringProgramTypes(tmpDGFilteredProgram));
             }
 
@@ -1373,7 +1368,6 @@ const MapFilter = ({filteredPrograms,
     
                 const tmpFilteredPrograms = tmpDGFilteredProgram.filter((program) => programTypeIds.includes(program.prgm_type_id));
 
-                // setFilteredServiceTypes(filteringServiceTypes(tmpFilteredPrograms));
                 setFilteredProgramTypes(filteringProgramTypes(tmpFilteredPrograms));
             }
 
@@ -1411,7 +1405,7 @@ const MapFilter = ({filteredPrograms,
         if(e.target.value !== 'All Service Type') {
 
             //change happen
-            // the provided options should already be filtered by the division adn group
+            // the provided options should already be filtered by the division and group
             // the service stream will need to change at here...
             // just need to set the reset of the program type & program
             // because the stream will only provided the available service type
@@ -1450,7 +1444,7 @@ const MapFilter = ({filteredPrograms,
 
             setFilteredProgramTypes(tmpFilteredProgramTypes);
 
-            // need to check for both...
+            // need to check for both division and group
 
             const tmpFilteredDivisions = filteringDivisions(tmpFilteredPrograms);
             let tmpFilteredGroups = filteringGroups(tmpFilteredPrograms);
@@ -1805,7 +1799,10 @@ const MapFilter = ({filteredPrograms,
 
     },300);
 
-    //============================Apply Filter====================================
+    //============================== End Event Trigger Section ==================================
+
+
+    //============================ Apply Filter ====================================
     const applyingFilter = () => {
 
         let tmpAdvancedFilteredPrograms = advancedFilteredPrograms;
@@ -1829,11 +1826,7 @@ const MapFilter = ({filteredPrograms,
 
     }
 
-    const collapseRequest = () => {
-        setIsCollapse(!isCollapse);
-    }
-
-    //=============================Render of the Options===================================
+    //============================= Render of the Options ===================================
     const renderOptions = (option) => {
         return (
             <OptionContainer {...option} className=''>
@@ -1847,8 +1840,13 @@ const MapFilter = ({filteredPrograms,
         )
     }
 
+    //Collapse of UI
+    const collapseRequest = () => {
+        setIsCollapse(!isCollapse);
+    }
 
 
+    // Main Return of the APP
     return (
          <MapFilterContainer>
             <FilterContainer>
