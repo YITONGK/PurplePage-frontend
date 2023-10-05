@@ -35,7 +35,7 @@ const ProgramCreate = () => {
 
   /* get list of program types from the backend and display them */
   const getProgramTypes = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
     await axios.get(BASE_URL + '/programtype').then(res => {
       const list = res.data[0];
       setProgramTypeList(list);
@@ -44,7 +44,7 @@ const ProgramCreate = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
     await axios.get(BASE_URL + '/group').then(res => {
       const list = res.data[0];
       setGroupList(list);
@@ -54,7 +54,7 @@ const ProgramCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
     const url = BASE_URL + '/program';
     const { program_nme, prgm_mgr, prgm_type, group_name, prgm_status } = values;
     await axios.post(url, {program_nme, prgm_mgr, prgm_type, group_name, prgm_status}).then(() => {

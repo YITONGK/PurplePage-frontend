@@ -27,7 +27,7 @@ const ServiceStreamEdit = (props) => {
 
   /* get a service stream from the backend based on the id and display it */
   const getServiceStream = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
     await axios.get(BASE_URL + '/servicestream/' + id).then(res => {
       const data = res.data;
       setValues({
@@ -56,7 +56,7 @@ const ServiceStreamEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
     const url = BASE_URL + '/servicestream/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

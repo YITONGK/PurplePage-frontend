@@ -44,7 +44,7 @@ const ProgramTypeView = () => {
 
   /* get a program type from the backend based on the id and display it */
   const getProgramType = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
     await axios.get(BASE_URL + '/programtype/' + id).then(res => {
       console.log(res);
       const data = res.data[0];
@@ -54,7 +54,7 @@ const ProgramTypeView = () => {
   }
 
   const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
     const result = await axios.get(BASE_URL + '/program');
     setPrograms(result.data[0]);
     setIsLoading(false);
@@ -68,7 +68,7 @@ const ProgramTypeView = () => {
 
   /* delete the program type */
   // const deleteProgramType = () => {
-  //   const BASE_URL = 'http://localhost:8888';
+  //   const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
   //   Swal.fire({
   //     title: "Warning!",
   //     text: "Are you sure you want to delete this program type?",

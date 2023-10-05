@@ -58,7 +58,7 @@ const GroupView = () => {
 
   /* get a group from the backend based on the id and display it */
   const getGroup = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
     await axios.get(BASE_URL + '/group/' + id).then(res => {
       const data = res.data[0];
       data['division_name'] = res.data[1];
@@ -67,7 +67,7 @@ const GroupView = () => {
   }
 
   const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
     let result = await axios.get(BASE_URL + '/program');
     result = result.data[0];
     return result;
@@ -80,7 +80,7 @@ const GroupView = () => {
 
   // /* delete the group */
   // const deleteGroup = () => {
-  //   const BASE_URL = 'http://localhost:8888';
+  //   const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
   //   Swal.fire({
   //     title: "Warning!",
   //     text: "Are you sure you want to delete this group?",

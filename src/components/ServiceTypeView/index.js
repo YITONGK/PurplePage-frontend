@@ -66,7 +66,7 @@ const ServiceTypeView = () => {
 
   /* get a service type from the backend based on the id and display it */
   const getServiceType = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
     await axios.get(BASE_URL + '/servicetype/' + id).then(res => {
       const data = res.data[0];
       data['ser_stream'] = res.data[1];
@@ -75,14 +75,14 @@ const ServiceTypeView = () => {
   }
 
   const getProgramTypes = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
     let result = await axios.get(BASE_URL + '/programtype');
     result = result.data[0];
     return result;
   }
 
   const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
     let result = await axios.get(BASE_URL + '/program');
     result = result.data[0];
     return result;
@@ -133,7 +133,7 @@ const ServiceTypeView = () => {
 
   // /* delete the service type */
   // const deleteServiceType = () => {
-  //   const BASE_URL = 'http://localhost:8888';
+  //   const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
   //   Swal.fire({
   //     title: "Warning!",
   //     text: "Are you sure you want to delete this service type?",

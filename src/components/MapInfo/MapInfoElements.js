@@ -154,7 +154,7 @@ const fadeIn = keyframes`
   }
   to {
     opacity: 1;
-    transform: translate(0%, 10%);
+    transform: translate(0%, 15%);
   }
 `;
 
@@ -162,7 +162,7 @@ const fadeIn = keyframes`
 export const AnimatedModalContent = styled(Modal)`
   &.ReactModal__Content {
     animation: ${fadeIn} 0.3s ease-in-out;
-    transform: translate(0%, 10%);
+    transform: translate(0%, 15%);
     background-color: white;
     display: flex;
     background-color: white;
@@ -179,7 +179,7 @@ const fadeIn_2 = keyframes`
   }
   to {
     opacity: 1;
-    transform: translate(0%, 15%);
+    transform: translate(0%, 10%);
   }
 `;
 
@@ -187,7 +187,7 @@ const fadeIn_2 = keyframes`
 export const AnimatedModalContent_2 = styled(Modal)`
   &.ReactModal__Content {
     animation: ${fadeIn_2} 0.3s ease-in-out;
-    transform: translate(0%, 15%);
+    transform: translate(0%, 10%);
     background-color: white;
     display: flex;
     background-color: white;
@@ -205,8 +205,6 @@ export const ProgramCardContainer = styled.div`
 `;
 
 export const ProgramCardHeader = styled.div`
-  position: sticky;
-  top: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -214,16 +212,10 @@ export const ProgramCardHeader = styled.div`
   padding: 0.5rem 0.5rem 0.5rem 1rem;
   border-bottom: 1px solid grey;
   background-color: #A20066;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
 
   @media (max-width: 600px) {
     // Your small screen styles go here
     width: 97%;
-    // Any other styles you want to change for small screens
-
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
   }
 `;
 
@@ -276,12 +268,11 @@ export const ProgramInfoDetail = styled.div`
 export const Icon = styled.div`
   display: flex;
   flex-direction: row;
-  border-top: 1px solid grey;
-  border-bottom: 1px solid grey;
-  border-right: 1px solid grey;
-  border-radius: 50px;
+  align-items: center;
   min-width: 49.5%;
   max-width: 49.5%;
+  border-bottom: 2px solid grey;
+  padding-bottom: 5px;
 `;
 
 export const IconContainer = styled.div`
@@ -289,26 +280,33 @@ export const IconContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-top: 1px solid transparent;
-  border-left: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-  border-right: 1px solid transparent;
+  //border-top: 1px solid transparent;
+  //border-left: 1px solid transparent;
+  //border-bottom: 1px solid transparent;
+  //border-right: 1px solid transparent;
   border-radius: 50px;
   padding: 0.8rem 0.8rem 0.8rem 0.8rem;
-  color: white;
-  background-color: #333333;
-  margin-right: 0.2rem;
-  box-shadow: 5px 0px 8px rgba(0, 0, 0, 0.4);
+  color: black;
+  //background-color: #333333;
+  margin-right: 0.5rem;
+  //box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.4);
+`;
+
+export const IconDescriptionContainer =  styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  gap: 10px;
 `;
 
 export const IconDescription = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center; /* Center vertically */
-  text-align: center; /* Center horizontally */
+  justify-content: start;
+  align-items: end; /* Center vertically */
   width: 100%;
-  padding: 0rem 0.8rem 0rem 0rem;
-  min-height: 40px;
+  padding: 0rem 0rem 0rem 0rem;
+  //min-height: 40px;
 `;
 
 export const ProgramInfoDetailContainer = styled.div`
@@ -330,9 +328,8 @@ export const ProgramViewP2 = styled.p`
 `;
 
 export const ProgramViewCaption = styled.p`
-  font-size: 12px;
-  color: white;
-  font-weight: bold;
+  font-size: 16px;
+  color: #333333;
   margin: 0;
   padding: 0;
 `;

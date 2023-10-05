@@ -33,7 +33,7 @@ const SiteEdit = (props) => {
 
   /* get a site from the backend based on the id and display it */
   const getSite = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
     await axios.get(BASE_URL + '/site/' + id).then(res => {
       const data = res.data;
       setValues({
@@ -68,7 +68,7 @@ const SiteEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
     const url = BASE_URL + '/site/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

@@ -25,6 +25,7 @@ import { InfoContainer,
     ProgramInfoDetailContainer,
     Icon,
     IconContainer,
+    IconDescriptionContainer,
     IconDescription,
     ProgramViewCaption,
     ProgramViewP2,
@@ -288,7 +289,6 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                         borderRadius: '15px',
                         overflowY: 'auto',
                         overflowX: 'hidden',
-                        backgroundColor: '#A20066'
                     },
                 }}
             >
@@ -307,113 +307,129 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                     <ProgramInfoDetailContainer>
                         <ProgramInfoDetail>
                             <Icon style={{minWidth:'100%'}}>
-                                <IconContainer style={{minWidth: '70px'}}>
-                                    <CodeIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Program</ProgramViewCaption>
-                                    <ProgramViewCaption>Name</ProgramViewCaption>
+                                <IconContainer style={{minWidth: '2%'}}>
+                                    <CodeIcon style={{fontSize: '40px', margin: '0'}}/>
                                 </IconContainer>
-                                <IconDescription style={{padding: "1rem", textAlign: 'justify'}}>
-                                    <ProgramViewP2>{stringFilterPrefix(selectedPrograms.program_nme)}</ProgramViewP2>
-                                </IconDescription>
+                                <IconDescriptionContainer>
+                                    <ProgramViewCaption>Program Name: </ProgramViewCaption>
+                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                        <ProgramViewP2>{stringFilterPrefix(selectedPrograms.program_nme)}</ProgramViewP2>
+                                    </IconDescription>
+                                </IconDescriptionContainer>
                             </Icon>
                         </ProgramInfoDetail>
 
                         <ProgramInfoDetail>
+                            <Icon style={{minWidth:'100%', paddingBottom: '10px'}}>
+                                <IconContainer style={{minWidth: '2%'}}>
+                                    <DescriptionIcon style={{fontSize: '40px', margin: '0'}}/>
+                                </IconContainer>
+                                <IconDescriptionContainer style={{maxWidth: '92%'}}>
+                                    <ProgramViewCaption>Program Description: </ProgramViewCaption>
+                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                        <ProgramViewP2 style={{lineHeight: '1.5'}}>{stringFilterPrefix(selectedPrograms.service_desc)}.</ProgramViewP2>
+                                    </IconDescription>
+                                </IconDescriptionContainer>
+                            </Icon>
+                        </ProgramInfoDetail>
+
+
+                        <ProgramInfoDetail>
+
+                            <Icon>
+                                <IconContainer style={{minWidth: '2%'}}>
+                                    <PersonIcon style={{fontSize: '40px', margin: '0'}}/>
+                                </IconContainer>
+                                <IconDescriptionContainer>
+                                    <ProgramViewCaption>Program Manager: </ProgramViewCaption>
+                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                        <ProgramViewP2>{stringFilterPrefix(selectedPrograms.prgm_mgr)}</ProgramViewP2>
+                                    </IconDescription>
+                                </IconDescriptionContainer>
+                            </Icon>
+
+                            <Icon>
+                                <IconContainer style={{minWidth: '2%'}}>
+                                    <CallIcon style={{fontSize: '40px', margin: '0'}}/>
+                                </IconContainer>
+                                <IconDescriptionContainer>
+                                    <ProgramViewCaption>Program Contact: </ProgramViewCaption>
+                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                        <ProgramViewP2>{stringFilterPrefix(selectedPrograms.prgm_cont_no)}</ProgramViewP2>
+                                    </IconDescription>
+                                </IconDescriptionContainer>
+                            </Icon>
+
+                        </ProgramInfoDetail>
+
+                        <ProgramInfoDetail>
+
+                            <Icon>
+                                <IconContainer style={{minWidth: '2%'}}>
+                                    <PersonIcon style={{fontSize: '40px', margin: '0'}}/>
+                                </IconContainer>
+                                <IconDescriptionContainer>
+                                    <ProgramViewCaption>General Manager: </ProgramViewCaption>
+                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                        <ProgramViewP2>{stringFilterPrefix(selectedPrograms.gm)}</ProgramViewP2>
+                                    </IconDescription>
+                                </IconDescriptionContainer>
+                            </Icon>
+
+                            <Icon>
+                                <IconContainer style={{minWidth: '2%'}}>
+                                    <PersonIcon style={{fontSize: '40px', margin: '0'}}/>
+                                </IconContainer>
+                                <IconDescriptionContainer>
+                                    <ProgramViewCaption>Executive Officer: </ProgramViewCaption>
+                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                        <ProgramViewP2>{stringFilterPrefix(selectedPrograms.eo)}</ProgramViewP2>
+                                    </IconDescription>
+                                </IconDescriptionContainer>
+                            </Icon>
+
+                        </ProgramInfoDetail>
+                        <ProgramInfoDetail>
+
+                            <Icon>
+                                <IconContainer style={{minWidth: '2%'}}>
+                                    <CategoryIcon style={{fontSize: '40px', margin: '0'}}/>
+                                </IconContainer>
+                                <IconDescriptionContainer>
+                                    <ProgramViewCaption>Program Type: </ProgramViewCaption>
+                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                        <ProgramViewP2>{stringFilterPrefix(selectedPrograms.prgm_type)}</ProgramViewP2>
+                                    </IconDescription>
+                                </IconDescriptionContainer>
+                            </Icon>
+
+                            <Icon>
+                                <IconContainer style={{minWidth: '2%'}}>
+                                    <VpnKeyIcon style={{fontSize: '40px', margin: '0'}}/>
+                                </IconContainer>
+                                <IconDescriptionContainer>
+                                    <ProgramViewCaption>Access Type: </ProgramViewCaption>
+                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                        <ProgramViewP2>{(selectedPrograms.at) ? stringFilterPrefix(selectedPrograms.at.at) : 'None'}</ProgramViewP2>
+                                    </IconDescription>
+                                </IconDescriptionContainer>
+                            </Icon>
+
+                        </ProgramInfoDetail>
+                        <ProgramInfoDetail>
+
                             <Icon style={{minWidth:'100%'}}>
-                                <IconContainer>
-                                    <DescriptionIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Program</ProgramViewCaption>
-                                    <ProgramViewCaption>Description</ProgramViewCaption>
+                                <IconContainer style={{minWidth: '2%'}}>
+                                    <LocalShippingIcon style={{fontSize: '40px', margin: '0'}}/>
                                 </IconContainer>
-                                <IconDescription style={{padding: "1rem", textAlign: 'justify'}}>
-                                    <ProgramViewP2>{stringFilterPrefix(selectedPrograms.service_desc)}</ProgramViewP2>
-                                </IconDescription>
-                            </Icon>
-                        </ProgramInfoDetail>
-
-                        <ProgramInfoDetail>
-                            <Icon>
-                                <IconContainer style={{minWidth: '70px'}}>
-                                    <PersonIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Program</ProgramViewCaption>
-                                    <ProgramViewCaption>Manager</ProgramViewCaption>
-                                </IconContainer>
-                                <IconDescription>
-                                    <ProgramViewP2>{stringFilterPrefix(selectedPrograms.prgm_mgr)}</ProgramViewP2>
-                                </IconDescription>
+                                <IconDescriptionContainer>
+                                    <ProgramViewCaption>Delivery Method: </ProgramViewCaption>
+                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                        <ProgramViewP2>{(selectedPrograms.sdm) ? stringFilterPrefix(selectedPrograms.sdm.sdm) : 'None'}</ProgramViewP2>
+                                    </IconDescription>
+                                </IconDescriptionContainer>
                             </Icon>
 
-                            <Icon>
-                                <IconContainer style={{minWidth: '70px'}}>
-                                    <CallIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Program</ProgramViewCaption>
-                                    <ProgramViewCaption>Contact</ProgramViewCaption>
-                                </IconContainer>
-                                <IconDescription>
-                                    <ProgramViewP2>{stringFilterPrefix(selectedPrograms.prgm_cont_no)}</ProgramViewP2>
-                                </IconDescription>
-                            </Icon>
-                        </ProgramInfoDetail>
-
-                        <ProgramInfoDetail>
-
-                            <Icon>
-                                <IconContainer style={{minWidth: '70px'}}>
-                                    <PersonIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>General</ProgramViewCaption>
-                                    <ProgramViewCaption>Manager</ProgramViewCaption>
-                                </IconContainer>
-                                <IconDescription>
-                                    <ProgramViewP2>{stringFilterPrefix(selectedPrograms.gm)}</ProgramViewP2>
-                                </IconDescription>
-                            </Icon>
-
-                            <Icon>
-                                <IconContainer style={{minWidth: '70px'}}>
-                                    <PersonIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Executive</ProgramViewCaption>
-                                    <ProgramViewCaption>Officer</ProgramViewCaption>
-                                </IconContainer>
-                                <IconDescription>
-                                    <ProgramViewP2>{stringFilterPrefix(selectedPrograms.eo)}</ProgramViewP2>
-                                </IconDescription>
-                            </Icon>
-                        </ProgramInfoDetail>
-                        <ProgramInfoDetail>
-
-                            <Icon>
-                                <IconContainer style={{minWidth: '70px'}}>
-                                    <CategoryIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Program</ProgramViewCaption>
-                                    <ProgramViewCaption>Type</ProgramViewCaption>
-                                </IconContainer>
-                                <IconDescription>
-                                    <ProgramViewP2>{stringFilterPrefix(selectedPrograms.prgm_type)}</ProgramViewP2>
-                                </IconDescription>
-                            </Icon>
-
-                            <Icon>
-                                <IconContainer style={{minWidth: '70px'}}>
-                                    <VpnKeyIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Access</ProgramViewCaption>
-                                    <ProgramViewCaption>Type</ProgramViewCaption>
-                                </IconContainer>
-                                <IconDescription>
-                                    <ProgramViewP2>{(selectedPrograms.at) ? stringFilterPrefix(selectedPrograms.at.at) : 'None'}</ProgramViewP2>
-                                </IconDescription>
-                            </Icon>
-                        </ProgramInfoDetail>
-                        <ProgramInfoDetail>
-                            <Icon style={{minWidth:'100%'}}>
-                                <IconContainer style={{minWidth: '70px'}}>
-                                    <LocalShippingIcon style={{fontSize: '25px', margin: '0'}}/>
-                                    <ProgramViewCaption>Delivery</ProgramViewCaption>
-                                    <ProgramViewCaption>Method</ProgramViewCaption>
-                                </IconContainer>
-                                <IconDescription>
-                                    <ProgramViewP2>{(selectedPrograms.sdm) ? stringFilterPrefix(selectedPrograms.sdm.sdm) : 'None'}</ProgramViewP2>
-                                </IconDescription>
-                            </Icon>
                         </ProgramInfoDetail>
                     </ProgramInfoDetailContainer>
                 </ProgramCardContainer>
@@ -422,7 +438,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
             <AnimatedModalContent_2
                 appElement={document.getElementById('root')}
                 isOpen={sitePopUpOpen}
-                contentLabel="Site Information Modal"
+                contentLabel="Site Information Modal" // Site
                 style={{
                     content: {
                         width: '90vw', // Set the desired width

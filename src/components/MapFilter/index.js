@@ -88,8 +88,8 @@ const MapFilter = ({filteredPrograms,
     const [divisions, setDivisions] = useState([]);
     const [groups, setGroups] = useState([]);
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [addressIsLoading, setAddressIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [addressIsLoading, setAddressIsLoading] = useState(false);
 
     // drop down option
     const [filteredServiceStreams, setFilteredServiceStreams] = useState([]);

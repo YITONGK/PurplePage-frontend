@@ -196,13 +196,55 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
           >
              <InfoWindowContainer>
                 <InfoWindowH1>{popUpMarker.site_id}</InfoWindowH1>
-                <InfoWindowP><strong>Address:</strong> <br/>{popUpMarker.street_nbr} {popUpMarker.street_name}, {popUpMarker.suburb}, {popUpMarker.state} {popUpMarker.postcode}</InfoWindowP>
+                <InfoWindowP>
+                    <strong>Address:</strong>
+                    <br/>{popUpMarker.street_nbr} {popUpMarker.street_name}, {popUpMarker.suburb}, {popUpMarker.state} {popUpMarker.postcode}
+                </InfoWindowP>
+                 {
+                     (popUpMarker.geojson) ?
+
+                         <>
+                             <InfoWindowP>
+                                 <strong>Distance:</strong>
+                                 <br/>{`${Math.round((popUpMarker.distance / 1000) * 10) / 10} km`}
+                             </InfoWindowP>
+                             <InfoWindowP>
+                                 <strong>Duration:</strong>
+                                 <br/>{`${timeCalculation(popUpMarker.duration)}`}
+                             </InfoWindowP>
+                         </> : null
+
+
+                 }
+
               </InfoWindowContainer>
           </Popup>
         ) : null}
       </>
     )
   }
+
+    const timeCalculation = (seconds) => {
+
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = Math.round(seconds % 60);
+
+        let formattedTime = '';
+
+        if (hours > 0) {
+            formattedTime += `${hours}h `;
+        }
+
+        if (minutes > 0 || (hours === 0 && seconds < 60)) {
+            formattedTime += `${minutes}m `;
+        }
+
+        formattedTime += `${remainingSeconds}s`;
+
+        return formattedTime.trim(); // Trim any leading or trailing spaces
+
+    }
 
   // Return UI
   return (

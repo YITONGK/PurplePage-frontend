@@ -72,7 +72,7 @@ const ServiceStreamView = () => {
 
   /* get a service stream from the backend based on the id and display it */
   const getServiceStream = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
     const result = await axios.get(BASE_URL + '/servicestream/' + id).then(res => {
       const data = res.data;
       return data;
@@ -84,21 +84,21 @@ const ServiceStreamView = () => {
   }
 
   const getServiceTypes = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
     let result = await axios.get(BASE_URL + '/servicetype/');
     result = result.data[1]; // type id - service stream name
     return result;
   }
 
   const getProgramTypes = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
     let result = await axios.get(BASE_URL + '/programtype');
     result = result.data[0];
     return result;
   }
 
   const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
     let result = await axios.get(BASE_URL + '/program');
     result = result.data[0];
     return result;
@@ -149,7 +149,7 @@ const ServiceStreamView = () => {
 
   // /* delete the service stream */
   // const deleteServiceStream = () => {
-  //   const BASE_URL = 'http://localhost:8888';
+  //   const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
   //   Swal.fire({
   //     title: "Warning!",
   //     text: "Are you sure you want to delete this service stream?",
