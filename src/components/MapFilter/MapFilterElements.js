@@ -13,7 +13,7 @@ export const FilterContainer = styled.div`
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    padding: 0rem 1rem 0rem 1rem;
+    padding: 0rem 0.5rem 0rem 0.5rem;
     align-items: center;
     overflow-y: auto;
 `;
@@ -43,7 +43,6 @@ export const SelectDiv = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    ${'' /* border: 1px solid; */}
 `;
 
 export const ProgramDropDownContainer = styled.div`
@@ -56,7 +55,6 @@ export const ProgramDropDownContainer = styled.div`
 export const GroupDropDownContainer = styled.div`
     display: flex;
     flex-direction: column;
-    ${'' /* border: 1px solid yellow; */}
     gap: 1.5rem;
 `;
 
@@ -132,7 +130,6 @@ export const LabelContainer = styled.div`
     display: flex;
     flex-direction: row;
     width: 100%;
-    justify-content: space-between;
     align-items: center;
     justify-content: center;
     margin-top: 0.5rem;
@@ -212,7 +209,7 @@ export const ResetButton = styled.button`
 
 export const ButtonLabel = styled.p`
    font-size: 14px;
-   color: 'white';
+   color: white;
    font-weight: bold;
    padding: 0;
    margin: 0;

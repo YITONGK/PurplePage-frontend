@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ServiceTypeContainer, ServiceTypeH1, ButtonWrapper, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink, ServiceTypeButtonLink } from './ServiceTypeElements';
+import { ServiceTypeContainer, ServiceTypeH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './ServiceTypeElements';
 
 const ServiceType = () => {
   // useState hooks
@@ -79,8 +79,6 @@ const ServiceType = () => {
     ActionsColumn
   ];
 
-  // links
-  const addServiceTypeLink = '/servicetype/create';
 
   return (
     <ServiceTypeContainer>

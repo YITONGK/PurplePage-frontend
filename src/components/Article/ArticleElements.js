@@ -90,7 +90,7 @@ export const MapInfoContainer = styled.div`
   padding: 0;
   justify-content: start;
   flex: 1;
-  width: 'fit-content';
+  width: 100%;
 `;
 
 export const LoadindContainer = styled.div`

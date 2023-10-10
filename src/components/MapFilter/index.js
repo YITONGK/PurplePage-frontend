@@ -50,11 +50,11 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 const MapFilter = ({filteredPrograms, 
     filteredSites, 
-    programTypeList, 
-    serviceTypeList, 
-    serviceStreamList, 
-    groupList, 
-    divisionList, 
+    programTypes,
+    serviceTypes,
+    serviceStreams,
+    groups,
+    divisions,
     exportAdvanceFilteredSites, 
     importRef, 
     exportSite, 
@@ -79,14 +79,6 @@ const MapFilter = ({filteredPrograms,
     const [routingAddressValue, setRoutingAddressValue] = useState({});
     const [tmpAddressValue, setTmpAddressValue] = useState(null);
     const [onChangeAddressValue, setOnChangeAddressValue] = useState('');
-
-    //data from db
-    const [serviceStreams, setServiceStreams] = useState([]);
-    const [serviceTypes, setServiceTypes] = useState([]);
-    const [programTypes, setProgramTypes] = useState([]);
-
-    const [divisions, setDivisions] = useState([]);
-    const [groups, setGroups] = useState([]);
 
     const [isLoading, setIsLoading] = useState(false);
     const [addressIsLoading, setAddressIsLoading] = useState(false);
@@ -113,11 +105,11 @@ const MapFilter = ({filteredPrograms,
     const [isCollapse, setIsCollapse] = useState(false);
 
     // style
-    const dropDownStyle = { minWidth: '13vw', maxWidth: '13vw', fontSize: '14px'};
+    const dropDownStyle = { minWidth: '14vw', maxWidth: '14vw', fontSize: '15px'};
 
-    const textFieldStyle = { 
-        minWidth: "16vw", 
-        fontSize: '15px', 
+    const textFieldStyle = {
+        minWidth: "16vw",
+        fontSize: '15px',
         borderRadius: '5px'
     };
 
@@ -135,6 +127,11 @@ const MapFilter = ({filteredPrograms,
 
     const searchTextFieldStyle = {
         '& .MuiOutlinedInput-root': {
+            minWidth: '16vw',
+            maxWidth: '16vw',
+          '& .MuiOutlinedInput-input' : {
+            fontSize: '15px'
+          },
           '& fieldset': {
             border: '0.5px solid grey',
             borderRadius: '5px',
@@ -188,30 +185,6 @@ const MapFilter = ({filteredPrograms,
 
     },[filteredSites])
 
-
-    useEffect(() => {
-
-        if(programTypeList && programTypeList.length > 0) {
-            setProgramTypes(programTypeList);
-        }
-
-        if (serviceTypeList && serviceTypeList.length > 0) {
-            setServiceTypes(serviceTypeList);
-        }
-
-        if (serviceStreamList && serviceStreamList.length > 0) {
-            setServiceStreams(serviceStreamList);
-        }
-
-        if(groupList && groupList.length > 0) {
-            setGroups(groupList);
-        }
-        
-        if (divisionList && divisionList.length > 0) {
-            setDivisions(divisionList);
-        }
-        
-    }, [programTypeList, serviceTypeList,serviceStreamList, groupList, divisionList ]);
 
     useEffect(() => {
 
@@ -321,7 +294,7 @@ const MapFilter = ({filteredPrograms,
         setAdvancedFilteredPrograms(finalFilteredPrograms);
 
         if(programValue !== 'All Program') {
-            const tmpProgram = filteredPrograms.filter((program) => program.program_nme === programValue);
+            const tmpProgram = finalFilteredPrograms.filter((program) => program.program_nme === programValue);
             if(tmpProgram.length <= 0) {
                 setProgramValue('All Program');
             }
@@ -1944,8 +1917,8 @@ const MapFilter = ({filteredPrograms,
                                 size='small'
                                 selectOnFocus
                                 clearOnBlur
-                                forcePopupIcon 
-                                renderInput={(params) => <TextField {...params} placeholder='E.g., Harris Street' sx={searchTextFieldStyle}/>}
+                                forcePopupIcon
+                                renderInput={(params) => <TextField {...params} size='small' placeholder='E.g., Harris Street' sx={{...searchTextFieldStyle, alignItems: 'center'}}/>}
                                 renderOption={renderOptions}
                             />
                         }
@@ -1962,7 +1935,7 @@ const MapFilter = ({filteredPrograms,
                                 </SkeletonTheme>
                             </div>
                             :
-                            <TextField sx={{...searchTextFieldStyle, ...textFieldStyle}} id="searchSite" size='small' placeholder='E.g., Harris Street' onChange={onChangeSiteSearch} 
+                            <TextField sx={{...searchTextFieldStyle, alignItems: 'center'}} id="searchSite" size='small' placeholder='E.g., Harris Street' onChange={onChangeSiteSearch}
                                 InputProps={{
                                     endAdornment : (
                                         <InputAdornment position="end">

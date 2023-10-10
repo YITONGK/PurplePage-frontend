@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Nav, HeaderContainer, HeaderLogo, HeaderImg, HeaderLogin, SideNavButton } from './HeaderElements';
+import React from 'react';
+import { Nav, HeaderContainer, HeaderLogo, HeaderImg, SideNavButton } from './HeaderElements';
 import MenuIcon from '@mui/icons-material/Menu';
 
 
@@ -9,8 +9,6 @@ const Header = ({showSideNav}) => {
   const logo = 'http://rev.u22s2101.monash-ie.me/img/uniting-logo-white.png';
   const homeLink = '/';
 
-  // styles
-  const menuStyle = { marginTop: '4rem', width: '100%' };
   return (
     <>
       <Nav>

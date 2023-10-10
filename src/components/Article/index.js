@@ -14,14 +14,14 @@ import TextField from '@mui/material/TextField';
 import Map from '../Map';
 import MapInfo from '../MapInfo';
 import MapFilter from '../MapFilter';
-import natural from 'natural';
+import { removeStopwords } from 'stopword';
 
 import ReactLoading from 'react-loading';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import '../../App.css';
 
-const Article = ({sites, programs, programTypes, groups, serviceStreams, serviceTypes, divisions}) => {
+const Article = () => {
 
   // Variable Initialise and Declaration
 
@@ -665,9 +665,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
     const splitValue = filteringValue.trim().split(/\s+/);
 
-    const stopwords = new Set(natural.stopwords);
-
-    const filteredWords = splitValue.filter((word) => !stopwords.has(word));
+    const filteredWords = removeStopwords(splitValue);
     const filteredValue = filteredWords.join(' ');
 
     const filteredPattern = new RegExp(filteredValue, 'i');
@@ -689,17 +687,14 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
       groupIds.push(filteredProgram[i].group_id);
     }
 
-    const filteredProgramType = programTypeList.map((type) => {
-      if(programTypeIds.includes(type.prgm_type_id)) { 
-        return type.prgm_type;
-      }
-    });
+    const filteredProgramType = programTypeList
+        .filter(type => programTypeIds.includes(type.prgm_type_id))
+        .map(type => type.prgm_type);
 
-    const filteredGroups = groupList.map((group) => {
-      if(groupIds.includes(group.group_id)) {
-        return group.group_name;
-      }
-    });
+    const filteredGroups = groupList
+        .filter(group => groupIds.includes(group.group_id))
+        .map(group => group.group_name);
+
 
     const availableOptions = options.filter((option) => (filteredProgramType.includes(option.value) || filteredGroups.includes(option.value)));
     const filterTypeGroup = options.filter((option) => filteredPattern.test(option.value));
@@ -833,7 +828,7 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
 
     <div className="loading-overlay">
       <div className="loading-container">
-        <span className="loading-text"><img src='http://rev.u22s2101.monash-ie.me/img/uniting-logo-white.png' style={{width: '150px', height: 'auto', marginBottom: '10px'}} /> </span>
+        <span className="loading-text"><img src='http://rev.u22s2101.monash-ie.me/img/uniting-logo-white.png' style={{width: '150px', height: 'auto', marginBottom: '10px'}} alt={"Uniting Logo"} /> </span>
         <ReactLoading type={'spin'} color={'#A20066'} height={150} width={110}></ReactLoading>
         <span className="loading-text">Loading...</span>
       </div>
@@ -852,11 +847,11 @@ const Article = ({sites, programs, programTypes, groups, serviceStreams, service
           <MapFilter 
             filteredPrograms={filteredPrograms} 
             filteredSites={filteredSites}
-            programTypeList={programTypeList}
-            serviceTypeList = {serviceTypeList}
-            serviceStreamList = {serviceStreamList} 
-            groupList={groupList}
-            divisionList = {divisionList}
+            programTypes={programTypeList}
+            serviceTypes = {serviceTypeList}
+            serviceStreams = {serviceStreamList}
+            groups={groupList}
+            divisions = {divisionList}
             exportAdvanceFilteredSites={applyFilter}
             importRef={mapRef}
             exportSite={selectingSite}

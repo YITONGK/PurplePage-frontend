@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
-import { DivisionContainer, DivisionH1, ButtonWrapper, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink, DivisionButtonLink } from './DivisionElements';
+import { DivisionContainer, DivisionH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './DivisionElements';
 
 const Division = () => {
   // useState hooks
@@ -74,9 +74,6 @@ const Division = () => {
     },
     ActionsColumn
   ];
-
-  // links
-  const addDivisionLink = '/division/create';
 
   return (
     <DivisionContainer>

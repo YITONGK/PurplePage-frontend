@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ServiceStreamContainer, ServiceStreamH1, ButtonWrapper, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink, ServiceStreamButtonLink } from './ServiceStreamElements';
+import { ServiceStreamContainer, ServiceStreamH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './ServiceStreamElements';
 
 const ServiceStream = () => {
   // useState hooks
@@ -70,8 +70,6 @@ const ServiceStream = () => {
     ActionsColumn
   ];
 
-  // links
-  const addServiceStreamLink = '/servicestream/create';
 
   return (
     <ServiceStreamContainer>

@@ -13,12 +13,25 @@ export const InfoWindowContainer = styled.div`
   padding-left: 0.5rem;
 `;
 
+export const InfoWindowContainerRow = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    margin-bottom: 5px;
+    width: 85%;
+`;
+
 export const InfoWindowH1 = styled.h1`
   color: #A20066;
+  padding-bottom: 0;
+  margin-bottom: 15px;
 `;
 
 export const InfoWindowP = styled.p`
   font-size: 14px;
+  margin:0;
+  padding:0;
 `;
 
 const moveUpAndBack = keyframes`

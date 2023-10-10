@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { Link as LinkRouter } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import MenuIcon from '@mui/icons-material/Menu';
 
 export const Nav = styled.nav`
   height: 80px;

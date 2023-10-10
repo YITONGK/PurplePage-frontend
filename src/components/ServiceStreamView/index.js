@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ServiceStreamViewContainer, ServiceStreamViewH1, ServiceStreamViewP, ServiceStreamViewH2, ActionsButtonLink, LoadingContainer, LoadingCircle, LoadingText, ServiceStreamProgramsContainer } from './ServiceStreamViewElements';
 import Button from '@mui/material/Button';
-import Swal from 'sweetalert2';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';

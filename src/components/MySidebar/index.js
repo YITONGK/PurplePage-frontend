@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import SideNav, { Toggle, NavItem, NavIcon, NavText, Nav } from '@trendmicro/react-sidenav';
+import SideNav, {NavItem, NavIcon, NavText, Nav } from '@trendmicro/react-sidenav';
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import { SideNavButton, ButtonContainer, HeaderImg} from './MySidebarElements';
 import MenuIcon from '@mui/icons-material/Menu';

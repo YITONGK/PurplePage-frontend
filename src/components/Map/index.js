@@ -1,7 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { MapContainer, MapP, InfoWindowContainer, InfoWindowH1, InfoWindowP, MarkerAnimation, BasicMarker, InterContainer} from './MapElements';
-import ReactMapGl, { Marker, Popup, AttributionControl} from "react-map-gl";
+import React, { useState, useEffect } from 'react';
+import { MapContainer, InfoWindowContainer, InfoWindowH1, InfoWindowP, MarkerAnimation, BasicMarker, InterContainer, InfoWindowContainerRow} from './MapElements';
+import ReactMapGl, { Marker, Popup} from "react-map-gl";
 import mapboxgl from 'mapbox-gl';
+
+import RoomIcon from '@mui/icons-material/Room';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LocalTaxiIcon from '@mui/icons-material/LocalTaxi';
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
@@ -193,25 +197,35 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
             latitude={popUpMarker.lat}
             longitude={popUpMarker.lng}
             onClose={closePopup}
+            anchor={"bottom"}
+            offset={22}
           >
              <InfoWindowContainer>
                 <InfoWindowH1>{popUpMarker.site_id}</InfoWindowH1>
-                <InfoWindowP>
-                    <strong>Address:</strong>
-                    <br/>{popUpMarker.street_nbr} {popUpMarker.street_name}, {popUpMarker.suburb}, {popUpMarker.state} {popUpMarker.postcode}
-                </InfoWindowP>
+                 <InfoWindowContainerRow>
+                     <RoomIcon style={{margin: '0', padding: '0'}}></RoomIcon>
+                     <InfoWindowP>
+                         <strong>
+                            {popUpMarker.street_nbr} {popUpMarker.street_name}, {popUpMarker.suburb}, {popUpMarker.state} {popUpMarker.postcode}
+                         </strong>
+                     </InfoWindowP>
+                 </InfoWindowContainerRow>
                  {
                      (popUpMarker.geojson) ?
 
                          <>
+                             <InfoWindowContainerRow>
+                                <LocalTaxiIcon></LocalTaxiIcon>
+                                 <InfoWindowP>
+                                     <strong>{`${Math.round((popUpMarker.distance / 1000) * 10) / 10} km`}</strong> Away.
+                                 </InfoWindowP>
+                             </InfoWindowContainerRow>
+                             <InfoWindowContainerRow>
+                                 <AccessTimeIcon></AccessTimeIcon>
                              <InfoWindowP>
-                                 <strong>Distance:</strong>
-                                 <br/>{`${Math.round((popUpMarker.distance / 1000) * 10) / 10} km`}
+                                 May Take <strong>{`${timeCalculation(popUpMarker.duration)}`}</strong> To Get There.
                              </InfoWindowP>
-                             <InfoWindowP>
-                                 <strong>Duration:</strong>
-                                 <br/>{`${timeCalculation(popUpMarker.duration)}`}
-                             </InfoWindowP>
+                             </InfoWindowContainerRow>
                          </> : null
 
 

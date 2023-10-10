@@ -15,7 +15,7 @@ import { InfoContainer,
     InfoP2,
     InfoAndPopupContainer, 
     AnimatedModalContent,
-    AnimatedModalContent_2,
+    AnimatedModalContent2,
     ProgramCardContainer, 
     ProgramCardHeader, 
     ProgramCardHeaderLeft, 
@@ -42,7 +42,7 @@ import { InfoContainer,
     SiteViewH2, 
     SiteViewP2, 
     SperateLine,
-    ProgramCardHeader_2
+    ProgramCardHeader2
 } from './MapInfoElements';
 import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
@@ -435,7 +435,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                 </ProgramCardContainer>
             </AnimatedModalContent>
 
-            <AnimatedModalContent_2
+            <AnimatedModalContent2
                 appElement={document.getElementById('root')}
                 isOpen={sitePopUpOpen}
                 contentLabel="Site Information Modal" // Site
@@ -450,7 +450,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                 }}
             >
                 <ProgramCardContainer>
-                    <ProgramCardHeader_2>
+                    <ProgramCardHeader2>
                         <ProgramCardHeaderLeft>
                             <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Detail</h2>
                             </ProgramCardHeaderLeft>
@@ -459,7 +459,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                                 <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
                             </Button>
                         </ProgramCardHeaderRight>
-                    </ProgramCardHeader_2>
+                    </ProgramCardHeader2>
 
                     { (selectedSite) ?
 
@@ -570,7 +570,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                     }
 
                 </ProgramCardContainer>
-            </AnimatedModalContent_2>
+            </AnimatedModalContent2>
         </InfoAndPopupContainer>
     );
 }

@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { DivisionViewContainer, DivisionViewH1, DivisionViewH2, DivisionViewP, ActionsButtonLink, LoadingContainer, LoadingCircle, LoadingText, DivisionProgramsContainer} from './DivisionViewElements';
 import Button from '@mui/material/Button';
-import Swal from 'sweetalert2';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -24,6 +23,7 @@ const DivisionView = () => {
   const TableTitleStyle = {fontWeight: 'bold', fontSize: '18px', color: '#A60A6C'};
   const TableContentStyle = {fontSize: '16px', color: 'black'};
 
+  // react hook to get division
   useEffect(() => {
     getDivision();
   }, []);
@@ -123,46 +123,6 @@ const DivisionView = () => {
         </Table>
       </TableContainer>
     )
-  }
-
-
-
-  /* Handle going to edit page */
-  const edit = () => {
-    window.location = '/division/' + id + '/edit';
-  }
-
-  /* delete the division */
-  const deleteDivision = () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
-    Swal.fire({
-      title: "Warning!",
-      text: "Are you sure you want to delete this division?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      showClass: {
-        icon: ''
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await axios.delete(BASE_URL + "/division/" + id).then(() => {
-          Swal.fire({
-            title: "Success!",
-            text: "Division has been successfully deleted!",
-            icon: "success",
-            showClass: {
-              icon: ''
-            }
-          });
-          setTimeout(() => {
-            window.location = '/division';
-          }, 1500);
-        })
-      }
-    })
   }
 
   return (

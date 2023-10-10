@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
-import { SiteContainer, SiteH1, ButtonWrapper, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink, SiteButtonLink } from './SiteElements';
+import { SiteContainer, SiteH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './SiteElements';
 
 const Site = () => {
   // useState hooks
@@ -89,9 +89,6 @@ const Site = () => {
     },
     ActionsColumn
   ];
-
-  // links
-  const addSiteLink = '/site/create';
 
   return (
     <SiteContainer>

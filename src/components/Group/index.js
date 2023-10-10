@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
-import { GroupContainer, GroupH1, ButtonWrapper, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink, GroupButtonLink } from './GroupElements';
+import { GroupContainer, GroupH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './GroupElements';
 
 const Group = () => {
   // useState hooks
@@ -87,9 +87,6 @@ const Group = () => {
     },
     ActionsColumn
   ];
-
-  // links
-  const addGroupLink = '/group/create';
 
   return (
     <GroupContainer>

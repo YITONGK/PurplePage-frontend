@@ -165,7 +165,6 @@ export const AnimatedModalContent = styled(Modal)`
     transform: translate(0%, 15%);
     background-color: white;
     display: flex;
-    background-color: white;
     box-shadow: 3px 0px 20px rgba(0, 0, 0, 0.4);
     outline: none;
   }
@@ -184,7 +183,7 @@ const fadeIn_2 = keyframes`
 `;
 
 // Create a styled component for the modal content with the animation
-export const AnimatedModalContent_2 = styled(Modal)`
+export const AnimatedModalContent2 = styled(Modal)`
   &.ReactModal__Content {
     animation: ${fadeIn_2} 0.3s ease-in-out;
     transform: translate(0%, 10%);
@@ -219,7 +218,7 @@ export const ProgramCardHeader = styled.div`
   }
 `;
 
-export const ProgramCardHeader_2 = styled.div`
+export const ProgramCardHeader2 = styled.div`
   position: sticky;
   top: 0;
   display: flex;

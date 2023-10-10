@@ -46,22 +46,11 @@ import SitePage from './pages/site';
 import SiteView from './components/SiteView';
 import SiteEdit from './components/SiteEdit';
 import SiteCreate from './components/SiteCreate';
-import ReactLoading from 'react-loading';
 
 
 //export NODE_OPTIONS=--openssl-legacy-provider //use this comment id digital routine unsupport
 
 function App() {
-
-  const [siteList, setSiteList] = useState([]);
-  const [programList, setProgramList] = useState([]);
-  const [programTypeList, setProgramTypeList] = useState([]);
-  const [groupList, setGroupList] = useState([]);
-  const [serviceStreamList, setServiceStreamList] = useState([]);
-  const [serviceTypeList, setServiceTypeList] = useState([]);
-  const [divisionList, setDivisionList] = useState([]);
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const [sideNavShow, setSideNavShow] = useState(false);
 
@@ -73,70 +62,58 @@ function App() {
 
   return (
 
-    (isLoading) ?
-
-    <div className="loading-overlay">
-      <div className="loading-container">
-        <span className="loading-text"><img src='http://rev.u22s2101.monash-ie.me/img/uniting-logo-white.png' style={{width: '150px', height: 'auto', marginBottom: '10px'}} /> </span>
-          <ReactLoading type={'spin'} color={'#A20066'} height={150} width={110}></ReactLoading> 
-        <span className="loading-text">Loading...</span>
+    <Router>
+      <div className={(sideNavShow) ? 'slide-in': 'slide-out'}>
+        <MySidebar showSideNav = {showSideNav}/>
       </div>
-    </div>
+      <Header showSideNav = {showSideNav}/>
+      <Routes>
+        <Route>
+          <Route path="/" element={<Home/>} exact />
+          <Route path="/profile" element={<Profile/>} exact />
+          <Route path="/users" element={<Users/>} exact />
+          <Route path="/users/:id" element={<UserView/>} exact />
+          <Route path="/users/:id/edit" element={<UserEdit/>} exact />
+          <Route path="/users/create" element={<UserCreate/>} exact />
 
-      :
+          <Route path="/program" element={<ProgramPage/>} exact />
+          <Route path="/program/:id" element={<ProgramView/>} exact />
+          <Route path="/program/:id/edit" element={<ProgramEdit/>} exact />
+          <Route path="/program/create" element={<ProgramCreate/>} exact />
 
-      <Router>
-        <div className={(sideNavShow) ? 'slide-in': 'slide-out'}>
-          <MySidebar showSideNav = {showSideNav}/>
-        </div>
-        <Header showSideNav = {showSideNav}/>
-        <Routes>
-          <Route>
-            <Route path="/" element={<Home sites = {siteList} programs= {programList} programTypes = {programTypeList} groups = {groupList} serviceStreams = {serviceStreamList} serviceTypes = {serviceTypeList} divisions = {divisionList}/>} exact />
-            <Route path="/profile" element={<Profile/>} exact />
-            <Route path="/users" element={<Users/>} exact />
-            <Route path="/users/:id" element={<UserView/>} exact />
-            <Route path="/users/:id/edit" element={<UserEdit/>} exact />
-            <Route path="/users/create" element={<UserCreate/>} exact />
+          <Route path="/programtype" element={<ProgramTypePage/>} exact />
+          <Route path="/programtype/:id" element={<ProgramTypeView/>} exact />
+          <Route path="/programtype/:id/edit" element={<ProgramTypeEdit/>} exact />
+          <Route path="/programtype/create" element={<ProgramTypeCreate/>} exact />
 
-            <Route path="/program" element={<ProgramPage/>} exact />
-            <Route path="/program/:id" element={<ProgramView/>} exact />
-            <Route path="/program/:id/edit" element={<ProgramEdit/>} exact />
-            <Route path="/program/create" element={<ProgramCreate/>} exact />
+          <Route path="/servicetype" element={<ServiceTypePage/>} exact />
+          <Route path="/servicetype/:id" element={<ServiceTypeView/>} exact />
+          <Route path="/servicetype/:id/edit" element={<ServiceTypeEdit/>} exact />
+          <Route path="/servicetype/create" element={<ServiceTypeCreate/>} exact />
 
-            <Route path="/programtype" element={<ProgramTypePage/>} exact />
-            <Route path="/programtype/:id" element={<ProgramTypeView/>} exact />
-            <Route path="/programtype/:id/edit" element={<ProgramTypeEdit/>} exact />
-            <Route path="/programtype/create" element={<ProgramTypeCreate/>} exact />
+          <Route path="/servicestream" element={<ServiceStreamPage/>} exact />
+          <Route path="/servicestream/:id" element={<ServiceStreamView/>} exact />
+          <Route path="/servicestream/:id/edit" element={<ServiceStreamEdit/>} exact />
+          <Route path="/servicestream/create" element={<ServiceStreamCreate/>} exact />
 
-            <Route path="/servicetype" element={<ServiceTypePage/>} exact />
-            <Route path="/servicetype/:id" element={<ServiceTypeView/>} exact />
-            <Route path="/servicetype/:id/edit" element={<ServiceTypeEdit/>} exact />
-            <Route path="/servicetype/create" element={<ServiceTypeCreate/>} exact />
+          <Route path="/group" element={<GroupPage/>} exact />
+          <Route path="/group/:id" element={<GroupView/>} exact />
+          <Route path="/group/:id/edit" element={<GroupEdit/>} exact />
+          <Route path="/group/create" element={<GroupCreate/>} exact />
 
-            <Route path="/servicestream" element={<ServiceStreamPage/>} exact />
-            <Route path="/servicestream/:id" element={<ServiceStreamView/>} exact />
-            <Route path="/servicestream/:id/edit" element={<ServiceStreamEdit/>} exact />
-            <Route path="/servicestream/create" element={<ServiceStreamCreate/>} exact />
-            
-            <Route path="/group" element={<GroupPage/>} exact />
-            <Route path="/group/:id" element={<GroupView/>} exact />
-            <Route path="/group/:id/edit" element={<GroupEdit/>} exact />
-            <Route path="/group/create" element={<GroupCreate/>} exact />
+          <Route path="/division" element={<DivisionPage/>} exact />
+          <Route path="/division/:id" element={<DivisionView/>} exact />
+          <Route path="/division/:id/edit" element={<DivisionEdit/>} exact />
+          <Route path="/division/create" element={<DivisionCreate/>} exact />
 
-            <Route path="/division" element={<DivisionPage/>} exact />
-            <Route path="/division/:id" element={<DivisionView/>} exact />
-            <Route path="/division/:id/edit" element={<DivisionEdit/>} exact />
-            <Route path="/division/create" element={<DivisionCreate/>} exact />
-
-            <Route path="/site" element={<SitePage/>} exact />
-            <Route path="/site/:id" element={<SiteView/>} exact />
-            <Route path="/site/:id/edit" element={<SiteEdit/>} exact />
-            <Route path="/site/create" element={<SiteCreate/>} exact />
-          </Route>
-        </Routes>
-        <Footer />
-      </Router>
+          <Route path="/site" element={<SitePage/>} exact />
+          <Route path="/site/:id" element={<SiteView/>} exact />
+          <Route path="/site/:id/edit" element={<SiteEdit/>} exact />
+          <Route path="/site/create" element={<SiteCreate/>} exact />
+        </Route>
+      </Routes>
+      <Footer />
+    </Router>
     
     
   );
