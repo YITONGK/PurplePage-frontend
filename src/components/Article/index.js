@@ -56,6 +56,8 @@ const Article = () => {
 
   const [searchOptions, setSearchOptions] = useState([]);
 
+  const [mapFilterIsCollapse, setMapFilterIsCollapse] = useState(true);
+
   const mapRef = useRef();
 
   // Style
@@ -819,6 +821,10 @@ const Article = () => {
     setMapFilterIsLoading(bool)
   }
 
+  const reportingMapFilterIsCollapse = (isCpllapse) => {
+    setMapFilterIsCollapse(isCpllapse);
+  }
+
 
   //===================== Main Return Features ===========================================
 
@@ -852,13 +858,14 @@ const Article = () => {
             serviceStreams = {serviceStreamList}
             groups={groupList}
             divisions = {divisionList}
-            exportAdvanceFilteredSites={applyFilter}
             importRef={mapRef}
+            importSite={selectedSite}
             exportSite={selectingSite}
+            exportAdvanceFilteredSites={applyFilter}
             exportAdvanceFilteredPrograms = {sendAdvanceFilteredPrograms}
             exportDepartureAddress={transferDepartureAddress}
-            importSite={selectedSite}
             loadingChecking={mapFilterLoadingCheck}
+            collapseChecking={reportingMapFilterIsCollapse}
           />
           {
             (addressIsLoading || mapFilterIsLoading) ?
@@ -867,7 +874,7 @@ const Article = () => {
               </LoadindContainer>
               : 
               <Map 
-                sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef} importSite={selectedSite} departureLocation={departureAddress}
+                sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef} importSite={selectedSite} departureLocation={departureAddress} mapWidth={(mapFilterIsCollapse) ? 59.5 : 0}
               />
           }
 

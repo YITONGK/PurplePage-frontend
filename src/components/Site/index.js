@@ -24,7 +24,14 @@ const Site = () => {
   const getSites = async () => {
     const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
     await axios.get(BASE_URL + '/site').then(res => {
-      const list = res.data;
+      let list = res.data;
+      list = list.map ((list) => {
+        return {
+          ...list,
+          accessibility: 'None',
+          hours: 'TBA-TBA',
+        };
+      })
       setSiteList(list);
       setIsLoading(false);
     })
@@ -52,27 +59,27 @@ const Site = () => {
 
   // columns for datagrid
   const columns = [
-    { field: 'site_id', headerName: 'Site ID', headerClassName: 'header', minWidth: 200, flex: 1,
+    { field: 'site_id', headerName: 'Site ID', headerClassName: 'header', maxWidth: 140, flex: 1,
       renderCell: (params) => (
         <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
       )
     },
-    { field: 'street_nbr', headerName: 'Number', headerClassName: 'header', maxWidth: 100, flex: 1,
+    { field: 'street_nbr', headerName: 'Street Number', headerClassName: 'header', maxWidth: 130, flex: 1,
       renderCell: (params) => (
         <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
       )
     },
-    { field: 'street_name', headerName: 'Street Name', headerClassName: 'header', minWidth: 240, flex: 1,
+    { field: 'street_name', headerName: 'Street Name', headerClassName: 'header', minWidth: 200, flex: 1,
       renderCell: (params) => (
         <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
       )
     },
-    { field: 'suburb', headerName: 'Suburb', headerClassName: 'header', maxWidth: 120, flex: 1,
+    { field: 'suburb', headerName: 'Suburb', headerClassName: 'header', maxWidth: 140, flex: 1,
       renderCell: (params) => (
         <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
       )
     },
-    { field: 'state', headerName: 'State', headerClassName: 'header', maxWidth: 100, flex: 1,
+    { field: 'state', headerName: 'State', headerClassName: 'header', maxWidth: 120, flex: 1,
       renderCell: (params) => (
         <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
       )
@@ -80,6 +87,16 @@ const Site = () => {
     { field: 'postcode', headerName: 'Postcode', headerClassName: 'header', maxWidth: 120, flex: 1,
       renderCell: (params) => (
         <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'accessibility', headerName: 'Accessibility', headerClassName: 'header', maxWidth: 120, flex: 1,
+      renderCell: (params) => (
+          <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+      )
+    },
+    { field: 'hours', headerName: 'Hours', headerClassName: 'header', maxWidth: 120, flex: 1,
+      renderCell: (params) => (
+          <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
       )
     },
     { field: 'status', headerName: 'Status', headerClassName: 'header', maxWidth: 120, flex: 1,

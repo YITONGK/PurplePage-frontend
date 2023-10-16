@@ -4,7 +4,6 @@ export const ArticleContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  ${'' /* margin-left: 5%; */}
   padding-left: 2%;
   overflow-x: auto;
   margin-bottom: 75px;

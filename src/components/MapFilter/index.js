@@ -55,13 +55,14 @@ const MapFilter = ({filteredPrograms,
     serviceStreams,
     groups,
     divisions,
-    exportAdvanceFilteredSites, 
-    importRef, 
-    exportSite, 
+    importRef,
+    importSite,
+    exportSite,
+    exportAdvanceFilteredSites,
     exportAdvanceFilteredPrograms,
     exportDepartureAddress,
-    importSite,
-    loadingChecking}) => {
+    loadingChecking,
+    collapseChecking}) => {
 
     // Variable Declaration
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -102,7 +103,7 @@ const MapFilter = ({filteredPrograms,
     const [advancedFilteredPrograms, setAdvancedFilteredPrograms] = useState([]);
 
     const [clickedSite, setClickedSite] = useState(null);
-    const [isCollapse, setIsCollapse] = useState(false);
+    const [isCollapse, setIsCollapse] = useState(true);
 
     // style
     const dropDownStyle = { minWidth: '14vw', maxWidth: '14vw', fontSize: '15px'};
@@ -165,20 +166,25 @@ const MapFilter = ({filteredPrograms,
 
     useEffect(() => {
 
+        console.log("in effect of filtered sites");
+
         if(filteredSites && filteredSites[0] && !filteredSites[0].distance) {
             setTmpAddressValue("");
         }
 
         setAdvanceFilteredSites(filteredSites);
+        setAvailableSearchSites(filteredSites);
 
-        if(availableSearchSites.length <= 0) {
-            setAvailableSearchSites(filteredSites);
-        }
-        else {
-            const tmpAvailableSiteIds = availableSearchSites.map(site => site.site_id);
-            const tmpAvailableSites = filteredSites.filter((site) => tmpAvailableSiteIds.includes(site.site_id));
-            setAvailableSearchSites(tmpAvailableSites);
-        }
+        // if(availableSearchSites.length <= 0) {
+        //     console.log("in effect of filtered sites - if 1");
+        //     setAvailableSearchSites(filteredSites);
+        // }
+        // else {
+        //     console.log("in effect of filtered sites - if 2");
+        //     const tmpAvailableSiteIds = availableSearchSites.map(site => site.site_id);
+        //     const tmpAvailableSites = filteredSites.filter((site) => tmpAvailableSiteIds.includes(site.site_id));
+        //     setAvailableSearchSites(tmpAvailableSites);
+        // }
 
         setAddressIsLoading(false);
         setClickedSite(null);
@@ -1828,7 +1834,9 @@ const MapFilter = ({filteredPrograms,
 
     //Collapse of UI
     const collapseRequest = () => {
-        setIsCollapse(!isCollapse);
+        const tmpCollapse = isCollapse;
+        setIsCollapse(!tmpCollapse);
+        collapseChecking(!tmpCollapse);
     }
 
 

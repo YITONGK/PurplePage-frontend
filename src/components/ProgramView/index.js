@@ -53,6 +53,19 @@ const ProgramView = () => {
     })
   }
 
+  const stringFilterPrefix = (string) => {
+
+    if(!string) return 'None';
+
+    // Extract the local part of the email (before '@')
+    const localPart = string.split('@')[0];
+
+    // Replace all '.' with spaces in the local part
+    const result = localPart.replace(/\./g, ' ');
+
+    return result.trim(); // trim() to remove any leading/trailing spaces
+  }
+
   const ExportSite = (site) => {
     setSelectedSite(site);
 
@@ -67,6 +80,8 @@ const ProgramView = () => {
             <TableRow>
               <TableCell style={TableTitleStyle}>Site ID</TableCell>
               <TableCell style={TableTitleStyle}>Address</TableCell>
+              <TableCell style={TableTitleStyle}>Hours</TableCell>
+              <TableCell style={TableTitleStyle}>Accessibility</TableCell>
               <TableCell style={TableTitleStyle}>Contact</TableCell>
               <TableCell style={TableTitleStyle}>Actions</TableCell>
               <TableCell style={TableTitleStyle}></TableCell>
@@ -78,10 +93,15 @@ const ProgramView = () => {
                 key={index}
               >
                 <TableCell style={TableContentStyle}>{site.site_id}</TableCell>
-                <TableCell style={TableContentStyle}>{site.address}</TableCell>
-                <TableCell style={TableContentStyle}>{site.site_contact_name}</TableCell>
+                <TableCell style={TableContentStyle}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</TableCell>
+                <TableCell style={TableContentStyle}>
+                  {(stringFilterPrefix(site.site_open) === 'None') ? 'TBA' : stringFilterPrefix(site.site_open)} -
+                  {(stringFilterPrefix(site.site_close) === 'None') ? 'TBA' : stringFilterPrefix(site.site_close)}
+                </TableCell>
+                <TableCell style={TableContentStyle}> {(site.accessibility && site.accessibility.accessibility) ? stringFilterPrefix(site.accessibility.accessibility) : 'None'}</TableCell>
+                <TableCell style={TableContentStyle}>{stringFilterPrefix(site.site_contact_name)}</TableCell>
                 <TableCell style={{width: '10px'}}>
-                  <Button variant="contained" style={{textTransform: "none", marginRight: "5%"}}>
+                  <Button variant="contained" style={{textTransform: "none", marginRight: "5%", backgroundColor: '#A60A6C' }}>
                     <ActionsButtonLink to={`/site/${site.id}`}>View</ActionsButtonLink>
                   </Button>
                 </TableCell>
@@ -181,7 +201,7 @@ const ProgramView = () => {
           </InfoDetailContainer>
         </ProgramViewInfo>
         <ProgramViewMapContainer>
-          <Map sites = {sites} exportRef={mapRef} exportSite={ExportSite} mapZoom={6} mapWidth={50} mapHeight={50}/>
+          <Map sites = {sites} exportRef={mapRef} exportSite={ExportSite} mapZoom={6} mapWidth={53} mapHeight={50}/>
         </ProgramViewMapContainer>
       </MapAndInfoContainer>
       <ProgramViewP style={{ fontWeight: "bold", marginTop: "2rem", marginBottom: "2rem", color: "#A60A6C", fontSize: "28px" }}>Related Sites</ProgramViewP>

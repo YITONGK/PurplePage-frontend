@@ -36,6 +36,19 @@ const SiteView = () => {
     })
   }
 
+  const stringFilterPrefix = (string) => {
+
+    if(!string) return 'None';
+
+    // Extract the local part of the email (before '@')
+    const localPart = string.split('@')[0];
+
+    // Replace all '.' with spaces in the local part
+    const result = localPart.replace(/\./g, ' ');
+
+    return result.trim(); // trim() to remove any leading/trailing spaces
+  }
+
   return (
     <SiteViewContainer>
       <SiteViewMapAndInfoContainer>
@@ -52,7 +65,7 @@ const SiteView = () => {
               <SiteViewInfoDetailColumn>
                 <SiteViewP><strong>Site Manager:</strong></SiteViewP>
                 {
-                  site.site_contact_name === null ? <SiteViewP>{`-`}</SiteViewP> : <SiteViewP>{site.site_contact_name}</SiteViewP>
+                  site.site_contact_name === null ? <SiteViewP>{`-`}</SiteViewP> : <SiteViewP>{stringFilterPrefix(site.site_contact_name)}</SiteViewP>
                 }
               </SiteViewInfoDetailColumn>
 
@@ -134,7 +147,7 @@ const SiteView = () => {
 
           <SiteViewH2>Full Address:</SiteViewH2>
 
-          <SiteViewP style={{paddingLeft: '0.8rem'}}>{(site.address === null)? `-` : `${site.address}` }</SiteViewP>
+          <SiteViewP style={{paddingLeft: '0.8rem'}}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</SiteViewP>
         </SiteViewInfoContainer>
         <SiteViewMapContainer>
           <Map sites={[site]} exportSite={null} exportRef={mapRef} mapWidth={54} mapHeight={80}/>

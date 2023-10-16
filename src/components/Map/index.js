@@ -32,8 +32,8 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
     latitude: centerLat || -37.80995133438894,
     longitude: centerLng || 144.96871464972733,
     zoom: mapZoom || 10,
-    width: (20 * window.innerWidth) /100,
-    height: (20 * window.innerWidth) /100,
+    width:  (15 * window.innerWidth) / 100, //vw ro px
+    height:  (15 * window.innerWidth) / 100, //vw to px
     transitionDuration: 200
   });
 
@@ -269,6 +269,8 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
           style={{zIndex: '0'}}
           ref={exportRef}
           {...viewPort}
+          width={'100%'}
+          height={'100%'}
           mapboxAccessToken={MAPBOX_TOKEN}
           mapStyle="mapbox://styles/mapbox/streets-v12"
           onMove={(evt) => {
@@ -276,8 +278,8 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
               latitude: evt.viewState.latitude,
               longitude: evt.viewState.longitude,
               zoom: evt.viewState.zoom,
-              width: (20 * window.innerWidth) /100, //vh to px = (Viewport height unit (vh) * Viewport height) / 100
-              height: (20 * window.innerHeight) /100, //vh to px = (Viewport
+              width: (15 * window.innerWidth) / 100, //vw ro px
+              height: (15 * window.innerWidth) / 100, //vw to px
               transitionDuration: 200
             });
             setMarkersInView([]); // increase the performance when moving the map

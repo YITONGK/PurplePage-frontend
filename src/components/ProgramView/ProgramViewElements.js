@@ -69,6 +69,7 @@ export const MapAndInfoContainer = styled.div`
   margin-right: 2rem;
   width: 95%;
   height: 50vh;
+  overflow: hidden;
 `;
 
 export const ProgramViewInfo = styled.div`
