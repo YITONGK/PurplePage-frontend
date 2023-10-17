@@ -1,21 +1,29 @@
 import styled from 'styled-components';
 
-export const MapFilterContainer = styled.div`
-    margin-right: 1rem;
-    height: 64.5vh;
+export const MapFilterRowContainer = styled.div`
+    margin-right: 0.5rem;
+    height: fit-content;;
     display: flex;
-    flex-direction: row;
-    gap: 10px; 
+    flex-direction: column;
+    margin-top: 1rem;
+    border: 1px solid #CCC;
+    border-radius: 10px;
+    padding-bottom: 10px;
+    min-width: 96.8vw;
+    max-width: 96.8vw;
+    background-color: ghostwhite;
+    z-index: 0;
 `;
 
 export const FilterContainer = styled.div`
-    border: 1px solid #CCC;
+    //border: 1px solid #CCC;
     border-radius: 5px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding: 0rem 0.5rem 0rem 0.5rem;
     align-items: center;
-    overflow-y: auto;
+    flex:1;
+    width: fit-content;
 `;
 
 export const ResultContainer = styled.div`
@@ -31,12 +39,10 @@ export const ResultContainer = styled.div`
 export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
-  justify-content: center;
-  flex:1;
   gap: 20px;
   margin-bottom: 0.5rem;
   margin-top: 1.5rem;
+  margin-left: 2rem;
 `;
 
 export const SelectDiv = styled.div`
@@ -47,15 +53,17 @@ export const SelectDiv = styled.div`
 
 export const ProgramDropDownContainer = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding-top: 0.5rem;
+    align-items: center;
     gap: 1rem;
 `;
 
 export const GroupDropDownContainer = styled.div`
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    align-items: center;
+    flex-direction: row;
+    gap: 1rem;
 `;
 
 export const BreakingLine = styled.div`
@@ -68,10 +76,10 @@ export const BreakingLine = styled.div`
 `;
 
 export const BreakingLine2 = styled.div`
-    width: 90%;
+    width: 5rem;
     border-radius: 10px;
     max-height: 0;
-    margin-top: 0.8rem;
+    margin-top: 2rem;
     margin-bottom: 0.8rem;
 
     /* Gradient border with a slight inset appearance */

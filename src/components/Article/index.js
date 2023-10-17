@@ -20,6 +20,7 @@ import ReactLoading from 'react-loading';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import '../../App.css';
+import MapResultFilter from "../MapResultFilter";
 
 const Article = () => {
 
@@ -329,7 +330,7 @@ const Article = () => {
 
   /* get a list of sites from the backend and display it */
   const getSites = async () => {
-    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
+    const BASE_URL = "http://localhost:8888";
     const result = await axios.get(BASE_URL+ '/site');
     const filteredResult = result.data;
     return filteredResult.filter(site => site.lng !== null && site.lat != null);
@@ -337,7 +338,7 @@ const Article = () => {
 
   /* get list of site accessibility from the db */
   const getSiteAccessibilities = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'http://localhost:8888';
     try {
 
       const result = await axios.get(BASE_URL + '/siteaccess');
@@ -352,14 +353,19 @@ const Article = () => {
 
   /* get list of programs from the backend and display them */
   const getPrograms = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
-    const result = await axios.get(BASE_URL + '/program');
-    return result.data[0];
+    const BASE_URL = 'http://localhost:8888';
+    let result = await axios.get(BASE_URL + '/program');
+    result = result.data[0];
+    result = result.filter((r) => r.program_nme !== null && r.program_nme !== '')
+    result.sort((a, b) => {
+      return a.program_nme.localeCompare(b.program_nme);
+    });
+    return result;
   }
 
   /* get list of programs Access Type from the db */
   const getProgramAts = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'http://localhost:8888';
     try{
       const result = await axios.get(BASE_URL + '/programat');
       return result.data;
@@ -371,7 +377,7 @@ const Article = () => {
 
   /* get list of programs delivery method from the db */
   const getProgramSdms = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'http://localhost:8888';
 
     try {
       const result = await axios.get(BASE_URL + '/programsdm');
@@ -385,7 +391,7 @@ const Article = () => {
 
   /* get list of program types from the backend and display them */
   const getProgramTypes = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'http://localhost:8888';
 
     let result = await axios.get(BASE_URL + '/programtype');
     result = result.data[0];
@@ -402,7 +408,7 @@ const Article = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'http://localhost:8888';
 
     let result =  await axios.get(BASE_URL + '/group');
     result = result.data[0];
@@ -412,7 +418,7 @@ const Article = () => {
 
   /* get list of service stream from the backend and display them */
   const getServiceStreams = async() => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'http://localhost:8888';
 
     let result = await axios.get(BASE_URL + '/servicestream');
     result = result.data;
@@ -422,7 +428,7 @@ const Article = () => {
 
   /* get list of divisions from the backend and display them */
   const getDivisions = async() => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'http://localhost:8888';
 
     let result = await axios.get(BASE_URL + '/division');
     result = result.data;
@@ -433,12 +439,12 @@ const Article = () => {
 
   /* get list of service type from the backend and display them */
   const getServiceTypes = async() => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'http://localhost:8888';
 
     let result = await axios.get(BASE_URL + '/servicetype');
     result = result.data[0];
+    result.sort ((a, b) => a.ser_type.localeCompare(b.ser_type));
     return result;
-
   }
 
   // Getting the routing address from the api call base on user current location
@@ -848,25 +854,27 @@ const Article = () => {
             (searchError) ?
               <Typography variant="subtitle" sx={{color: 'red', marginBottom: '-0.8rem'}}>--Search No Result--</Typography> : null
           }
+          <MapFilter
+              filteredPrograms={filteredPrograms}
+              filteredSites={filteredSites}
+              programTypes={programTypeList}
+              serviceTypes = {serviceTypeList}
+              serviceStreams = {serviceStreamList}
+              groups={groupList}
+              divisions = {divisionList}
+              importRef={mapRef}
+              importSite={selectedSite}
+              exportSite={selectingSite}
+              exportAdvanceFilteredSites={applyFilter}
+              exportAdvanceFilteredPrograms = {sendAdvanceFilteredPrograms}
+              exportDepartureAddress={transferDepartureAddress}
+              loadingChecking={mapFilterLoadingCheck}
+              collapseChecking={reportingMapFilterIsCollapse}
+          />
+
         </FilterContainer>
         <MapElement>
-          <MapFilter 
-            filteredPrograms={filteredPrograms} 
-            filteredSites={filteredSites}
-            programTypes={programTypeList}
-            serviceTypes = {serviceTypeList}
-            serviceStreams = {serviceStreamList}
-            groups={groupList}
-            divisions = {divisionList}
-            importRef={mapRef}
-            importSite={selectedSite}
-            exportSite={selectingSite}
-            exportAdvanceFilteredSites={applyFilter}
-            exportAdvanceFilteredPrograms = {sendAdvanceFilteredPrograms}
-            exportDepartureAddress={transferDepartureAddress}
-            loadingChecking={mapFilterLoadingCheck}
-            collapseChecking={reportingMapFilterIsCollapse}
-          />
+          <MapResultFilter importRef={mapRef} exportSite={selectingSite} exportDepartureAddress={transferDepartureAddress} advanceFilteredSites={advancefilteredSites}></MapResultFilter>
           {
             (addressIsLoading || mapFilterIsLoading) ?
               <LoadindContainer>

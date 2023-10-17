@@ -228,7 +228,6 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
                              </InfoWindowContainerRow>
                          </> : null
 
-
                  }
 
               </InfoWindowContainer>

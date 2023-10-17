@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import { 
-    MapFilterContainer, 
+import {
+    MapFilterRowContainer,
     FilterContainer, 
     SelectDiv,
     ButtonContainer, 
@@ -103,7 +103,7 @@ const MapFilter = ({filteredPrograms,
     const [advancedFilteredPrograms, setAdvancedFilteredPrograms] = useState([]);
 
     const [clickedSite, setClickedSite] = useState(null);
-    const [isCollapse, setIsCollapse] = useState(true);
+    const [isCollapse, setIsCollapse] = useState(false);
 
     // style
     const dropDownStyle = { minWidth: '14vw', maxWidth: '14vw', fontSize: '15px'};
@@ -156,7 +156,13 @@ const MapFilter = ({filteredPrograms,
         setFilteredServiceStreams(filteringServiceStreams(filteredPrograms));
         setFilteredServiceTypes(filteringServiceTypes(filteredPrograms));
         setFilteredProgramTypes(filteringProgramTypes(filteredPrograms));
-        setLocalFilteredProgram(filteredPrograms);
+
+        //remove dueplicate
+        const distinctPrograms = filteredPrograms.filter((program, index, self) => {
+            return index === self.findIndex((obj) => obj.program_nme === program.program_nme);
+        });
+
+        setLocalFilteredProgram(distinctPrograms);
 
         setFilteredDivisions(filteringDivisions(filteredPrograms));
         setFilteredGroups(filteringGroups(filteredPrograms));
@@ -1842,42 +1848,37 @@ const MapFilter = ({filteredPrograms,
 
     // Main Return of the APP
     return (
-         <MapFilterContainer>
+        <MapFilterRowContainer>
+            <LabelContainer>
+                <InputLabel style={textStyle}>Map Filter</InputLabel>
+            </LabelContainer>
             <FilterContainer>
-                <LabelContainer>
-                    <InputLabel style={textStyle}>Map Filter</InputLabel>
-                </LabelContainer>
                 <ProgramDropDownContainer>
                     <SelectDiv>
                         <InputLabel style={{fontSize: '16px'}}>Service Stream</InputLabel>
                         <ServiceStreamDropdown></ServiceStreamDropdown>
                     </SelectDiv>
+                    <BreakingLine2></BreakingLine2>
                     <SelectDiv>
                         <InputLabel style={{fontSize: '16px'}}>Service Type</InputLabel>
                         <ServiceTypeDropdown></ServiceTypeDropdown>
                     </SelectDiv>
+                    <BreakingLine2></BreakingLine2>
                     <SelectDiv>
                         <InputLabel style={{fontSize: '16px'}}>Program Type</InputLabel>
                         <ProgramTypeDropdown></ProgramTypeDropdown>
                     </SelectDiv>
+                </ProgramDropDownContainer>
+            </FilterContainer>
+            <FilterContainer>
+                <ProgramDropDownContainer>
+                    <div style={{ minWidth: '60vw', maxWidth: '60vw'}}></div>
                     <SelectDiv>
                         <InputLabel style={{fontSize: '16px'}}>Program</InputLabel>
                         <ProgramDropdown></ProgramDropdown>
                     </SelectDiv>
                 </ProgramDropDownContainer>
 
-                <BreakingLine></BreakingLine>
-
-                <GroupDropDownContainer>
-                    <SelectDiv>
-                        <InputLabel style={{fontSize: '16px'}} >Division</InputLabel>
-                        <DivisionDropdown></DivisionDropdown>
-                    </SelectDiv> 
-                    <SelectDiv>
-                        <InputLabel style={{fontSize: '16px'}}>Group</InputLabel>
-                        <GroupDropdown></GroupDropdown>
-                    </SelectDiv> 
-                </GroupDropDownContainer>
                 <ButtonContainer>
                     <ApplyButton onClick={applyingFilter} style={ (addressIsLoading || isLoading)? {pointerEvents: 'none'} : {}}>
                         <SendIcon style= {{fontSize: '16px', marginRight: '5px'}}></SendIcon>
@@ -1888,94 +1889,105 @@ const MapFilter = ({filteredPrograms,
                         <ButtonLabel style={{color: '#A20066'}}>Clear</ButtonLabel>
                     </ResetButton>
                 </ButtonContainer>
+
             </FilterContainer>
-            <ResultContainer style={{width: isCollapse ? '0' : 'auto', overflow: isCollapse ? 'hidden' : '', display: isCollapse ? 'none' : ''}}>
-                <LabelContainer>
-                    <InputLabel style={textStyle}>Available Sites</InputLabel>
-                </LabelContainer>
-                <SearchContainer>
-                    <SearchInputContainer>
-                        <InputLabel style={{fontSize: '16px'}}>Search Address</InputLabel>
-                        {
-                            (addressIsLoading || isLoading)?
+            <FilterContainer>
+                <GroupDropDownContainer>
+                    <div style={dropDownStyle}></div>
+                    <div style={{width: '5rem'}}></div>
+                    <SelectDiv>
+                        <InputLabel style={{fontSize: '16px'}} >Division</InputLabel>
+                        <DivisionDropdown></DivisionDropdown>
+                    </SelectDiv>
+                        <BreakingLine2></BreakingLine2>
+                    <SelectDiv>
+                        <InputLabel style={{fontSize: '16px'}}>Group</InputLabel>
+                        <GroupDropdown></GroupDropdown>
+                    </SelectDiv>
+                </GroupDropDownContainer>
+            </FilterContainer>
+            {/* <MapFilterRowContainer>*/}
+            {/*    <ResultContainer>*/}
+            {/*        <LabelContainer>*/}
+            {/*            <InputLabel style={textStyle}>Available Sites</InputLabel>*/}
+            {/*        </LabelContainer>*/}
+            {/*        <SearchContainer>*/}
+            {/*            <SearchInputContainer>*/}
+            {/*                <InputLabel style={{fontSize: '16px'}}>Search Address</InputLabel>*/}
+            {/*                {*/}
+            {/*                    (addressIsLoading || isLoading)?*/}
 
-                            <div>
-                                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                    <Skeleton style={textFieldStyle} height={35} />
-                                </SkeletonTheme>
-                            </div>
+            {/*                    <div>*/}
+            {/*                        <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">*/}
+            {/*                            <Skeleton style={textFieldStyle} height={35} />*/}
+            {/*                        </SkeletonTheme>*/}
+            {/*                    </div>*/}
 
-                            :
+            {/*                    :*/}
 
-                            <Autocomplete
-                                disablePortal
-                                id="departureAddress"
-                                className=''
-                                options={suggestAddressOptions.map((address) => address.address)}
-                                onChange={onChangeDepartureAddress}
-                                isOptionEqualToValue={(option, value) => {if(value === "") {return false;} else { return (option === value);}}}
-                                onInputChange={onInputDepartureValue}
-                                value={tmpAddressValue}
-                                style={textFieldStyle}
-                                popupIcon={ <SearchIcon />}
-                                sx={{
-                                    "& .MuiAutocomplete-popupIndicator": { transform: "none", pointerEvents: "none"}, 
-                                    "& .MuiAutocomplete-paper": { overflowX: "hidden"}
-                                    }}
-                                size='small'
-                                selectOnFocus
-                                clearOnBlur
-                                forcePopupIcon
-                                renderInput={(params) => <TextField {...params} size='small' placeholder='E.g., Harris Street' sx={{...searchTextFieldStyle, alignItems: 'center'}}/>}
-                                renderOption={renderOptions}
-                            />
-                        }
-                    </SearchInputContainer>
-                    <BreakingLine2></BreakingLine2>
-                    <SearchInputContainer>
-                        <InputLabel style={{fontSize: '16px'}}>Search Uniting Sites</InputLabel>
-                        {
-                            (addressIsLoading || isLoading)?
+            {/*                    <Autocomplete*/}
+            {/*                        disablePortal*/}
+            {/*                        id="departureAddress"*/}
+            {/*                        className=''*/}
+            {/*                        options={suggestAddressOptions.map((address) => address.address)}*/}
+            {/*                        onChange={onChangeDepartureAddress}*/}
+            {/*                        isOptionEqualToValue={(option, value) => {if(value === "") {return false;} else { return (option === value);}}}*/}
+            {/*                        onInputChange={onInputDepartureValue}*/}
+            {/*                        value={tmpAddressValue}*/}
+            {/*                        style={textFieldStyle}*/}
+            {/*                        popupIcon={ <SearchIcon />}*/}
+            {/*                        sx={{*/}
+            {/*                            "& .MuiAutocomplete-popupIndicator": { transform: "none", pointerEvents: "none"},*/}
+            {/*                            "& .MuiAutocomplete-paper": { overflowX: "hidden"}*/}
+            {/*                            }}*/}
+            {/*                        size='small'*/}
+            {/*                        selectOnFocus*/}
+            {/*                        clearOnBlur*/}
+            {/*                        forcePopupIcon*/}
+            {/*                        renderInput={(params) => <TextField {...params} size='small' placeholder='E.g., Harris Street' sx={{...searchTextFieldStyle, alignItems: 'center'}}/>}*/}
+            {/*                        renderOption={renderOptions}*/}
+            {/*                    />*/}
+            {/*                }*/}
+            {/*            </SearchInputContainer>*/}
+            {/*            <BreakingLine2></BreakingLine2>*/}
+            {/*            <SearchInputContainer>*/}
+            {/*                <InputLabel style={{fontSize: '16px'}}>Search Uniting Sites</InputLabel>*/}
+            {/*                {*/}
+            {/*                    (addressIsLoading || isLoading)?*/}
 
-                            <div>
-                                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                    <Skeleton style={textFieldStyle} height={35} />
-                                </SkeletonTheme>
-                            </div>
-                            :
-                            <TextField sx={{...searchTextFieldStyle, alignItems: 'center'}} id="searchSite" size='small' placeholder='E.g., Harris Street' onChange={onChangeSiteSearch}
-                                InputProps={{
-                                    endAdornment : (
-                                        <InputAdornment position="end">
-                                            <SearchIcon />
-                                        </InputAdornment>
-                                    )
-                                }}
-                            ></TextField>
-                        }
-                        
-                    </SearchInputContainer>
-                </SearchContainer>
-                <SitesContainer style={addressIsLoading || isLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center' } : {}}>
-                    <List sx={listStyle}>
-                    {
-                        (addressIsLoading || isLoading)?
-                        <ReactLoading type={'spin'} color={'#A20066'} height={80} width={60}></ReactLoading> 
-                        : 
-                        <AvailableSites></AvailableSites>
-                    }
-                    </List>
-                </SitesContainer>      
-            </ResultContainer>
-            <CollapseButtonContainer>
-                <CollapseButton 
-                    onClick={collapseRequest}
-                >
-                    <ArrowBackIosNewIcon style={{padding: '0', margin: '0', color: 'white', transform: isCollapse? 'rotate(180deg)' : ''}}></ArrowBackIosNewIcon>
-                </CollapseButton>
-            </CollapseButtonContainer>
-        
-        </MapFilterContainer>
+            {/*                    <div>*/}
+            {/*                        <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">*/}
+            {/*                            <Skeleton style={textFieldStyle} height={35} />*/}
+            {/*                        </SkeletonTheme>*/}
+            {/*                    </div>*/}
+            {/*                    :*/}
+            {/*                    <TextField sx={{...searchTextFieldStyle, alignItems: 'center'}} id="searchSite" size='small' placeholder='E.g., Harris Street' onChange={onChangeSiteSearch}*/}
+            {/*                        InputProps={{*/}
+            {/*                            endAdornment : (*/}
+            {/*                                <InputAdornment position="end">*/}
+            {/*                                    <SearchIcon />*/}
+            {/*                                </InputAdornment>*/}
+            {/*                            )*/}
+            {/*                        }}*/}
+            {/*                    ></TextField>*/}
+            {/*                }*/}
+
+            {/*            </SearchInputContainer>*/}
+            {/*        </SearchContainer>*/}
+            {/*        <SitesContainer style={addressIsLoading || isLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center' } : {}}>*/}
+            {/*            <List sx={listStyle}>*/}
+            {/*            {*/}
+            {/*                (addressIsLoading || isLoading)?*/}
+            {/*                <ReactLoading type={'spin'} color={'#A20066'} height={80} width={60}></ReactLoading>*/}
+            {/*                :*/}
+            {/*                <AvailableSites></AvailableSites>*/}
+            {/*            }*/}
+            {/*            </List>*/}
+            {/*        </SitesContainer>*/}
+            {/*    </ResultContainer>*/}
+
+            {/*</MapFilterRowContainer>*/}
+        </MapFilterRowContainer>
 
 
        

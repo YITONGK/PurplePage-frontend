@@ -38,7 +38,7 @@ const UserCreate = () => {
         password: values.password
       },
       withCredentials:  true,
-      url: 'https://pueplepagebackend.azurewebsites.net/users'
+      url: 'http://localhost:8888/users'
     }).then((res) => {
       if (Object.keys(res.data).length !== 0) {
         Swal.fire({

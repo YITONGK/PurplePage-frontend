@@ -22,7 +22,7 @@ const ServiceStream = () => {
 
   /* get list of service streams from the backend and display them */
   const getServiceStreams = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'http://localhost:8888';
     await axios.get(BASE_URL + '/servicestream').then(res => {
       const list = res.data;
       setServiceStreamList(list);

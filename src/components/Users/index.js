@@ -20,7 +20,7 @@ const Users = () => {
 
   // get the current user
   const getUsers = async () => {
-    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
+    const BASE_URL = "http://localhost:8888";
     await axios.get(BASE_URL + '/users').then(res => {
       const data = res.data;
       setUsers(data);

@@ -37,6 +37,8 @@ export const FilterContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 100%;
+  max-width: 100%;
   //border: 1px solid red;
 `;
 
