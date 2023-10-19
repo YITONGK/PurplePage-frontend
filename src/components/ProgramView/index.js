@@ -40,7 +40,7 @@ const ProgramView = () => {
 
   /* get a program from the backend based on the id and display it */
   const getProgram = async () => {
-    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
+    const BASE_URL = "https://purplepage-uniting.azurewebsites.net";
     await axios.get(BASE_URL + '/program/' + id).then(async (res) => {
       const data = res.data[0];
       data['prgm_type'] = res.data[1];

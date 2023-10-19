@@ -28,7 +28,7 @@ const UserEdit = () => {
 
   /* get a user from the backend based on the id and display it */
   const getUser = async () => {
-    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
+    const BASE_URL = "https://purplepage-uniting.azurewebsites.net";
     await axios.get(BASE_URL + '/users/' + id).then(res => {
       const data = res.data;
       setUser(data);
@@ -58,7 +58,7 @@ const UserEdit = () => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
     const url = BASE_URL + '/users/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

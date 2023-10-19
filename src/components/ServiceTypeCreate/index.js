@@ -31,7 +31,7 @@ const ServiceTypeCreate = () => {
 
   /* get list of service streams from the backend and display them */
   const getServiceStreams = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
     await axios.get(BASE_URL + '/servicestream').then(res => {
       const list = res.data;
       setServiceStreamList(list);
@@ -41,7 +41,7 @@ const ServiceTypeCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
     const url = BASE_URL + '/servicetype';
     const { ser_type, ser_stream, status } = values;
     await axios.post(url, {ser_type, ser_stream, status}).then(() => {

@@ -22,7 +22,7 @@ const Group = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
     await axios.get(BASE_URL + '/group').then(res => {
       const groupList = res.data[0];
       const divisionList = res.data[1];

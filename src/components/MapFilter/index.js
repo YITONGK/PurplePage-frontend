@@ -156,7 +156,13 @@ const MapFilter = ({filteredPrograms,
         setFilteredServiceStreams(filteringServiceStreams(filteredPrograms));
         setFilteredServiceTypes(filteringServiceTypes(filteredPrograms));
         setFilteredProgramTypes(filteringProgramTypes(filteredPrograms));
-        setLocalFilteredProgram(filteredPrograms);
+
+        //remove dueplicate
+        const distinctPrograms = filteredPrograms.filter((program, index, self) => {
+            return index === self.findIndex((obj) => obj.program_nme === program.program_nme);
+        });
+
+        setLocalFilteredProgram(distinctPrograms);
 
         setFilteredDivisions(filteringDivisions(filteredPrograms));
         setFilteredGroups(filteringGroups(filteredPrograms));
@@ -165,8 +171,6 @@ const MapFilter = ({filteredPrograms,
     },[filteredPrograms])
 
     useEffect(() => {
-
-        console.log("in effect of filtered sites");
 
         if(filteredSites && filteredSites[0] && !filteredSites[0].distance) {
             setTmpAddressValue("");

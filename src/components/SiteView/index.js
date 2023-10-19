@@ -29,7 +29,7 @@ const SiteView = () => {
 
   /* get a site from the backend based on the id and display it */
   const getSite = async () => {
-    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
+    const BASE_URL = "https://purplepage-uniting.azurewebsites.net";
     await axios.get(BASE_URL + '/site/' + id).then(res => {
       const data = res.data;
       setSite(data);

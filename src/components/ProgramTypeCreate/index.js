@@ -31,7 +31,7 @@ const ProgramTypeCreate = () => {
 
   /* get list of service types from the backend and display them */
   const getServiceTypes = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
     await axios.get(BASE_URL + '/servicetype').then(res => {
       const list = res.data[0];
       setServiceTypeList(list);
@@ -41,7 +41,7 @@ const ProgramTypeCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
     const url = BASE_URL + '/programtype';
     const { prgm_type, ser_type, pgm_type_status } = values;
     await axios.post(url, {prgm_type, ser_type, pgm_type_status}).then(() => {

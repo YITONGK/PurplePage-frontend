@@ -22,7 +22,7 @@ const Division = () => {
 
   /* get list of divisions from the backend and display them */
   const getDivisions = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
     await axios.get(BASE_URL + '/division').then(res => {
       const list = res.data;
       setDivisionList(list);

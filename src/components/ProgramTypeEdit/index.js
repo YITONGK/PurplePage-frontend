@@ -31,7 +31,7 @@ const ProgramTypeEdit = (props) => {
 
   /* get a program type from the backend based on the id and display it */
   const getProgramType = async () => {
-    const BASE_URL = "https://pueplepagebackend.azurewebsites.net";
+    const BASE_URL = "https://purplepage-uniting.azurewebsites.net";
     await axios.get(BASE_URL + '/programtype/' + id).then(res => {
       const data = res.data[0];
       const ser_type = res.data[1];
@@ -46,7 +46,7 @@ const ProgramTypeEdit = (props) => {
 
   /* get list of service types from the backend and display them */
   const getServiceTypes = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
     await axios.get(BASE_URL + '/servicetype').then(res => {
       const list = res.data[0];
       setServiceTypeList(list);
@@ -71,7 +71,7 @@ const ProgramTypeEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
     const url = BASE_URL + '/programtype/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

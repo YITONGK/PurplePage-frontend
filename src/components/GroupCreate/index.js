@@ -32,7 +32,7 @@ const GroupCreate = () => {
 
   /* get list of divisions from the backend and display them */
   const getDivisions = async () => {
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
     await axios.get(BASE_URL + '/division').then(res => {
       const list = res.data;
       setDivisionList(list);
@@ -42,7 +42,7 @@ const GroupCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'https://pueplepagebackend.azurewebsites.net';
+    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
     const url = BASE_URL + '/group';
     const { group_name, eo, division_name, status } = values;
     await axios.post(url, {group_name, eo, division_name, status}).then(() => {
