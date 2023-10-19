@@ -18,7 +18,7 @@ const UserView = () => {
 
   /* get a user from the backend based on the id and display it */
   const getUser = async () => {
-    const BASE_URL = "https://purplepage-uniting.azurewebsites.net";
+    const BASE_URL = "https://api.wernmachine.art";
     await axios.get(BASE_URL + '/users/' + id).then(res => {
       const data = res.data;
       setUser(data);
@@ -32,7 +32,7 @@ const UserView = () => {
 
   /* delete the user */
   const deleteUser = () => {
-    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
+    const BASE_URL = 'https://api.wernmachine.art';
     Swal.fire({
       title: "Warning!",
       text: "Are you sure you want to delete this user?",

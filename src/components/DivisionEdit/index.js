@@ -28,7 +28,7 @@ const DivisionEdit = (props) => {
 
   /* get a division from the backend based on the id and display it */
   const getDivision = async () => {
-    const BASE_URL = "https://purplepage-uniting.azurewebsites.net";
+    const BASE_URL = "https://api.wernmachine.art";
     await axios.get(BASE_URL + '/division/' + id).then(res => {
       const data = res.data;
       setValues({
@@ -58,7 +58,7 @@ const DivisionEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'https://purplepage-uniting.azurewebsites.net';
+    const BASE_URL = 'https://api.wernmachine.art';
     const url = BASE_URL + '/division/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

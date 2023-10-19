@@ -38,7 +38,7 @@ const UserCreate = () => {
         password: values.password
       },
       withCredentials:  true,
-      url: 'https://purplepage-uniting.azurewebsites.net/users'
+      url: 'https://api.wernmachine.art/users'
     }).then((res) => {
       if (Object.keys(res.data).length !== 0) {
         Swal.fire({
