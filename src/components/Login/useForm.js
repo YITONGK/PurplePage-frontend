@@ -34,7 +34,7 @@ const useFormLogin = (validate) => {
         password: values.password
       },
       withCredentials:  true,
-      url: 'https://api.wernmachine.art/login'
+      url: 'https://myapi.hhzhu.art/login'
     }).then((res) => {
       console.log('Server response:', res); // print out the server response
       if (Object.keys(res.data).length !== 0) {

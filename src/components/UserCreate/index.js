@@ -38,7 +38,7 @@ const UserCreate = () => {
         password: values.password
       },
       withCredentials:  true,
-      url: 'https://api.wernmachine.art/users'
+      url: 'https://myapi.hhzhu.art/users'
     }).then((res) => {
       if (Object.keys(res.data).length !== 0) {
         Swal.fire({

@@ -329,7 +329,7 @@ const Article = () => {
 
   /* get a list of sites from the backend and display it */
   const getSites = async () => {
-    const BASE_URL = "https://api.wernmachine.art";
+    const BASE_URL = "https://myapi.hhzhu.art";
     const result = await axios.get(BASE_URL+ '/site');
     const filteredResult = result.data;
     return filteredResult.filter(site => site.lng !== null && site.lat != null);
@@ -337,7 +337,7 @@ const Article = () => {
 
   /* get list of site accessibility from the db */
   const getSiteAccessibilities = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'https://myapi.hhzhu.art';
     try {
 
       const result = await axios.get(BASE_URL + '/siteaccess');
@@ -352,7 +352,7 @@ const Article = () => {
 
   /* get list of programs from the backend and display them */
   const getPrograms = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'https://myapi.hhzhu.art';
     let result = await axios.get(BASE_URL + '/program');
     result = result.data[0];
     result = result.filter((r) => r.program_nme !== null && r.program_nme !== '')
@@ -364,7 +364,7 @@ const Article = () => {
 
   /* get list of programs Access Type from the db */
   const getProgramAts = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'https://myapi.hhzhu.art';
     try{
       const result = await axios.get(BASE_URL + '/programat');
       return result.data;
@@ -376,7 +376,7 @@ const Article = () => {
 
   /* get list of programs delivery method from the db */
   const getProgramSdms = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'https://myapi.hhzhu.art';
 
     try {
       const result = await axios.get(BASE_URL + '/programsdm');
@@ -390,7 +390,7 @@ const Article = () => {
 
   /* get list of program types from the backend and display them */
   const getProgramTypes = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'https://myapi.hhzhu.art';
 
     let result = await axios.get(BASE_URL + '/programtype');
     result = result.data[0];
@@ -407,7 +407,7 @@ const Article = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'https://myapi.hhzhu.art';
 
     let result =  await axios.get(BASE_URL + '/group');
     result = result.data[0];
@@ -417,7 +417,7 @@ const Article = () => {
 
   /* get list of service stream from the backend and display them */
   const getServiceStreams = async() => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'https://myapi.hhzhu.art';
 
     let result = await axios.get(BASE_URL + '/servicestream');
     result = result.data;
@@ -427,7 +427,7 @@ const Article = () => {
 
   /* get list of divisions from the backend and display them */
   const getDivisions = async() => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'https://myapi.hhzhu.art';
 
     let result = await axios.get(BASE_URL + '/division');
     result = result.data;
@@ -438,7 +438,7 @@ const Article = () => {
 
   /* get list of service type from the backend and display them */
   const getServiceTypes = async() => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'https://myapi.hhzhu.art';
 
     let result = await axios.get(BASE_URL + '/servicetype');
     result = result.data[0];

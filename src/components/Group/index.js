@@ -22,7 +22,7 @@ const Group = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'https://myapi.hhzhu.art';
     await axios.get(BASE_URL + '/group').then(res => {
       const groupList = res.data[0];
       const divisionList = res.data[1];
