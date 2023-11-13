@@ -42,6 +42,27 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
 
     setPopUpMarker(null);
     setSelectedMarker(null);
+    console.log(sites);
+
+    if(sites.length > 0 && sites[0] && sites[0].lat && sites[0].lng) {
+        const bounds = new mapboxgl.LngLatBounds();
+
+        sites.map((site) => {
+            bounds.extend(new mapboxgl.LngLat(site.lng, site.lat));
+        })
+
+        if(departureLocation) {
+           bounds.extend(new mapboxgl.LngLat(departureLocation.lng, departureLocation.lat));
+        }
+
+        if(exportRef.current) {
+            exportRef.current.getMap().fitBounds( bounds, {
+                padding: 30, // or your preferred padding
+                maxZoom: 15, // or your preferred max zoom
+            });
+        }
+
+    }
 
   }, [sites]);
 

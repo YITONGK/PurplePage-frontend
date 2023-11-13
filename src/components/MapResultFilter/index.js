@@ -334,7 +334,7 @@ const MapResultFilter = ({importRef, exportSite, exportDepartureAddress, advance
                     <InputLabel style={textStyle}>Available Sites</InputLabel>
                 </LabelContainer>
                 <SearchContainer>
-                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'cenetr', width: '91%'}}>
+                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', width: '91%'}}>
                         <InputLabel style={{fontSize: '16px'}}>Search Address</InputLabel>
                     </div>
                     <SearchInputContainer>
@@ -368,7 +368,7 @@ const MapResultFilter = ({importRef, exportSite, exportDepartureAddress, advance
                                     selectOnFocus
                                     clearOnBlur
                                     forcePopupIcon
-                                    renderInput={(params) => <TextField {...params} size='small' placeholder='E.g., Harris Street' sx={{...searchTextFieldStyle, alignItems: 'center'}}/>}
+                                    renderInput={(params) => <TextField {...params} size='small' placeholder='E.g., Your Current Address' sx={{...searchTextFieldStyle, alignItems: 'center'}}/>}
                                     renderOption={renderOptions}
                                 />
                         }

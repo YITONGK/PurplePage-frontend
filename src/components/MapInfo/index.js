@@ -204,7 +204,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
         <InfoAndPopupContainer>
             <InfoContainer>
                 <Grid style={gridStyle}>
-                    <InfoIcon fontSize="large" /> 
+                    <InfoIcon fontSize="large" />
                     <InfoH1>Site Information</InfoH1>
                 </Grid>
                 <InfoDetail>
@@ -212,7 +212,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                     <SiteContainer>
                         <SiteTitle>
                             <InfoH2>
-                                {site.street_name} - {site.suburb}
+                                {site.site_id}
                             </InfoH2>
                         </SiteTitle>
                         <SiteInfo>
@@ -248,10 +248,12 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                                 </InfoP2>
                             </SiteInfoDetailContainer>
 
-                            <InfoP>Program Offer:</InfoP>
-                            <List style={{marginTop: '-0.3rem'}}>
-                                <ProgramInfo></ProgramInfo>
-                            </List>
+                            <SiteInfoDetailContainer>
+                                <InfoP>Program Offer:</InfoP>
+                                <List>
+                                    <ProgramInfo></ProgramInfo>
+                                </List>
+                            </SiteInfoDetailContainer>
 
                             <SiteInfoDetailContainer style={{marginTop: '-5px'}}>
                                 <InfoP>Local Government Area:</InfoP>
@@ -264,8 +266,9 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                             </SiteInfoDetailContainer>
 
                         </SiteInfo>
+
                         <SiteButtonContainer>
-                            <Button style={{borderRadius: '20px', display: 'flex', justifyContent: 'center' , marginBottom: '0.2rem',color: 'white', backgroundColor: '#A20066', width: '10rem', fontWeight: 'bold'}} onClick={(e) => onClickSiteDetail(site)}>Show More</Button>
+                            <Button style={{borderRadius: '20px', marginBottom: '0.2rem',color: 'white', backgroundColor: '#A20066', width: '10rem',fontWeight: 'bold'}} onClick={(e) => onClickSiteDetail(site)}>Show More</Button>
                         </SiteButtonContainer>
                     </SiteContainer>
                     ) : (

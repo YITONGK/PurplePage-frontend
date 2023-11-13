@@ -4,22 +4,38 @@ import PersonIcon from '@mui/icons-material/Person';
 import Modal from 'react-modal';
 import ClearIcon from '@mui/icons-material/Clear';
 
+// export const InfoContainer = styled.div`
+//   ${'' /* margin-left: 1rem; */}
+//   border: 1px solid #CCC;
+//   padding-left: 1.2rem;
+//   padding-bottom: 1rem;
+//   border-radius: 5px;
+//   min-width: 22rem;
+//   max-width: 22rem;
+//   height: 63vh;
+//   overflow: hidden;
+// `;
+
 export const InfoContainer = styled.div`
-  ${'' /* margin-left: 1rem; */}
+  display: flex;
+  flex-direction: column;
   border: 1px solid #CCC;
-  padding-left: 1.2rem;
-  padding-bottom: 1rem;
+  padding-left: 0.5rem;
+  //padding-bottom: 1rem;
   border-radius: 5px;
-  min-width: 22rem;
-  max-width: 22rem;
-  height: 63vh;
-  overflow: hidden;
+  min-width: 18vw;
+  max-width: 18vw;
+  min-height: 63vh;
+  max-height: 63vh;
+  //overflow: hidden;
 `;
+
 
 export const InfoDetail = styled.div`
     display: flex;
     flex-direction: column;
-    border-top: 2px solid #CCC;
+    //border-top: 2px solid #CCC;
+    border: 2px solid red;
     max-height: 100%;
     overflow: auto;
 `;
@@ -42,6 +58,14 @@ export const InfoP = styled.p`
     font-size: 18px;
     margin: 0;
     padding: 0;
+
+  @media (max-width: 768px) {
+    font-size: 16px; // Smaller font size on medium screens
+  }
+
+  @media (max-width: 480px) {
+    font-size: 14px; // Even smaller font size on small screens
+  }
 `;
 
 export const InfoP2 = styled.p`
@@ -75,12 +99,12 @@ export const SiteTitle = styled.div`
 export const SiteContainer = styled.div`
     display: flex;
     flex-direction: column;
-    margin-bottom: 3rem;
-    height: 100%;
+    //margin-bottom: 3rem;
 `;
 
 export const SiteInfo = styled.div`
     display: flex;
+    border: 2px solid green;
     flex-direction: column;
     justify-content: start;
     align-items: start;
@@ -94,25 +118,56 @@ export const SiteInfoDetailContainer = styled.div`
     gap: 5px;
 `;
 
+// export const ListItemButton = styled.div`
+//     display: flex;
+//     flex-direction: row;
+//     align-items: center;
+//     margin: 0 0 0.3rem 0;
+//     padding: 0.3rem 0 0 0.3rem;
+//     min-width: 320px;
+//     max-width: 320px;
+//     border-radius: 10px;
+//     background-color: #f2f2f2; /* Light background color */
+//     transition: all 0.2s ease-in-out; /* Smooth transition on hover */
+//     cursor: pointer;
+//
+//     &:hover {
+//         box-shadow: 8px 5px 8px #5C5C66; /* Add the box-shadow */
+//         background-color: #A20066;
+//         color: white;
+//     }
+// `;
+
 export const ListItemButton = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 0 0 0.3rem 0;
-    padding: 0.3rem 0 0 0.3rem;
-    min-width: 320px;
-    max-width: 320px;
-    border-radius: 10px;
-    background-color: #f2f2f2; /* Light background color */
-    transition: all 0.2s ease-in-out; /* Smooth transition on hover */
-    cursor: pointer;
-    
-    &:hover {
-        box-shadow: 8px 5px 8px #5C5C66; /* Add the box-shadow */
-        background-color: #A20066;
-        color: white;
-    }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0 0 0.3rem 0;
+  padding: 0.3rem 0 0 0.3rem;
+  min-width: 320px;
+  max-width: 320px;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+ 
+  &:hover {
+      box-shadow: 8px 5px 8px #5C5C66;
+      background-color: #A20066;
+      color: white;
+  }
+
+  @media (max-width: 600px) {
+    min-width: 280px;
+    max-width: 280px;
+  }
+
+  @media (max-width: 400px) {
+    min-width: 250px;
+    max-width: 250px;
+  }
 `;
+
 
 export const CollapseInfoContainer = styled.div`
     display: flex;
@@ -203,6 +258,21 @@ export const ProgramCardContainer = styled.div`
   z-index: 2;
 `;
 
+// export const ProgramCardHeader = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 0.5rem 0.5rem 0.5rem 1rem;
+//   border-bottom: 1px solid grey;
+//   background-color: #A20066;
+//
+//   @media (max-width: 600px) {
+//     // Your small screen styles go here
+//     width: 97%;
+//   }
+// `;
+
 export const ProgramCardHeader = styled.div`
   display: flex;
   flex-direction: row;
@@ -213,10 +283,11 @@ export const ProgramCardHeader = styled.div`
   background-color: #A20066;
 
   @media (max-width: 600px) {
-    // Your small screen styles go here
-    width: 97%;
+    flex-direction: column;
+    padding: 0.5rem;
   }
 `;
+
 
 export const ProgramCardHeader2 = styled.div`
   position: sticky;
@@ -342,11 +413,15 @@ export const ProgramViewGreenP = styled.p`
   margin-bottom: 0;
 `;
 
-export const SiteButtonContainer= styled.p`
+export const SiteButtonContainer= styled.div`
   display: flex;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: fit-content;
+  border: 1px solid yellow;
+  flex: 1;
 `;
 
 export const SiteViewH1 = styled.h1`

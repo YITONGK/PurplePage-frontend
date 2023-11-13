@@ -146,7 +146,7 @@ const MapFilter = ({filteredPrograms,
     // Loading all data on the first load
     useEffect(()=> {
 
-        setServiceStreamValue ('All Service Stream');
+        setServiceStreamValue('All Service Stream');
         setServiceTypeValue('All Service Type');
         setProgramTypeValue('All Program Type');
         setProgramValue('All Program');
@@ -370,6 +370,10 @@ const MapFilter = ({filteredPrograms,
         }
 
     },[addressIsLoading]);
+
+    useEffect(() => {
+        applyingFilter();
+    }, [advancedFilteredPrograms, programValue])
 
 
     //===================================== Filter Component =====================================================
@@ -1272,7 +1276,7 @@ const MapFilter = ({filteredPrograms,
                     setServiceTypeValue('All Service Type'); // IF THERE IS NO RESULT THEN SET IT TO ALL...
                 }
                 else { 
-                    // NO RESULT FILGTERING THE PT
+                    // NO RESULT FILTERING THE PT
                     const tmpServiceTypeIds = tmpServiceType.map((serviceType) =>  serviceType.ser_type_id); 
                     tmpFilteredProgramTypes = tmpFilteredProgramTypes.filter((programType) => tmpServiceTypeIds.includes(programType.ser_type_id));
                 }
@@ -1475,6 +1479,7 @@ const MapFilter = ({filteredPrograms,
 
         }
 
+
     }
 
     const onChangeProgramType = (e) => {
@@ -1512,6 +1517,7 @@ const MapFilter = ({filteredPrograms,
 
         setFilteredDivisions(tmpFilteredDivisions);
         setFilteredGroups(tmpFilteredGroups);
+
     }
 
     const onChangeProgram = (e) => {
@@ -1641,6 +1647,7 @@ const MapFilter = ({filteredPrograms,
 
             setFilteredProgramTypes(tmpFilteredProgramTypes);
         }
+
     };
 
     const onChangeGroup = (e) => {
@@ -1804,6 +1811,7 @@ const MapFilter = ({filteredPrograms,
     const applyingFilter = () => {
 
         let tmpAdvancedFilteredPrograms = advancedFilteredPrograms;
+        console.log(tmpAdvancedFilteredPrograms);
 
         if(programValue !== 'All Program') {
             tmpAdvancedFilteredPrograms = tmpAdvancedFilteredPrograms.filter((program) => program.program_nme === programValue);
@@ -1880,10 +1888,10 @@ const MapFilter = ({filteredPrograms,
                 </ProgramDropDownContainer>
 
                 <ButtonContainer>
-                    <ApplyButton onClick={applyingFilter} style={ (addressIsLoading || isLoading)? {pointerEvents: 'none'} : {}}>
-                        <SendIcon style= {{fontSize: '16px', marginRight: '5px'}}></SendIcon>
-                        <ButtonLabel>Apply Filter</ButtonLabel>
-                    </ApplyButton>
+                    {/*<ApplyButton onClick={applyingFilter} style={ (addressIsLoading || isLoading)? {pointerEvents: 'none'} : {}}>*/}
+                    {/*    <SendIcon style= {{fontSize: '16px', marginRight: '5px'}}></SendIcon>*/}
+                    {/*    <ButtonLabel>Apply Filter</ButtonLabel>*/}
+                    {/*</ApplyButton>*/}
                     <ResetButton onClick={clear} style={ (addressIsLoading || isLoading)? {pointerEvents: 'none'} : {}}>
                         <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
                         <ButtonLabel style={{color: '#A20066'}}>Clear</ButtonLabel>
