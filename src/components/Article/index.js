@@ -22,6 +22,9 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import '../../App.css';
 import MapResultFilter from "../MapResultFilter";
 
+import WarningIcon from '@mui/icons-material/Warning';
+import Box from '@mui/material/Box';
+
 const Article = () => {
 
   // Variable Initialise and Declaration
@@ -311,10 +314,10 @@ const Article = () => {
       const filteredOptions = [];
     
       filteredOptions.push(...programTypesOptions, ...groupsOptions);
-      filteredOptions.unshift({ value: '-- what are you looking for? --',type: 'All'});
+      filteredOptions.unshift({ value: '-- What are you looking for? --',type: 'All'});
 
       setSearchOptions(filteredOptions);
-      setSearchValues({value: '-- what are you looking for? --', type: 'All'});
+      setSearchValues({value: '-- What are you looking for? --', type: 'All'});
 
       setIsLoading(false);
 
@@ -721,7 +724,7 @@ const Article = () => {
     setFilteredSites(siteList);
     setAdvanceFilteredSites(siteList);
 
-    setSearchValues({value: '-- what are you looking for? --', type: 'All'});
+    setSearchValues({value: '-- What are you looking for? --', type: 'All'});
 
   }
 
@@ -847,6 +850,22 @@ const Article = () => {
     </div>
     :
     <ArticleContainer>
+      <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '8px 16px',
+            backgroundColor: '#ff9800', // a standard warning color
+            borderRadius: '4px',
+            margin: '8px 0',
+          }}
+      >
+        <WarningIcon sx={{ marginRight: '8px', color: '#fff' }} />
+        <Typography variant="body1" sx={{ textAlign: 'center', flexGrow: 1, color: '#fff' }}>
+          Warning
+        </Typography>
+      </Box>
+
       <ArticleH1>Find a Uniting service near you</ArticleH1>
         <FilterContainer>
           <FreeTextSearch />

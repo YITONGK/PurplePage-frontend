@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Grid} from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
-import { InfoContainer, 
+import {
+    InfoContainer,
+    InfoTitleContainer,
+    TruncatedText,
     InfoH1, 
     InfoH2, 
     InfoP, 
@@ -56,6 +58,7 @@ import CallIcon from '@mui/icons-material/Call';
 import CodeIcon from '@mui/icons-material/Code';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import InfoIcon from '@mui/icons-material/Info';
 
 import Map from '../Map';
 
@@ -197,16 +200,16 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
 
 
     // styles
-    const gridStyle = { display: "flex", flexDirection: "row", alignItems: "center", marginBottom: "-1rem", color: "#A20066"};
+    const gridStyle = { display: "flex", flexDirection: "row", alignItems: "center", marginBottom: "-1rem", color: "#A20066", overflow: "hidden"};
 
     // Return UI
     return (
         <InfoAndPopupContainer>
             <InfoContainer>
-                <Grid style={gridStyle}>
-                    <InfoIcon fontSize="large" />
+                <InfoTitleContainer>
+                    <InfoIcon classname= "" style={{padding: "0", margin: "0"}} fontSize="large" />
                     <InfoH1>Site Information</InfoH1>
-                </Grid>
+                </InfoTitleContainer>
                 <InfoDetail>
                     {site ? (
                     <SiteContainer>
@@ -261,7 +264,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                             </SiteInfoDetailContainer>
 
                             <SiteInfoDetailContainer>
-                                <InfoP>Department of Families, Fairness and Housing:</InfoP>
+                                <InfoP>Department of Families, <br/>Fairness and Housing:</InfoP>
                                 <InfoP2>{stringFilterPrefix(site.dffh_area)}</InfoP2>
                             </SiteInfoDetailContainer>
 
@@ -549,7 +552,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                                 <SiteViewInfoDetailContainer>
 
                                     <SiteViewInfoDetailColumn>
-                                    <SiteViewP2>DEPARTMENT OF FAMILIES,FAIRNESS AND HOUSING</SiteViewP2>
+                                    <SiteViewP2>DEPARTMENT OF FAMILIES, FAIRNESS AND HOUSING</SiteViewP2>
                                     <SiteViewP>{stringFilterPrefix(selectedSite.dffh_area)}</SiteViewP>
                                     </SiteViewInfoDetailColumn>
 

@@ -23,27 +23,47 @@ export const InfoContainer = styled.div`
   padding-left: 0.5rem;
   //padding-bottom: 1rem;
   border-radius: 5px;
-  min-width: 18vw;
-  max-width: 18vw;
-  min-height: 63vh;
-  max-height: 63vh;
-  //overflow: hidden;
+  width: 16vw;
+  height: 64.5vh;
+  flex: 1;
+  overflow: hidden;
 `;
 
+export const InfoTitleContainer =  styled.div`
+  display:flex;
+  flex-direction: row;
+  gap: 0.5vw;
+  align-items: center;
+  color: #A20066;
+  overflow: hidden;
+`;
+
+export const TruncatedText = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1; // Allows the element to grow and fill the space for truncation
+`;
 
 export const InfoDetail = styled.div`
     display: flex;
     flex-direction: column;
-    //border-top: 2px solid #CCC;
-    border: 2px solid red;
-    max-height: 100%;
+    border-top: 3px solid #CCC;
+    //border: 2px solid red;
+    height: 100%;
     overflow: auto;
+    flex: 1;
 `;
 
 
 export const InfoH1 = styled.h1`
-  font-size: 32px;
-  margin-left: 0.5rem;
+  font-size: 30px;
+  margin: 0;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 `;
 
 export const InfoH2 = styled.h2`
@@ -104,7 +124,7 @@ export const SiteContainer = styled.div`
 
 export const SiteInfo = styled.div`
     display: flex;
-    border: 2px solid green;
+    //border: 2px solid green;
     flex-direction: column;
     justify-content: start;
     align-items: start;
@@ -144,8 +164,9 @@ export const ListItemButton = styled.div`
   align-items: center;
   margin: 0 0 0.3rem 0;
   padding: 0.3rem 0 0 0.3rem;
-  min-width: 320px;
-  max-width: 320px;
+  //width: 95%;
+  min-width: 15vw;
+  max-width: 15vw;
   border-radius: 10px;
   background-color: #f2f2f2;
   transition: all 0.2s ease-in-out;
@@ -155,16 +176,6 @@ export const ListItemButton = styled.div`
       box-shadow: 8px 5px 8px #5C5C66;
       background-color: #A20066;
       color: white;
-  }
-
-  @media (max-width: 600px) {
-    min-width: 280px;
-    max-width: 280px;
-  }
-
-  @media (max-width: 400px) {
-    min-width: 250px;
-    max-width: 250px;
   }
 `;
 
@@ -199,6 +210,8 @@ export const CustomCallIcon = styled(CallIcon)`
 
 export const InfoAndPopupContainer = styled.div`
     display: flex;
+    padding-right: 0.3vw;
+    //border: 2px solid orange;
 `;
 
 // Define the animation keyframes
@@ -420,7 +433,7 @@ export const SiteButtonContainer= styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid yellow;
+  //border: 1px solid yellow;
   flex: 1;
 `;
 

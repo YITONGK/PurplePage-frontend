@@ -1,18 +1,15 @@
 import styled from 'styled-components';
 
 export const MapFilterRowContainer = styled.div`
-    margin-right: 0.5rem;
-    height: fit-content;;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     margin-top: 1rem;
     border: 1px solid #CCC;
     border-radius: 10px;
-    padding-bottom: 10px;
-    min-width: 96.8vw;
-    max-width: 96.8vw;
-    background-color: ghostwhite;
-    z-index: 0;
+    margin-right: 0.3vw;
+    background-color: #FBF4F8;
+    overflow: hidden;
 `;
 
 export const FilterContainer = styled.div`
@@ -20,10 +17,11 @@ export const FilterContainer = styled.div`
     border-radius: 5px;
     display: flex;
     flex-direction: row;
-    padding: 0rem 0.5rem 0rem 0.5rem;
+    padding: 0 0.5rem 1rem 0.5rem;
     align-items: center;
     flex:1;
     width: fit-content;
+    gap: 1.2vw;
 `;
 
 export const ResultContainer = styled.div`
@@ -41,8 +39,8 @@ export const ButtonContainer = styled.div`
   flex-direction: row;
   gap: 20px;
   margin-bottom: 0.5rem;
-  margin-top: 1.5rem;
-  margin-left: 2rem;
+  margin-top: 2rem;
+  //margin-left: 2rem;
 `;
 
 export const SelectDiv = styled.div`
@@ -53,10 +51,13 @@ export const SelectDiv = styled.div`
 
 export const ProgramDropDownContainer = styled.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding-top: 0.5rem;
     align-items: center;
-    gap: 1rem;
+    justify-content: space-between;
+    height: 16.5vh;
+    flex: 1;
+    //border: 2px solid grey;
 `;
 
 export const GroupDropDownContainer = styled.div`
@@ -76,15 +77,26 @@ export const BreakingLine = styled.div`
 `;
 
 export const BreakingLine2 = styled.div`
-    width: 5rem;
+    width: 3.5vw;
     border-radius: 10px;
     max-height: 0;
-    margin-top: 2rem;
-    margin-bottom: 0.8rem;
+  
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
 
     /* Gradient border with a slight inset appearance */
     border: 2px solid #A20066;
 `;
+
+export const BreakingLine3 = styled.div`
+  min-height: 1.5vh;
+  width: 2px;
+  border-radius: 20px;
+  background-color: #A20066;
+  
+  margin-top: 2vh;
+`;
+
 
 export const SearchContainer = styled.div`
     display: flex;
@@ -135,12 +147,13 @@ export const SearchInputContainer = styled.div`
 `;
 
 export const LabelContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(234, 234, 234);
+  padding: 0.5rem;
 `;
 
 export const CollapseButtonContainer = styled.div`

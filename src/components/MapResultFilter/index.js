@@ -39,7 +39,7 @@ const MapResultFilter = ({importRef, exportSite, exportDepartureAddress, advance
         borderRadius: '5px'
     };
 
-    const textStyle = { fontSize: '20px', fontWeight: 'bold', color: '#A20066'};
+    const textStyle = { fontSize: '24px', fontWeight: 'bold', color: '#A20066'};
     const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', minWidth: '13vw', maxWidth: '13vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
     const toolTipsStyleClicked = {backgroundColor: '#A20066',  color: 'white', minWidth: '13vw', maxWidth: '13vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
     const captionStyle = {

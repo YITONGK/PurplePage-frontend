@@ -5,40 +5,41 @@ export const ArticleContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding-left: 2%;
-  overflow-x: auto;
+  overflow: hidden;
   margin-bottom: 75px;
 
   /* Styling for the scrollbar */
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #ff8a00, #e52e71);
-    border-radius: 10px;
-    border: 3px solid #f1f1f1;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #e52e71, #ff8a00);
-  }
+  //&::-webkit-scrollbar {
+  //  width: 10px;
+  //}
+  //
+  //&::-webkit-scrollbar-track {
+  //  background: #f1f1f1;
+  //}
+  //
+  //&::-webkit-scrollbar-thumb {
+  //  background: linear-gradient(135deg, #ff8a00, #e52e71);
+  //  border-radius: 10px;
+  //  border: 3px solid #f1f1f1;
+  //}
+  //
+  //&::-webkit-scrollbar-thumb:hover {
+  //  background: linear-gradient(135deg, #e52e71, #ff8a00);
+  //}
 `;
 
 export const ArticleH1 = styled.h1`
   color: #A20066;
   font-size: 40px;
+  padding-top: 0;
 `;
 
 export const FilterContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 100%;
-  max-width: 100%;
+  width: 100%;
+  flex: 1;
   //border: 1px solid red;
 `;
 
@@ -59,8 +60,10 @@ export const MapElement = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: 2rem;
-  min-height: 60vh;
+  height: 60vh;
+  flex: 1;
   padding-bottom: 1rem;
+  //border: 2px solid mediumvioletred;
 `;
 
 export const MapP = styled.p`
@@ -87,11 +90,11 @@ export const GroupItems = styled('ul')({
 
 export const MapInfoContainer = styled.div`
   display: flex;
-  margin-left: 1.5rem;
+  flex-direction: column;
+  margin-left: 1.2vw;
   padding: 0;
   justify-content: start;
   flex: 1;
-  width: 100%;
 `;
 
 export const LoadindContainer = styled.div`

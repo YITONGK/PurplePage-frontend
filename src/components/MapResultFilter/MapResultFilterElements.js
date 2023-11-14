@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const MapFilterRowContainer = styled.div`
-    margin-right: 1.5rem;
+    margin-right: 1.2vw;
     height: 64.5vh;
     display: flex;
     width: 15.5vw;
