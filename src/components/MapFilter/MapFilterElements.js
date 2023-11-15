@@ -97,6 +97,39 @@ export const BreakingLine3 = styled.div`
   margin-top: 2vh;
 `;
 
+export const Arrow = styled.div`
+  position: relative;
+  //margin: auto; /* Center in column */
+  height: 6px; /* Adjust to control the triangle's height */
+  width: 40px; /* Adjust to control the triangle's width */
+  transform: rotate(90deg) translateY(0.5vw) translateX(1.5vh);
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    background: #A20066;
+  }
+
+  &:before {
+    left: 0;
+    border-radius: 10px 0 0 10px;
+    transform: skewY(-45deg); /* Skew for left side */
+    transform-origin: top left;
+  }
+
+  &:after {
+    right: 0;
+    border-radius: 0 10px 10px 0;
+    transform: skewY(45deg); /* Skew for right side */
+    transform-origin: top right;
+  }
+`;
+
+
 
 export const SearchContainer = styled.div`
     display: flex;

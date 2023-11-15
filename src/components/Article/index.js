@@ -858,6 +858,7 @@ const Article = () => {
             backgroundColor: '#ff9800', // a standard warning color
             borderRadius: '4px',
             margin: '8px 0',
+            marginRight: '0.3vw'
           }}
       >
         <WarningIcon sx={{ marginRight: '8px', color: '#fff' }} />

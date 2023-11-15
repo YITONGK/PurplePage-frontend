@@ -317,9 +317,9 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                                     <CodeIcon style={{fontSize: '40px', margin: '0'}}/>
                                 </IconContainer>
                                 <IconDescriptionContainer>
-                                    <ProgramViewCaption>Program Name: </ProgramViewCaption>
+                                    <ProgramViewCaption>Program ID And Name: </ProgramViewCaption>
                                     <IconDescription style={{ textAlign: 'justify'}}>
-                                        <ProgramViewP2>{stringFilterPrefix(selectedPrograms.program_nme)}</ProgramViewP2>
+                                        <ProgramViewP2>{stringFilterPrefix(selectedPrograms.title) + " - " + stringFilterPrefix(selectedPrograms.program_nme)}</ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
                             </Icon>

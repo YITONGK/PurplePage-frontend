@@ -16,6 +16,7 @@ import {
     SearchInputContainer,
     BreakingLine2,
     BreakingLine3,
+    Arrow,
     LabelContainer, 
     CollapseButtonContainer, 
     CollapseButton, 
@@ -1898,7 +1899,8 @@ const MapFilter = ({filteredPrograms,
                 </ProgramDropDownContainer>
 
                 <ProgramDropDownContainer style={{justifyContent: "center", alignItems: "start"}}>
-                    <BreakingLine2></BreakingLine2>
+                    {/*<BreakingLine2></BreakingLine2>*/}
+                    <Arrow></Arrow>
                 </ProgramDropDownContainer>
 
                 <ProgramDropDownContainer style={{justifyContent: "center", alignItems: "start"}}>
