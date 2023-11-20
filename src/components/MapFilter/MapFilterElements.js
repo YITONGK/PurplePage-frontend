@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const MapFilterRowContainer = styled.div`
-    height: fit-content;
+    height: 16rem;
     display: flex;
     flex-direction: column;
     margin-top: 1rem;
@@ -22,6 +22,7 @@ export const FilterContainer = styled.div`
     flex:1;
     width: fit-content;
     gap: 1.2vw;
+    //border: 1px solid grey;
 `;
 
 export const ResultContainer = styled.div`
@@ -55,7 +56,7 @@ export const ProgramDropDownContainer = styled.div`
     padding-top: 0.5rem;
     align-items: center;
     justify-content: space-between;
-    height: 16.5vh;
+    height: 100%;
     flex: 1;
     //border: 2px solid grey;
 `;
@@ -102,7 +103,7 @@ export const Arrow = styled.div`
   //margin: auto; /* Center in column */
   height: 6px; /* Adjust to control the triangle's height */
   width: 40px; /* Adjust to control the triangle's width */
-  transform: rotate(90deg) translateY(0.5vw) translateX(1.5vh);
+  transform: rotate(90deg) translateY(5px) translateX(10px);
 
   &:before,
   &:after {

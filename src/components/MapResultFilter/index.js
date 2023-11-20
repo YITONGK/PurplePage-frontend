@@ -26,6 +26,7 @@ import {debounce} from "@mui/material/utils";
 import ListItem from "@mui/material/ListItem";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import {preventDefault} from "leaflet/src/dom/DomEvent";
 
 
 const MapResultFilter = ({importRef, exportSite, exportDepartureAddress, advanceFilteredSites}) => {
@@ -258,10 +259,14 @@ const MapResultFilter = ({importRef, exportSite, exportDepartureAddress, advance
                 return (
                     <ListItem key={index}>
                         <Tooltip
-                            title= {<Typography variant= 'body2' color="inherit" style= {{zIndex: 0}}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>}
+                            title= {<Typography variant= 'body2' color="inherit" style= {{zIndex: 0}}>
+                                {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
+                                    `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                }
+                        </Typography>}
                             style={(clickedSite && site.site_id === clickedSite.site_id)? toolTipsStyleClicked: toolTipsStyle}
                         >
-                            <SiteOption onClick={() => onClickSite(site)}>
+                            <SiteOption onClick={(e) => { e.preventDefault(); onClickSite(site); }}>
                                 <SiteOptionRoutingContainer>
                                     <Typography variant='body1'>
                                         {site.site_id}
@@ -297,7 +302,11 @@ const MapResultFilter = ({importRef, exportSite, exportDepartureAddress, advance
                                     }
 
                                 </SiteOptionRoutingContainer>
-                                <Typography variant='caption' style={captionStyle}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>
+                                <Typography variant='caption' style={captionStyle}>
+                                    {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
+                                        `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                    }
+                                </Typography>
                             </SiteOption>
                         </Tooltip>
                     </ListItem>
@@ -340,10 +349,10 @@ const MapResultFilter = ({importRef, exportSite, exportDepartureAddress, advance
                     <SearchInputContainer>
                         {
                             (addressIsLoading || isLoading)?
-
+                            // (true)?
                                 <div>
                                     <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                        <Skeleton style={textFieldStyle} height={35} />
+                                        <Skeleton style={{width: '14vw'}} height={35} />
                                     </SkeletonTheme>
                                 </div>
 
@@ -378,10 +387,10 @@ const MapResultFilter = ({importRef, exportSite, exportDepartureAddress, advance
                         <InputLabel style={{fontSize: '16px'}}>Search Uniting Sites</InputLabel>
                         {
                             (addressIsLoading || isLoading)?
-
+                            // (true)?
                                 <div>
                                     <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                        <Skeleton style={textFieldStyle} height={35} />
+                                        <Skeleton style={{width: '14vw'}} height={35} />
                                     </SkeletonTheme>
                                 </div>
                                 :

@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect, useRef} from 'react';
 import { ArticleContainer, ArticleH1 } from './ArticleElements';
 
-import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer, LoadindContainer} from './ArticleElements';
+import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer, LoadindContainer, WarningContainer} from './ArticleElements';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -333,7 +333,7 @@ const Article = () => {
 
   /* get a list of sites from the backend and display it */
   const getSites = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://api.wernmachine.art";
     const result = await axios.get(BASE_URL+ '/site');
     const filteredResult = result.data;
     return filteredResult.filter(site => site.lng !== null && site.lat != null);
@@ -341,7 +341,7 @@ const Article = () => {
 
   /* get list of site accessibility from the db */
   const getSiteAccessibilities = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
     try {
 
       const result = await axios.get(BASE_URL + '/siteaccess');
@@ -356,7 +356,7 @@ const Article = () => {
 
   /* get list of programs from the backend and display them */
   const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
     let result = await axios.get(BASE_URL + '/program');
     result = result.data[0];
     result = result.filter((r) => r.program_nme !== null && r.program_nme !== '')
@@ -368,7 +368,7 @@ const Article = () => {
 
   /* get list of programs Access Type from the db */
   const getProgramAts = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
     try{
       const result = await axios.get(BASE_URL + '/programat');
       return result.data;
@@ -380,7 +380,7 @@ const Article = () => {
 
   /* get list of programs delivery method from the db */
   const getProgramSdms = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
 
     try {
       const result = await axios.get(BASE_URL + '/programsdm');
@@ -394,7 +394,7 @@ const Article = () => {
 
   /* get list of program types from the backend and display them */
   const getProgramTypes = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
 
     let result = await axios.get(BASE_URL + '/programtype');
     result = result.data[0];
@@ -411,7 +411,7 @@ const Article = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
 
     let result =  await axios.get(BASE_URL + '/group');
     result = result.data[0];
@@ -421,7 +421,7 @@ const Article = () => {
 
   /* get list of service stream from the backend and display them */
   const getServiceStreams = async() => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
 
     let result = await axios.get(BASE_URL + '/servicestream');
     result = result.data;
@@ -431,7 +431,7 @@ const Article = () => {
 
   /* get list of divisions from the backend and display them */
   const getDivisions = async() => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
 
     let result = await axios.get(BASE_URL + '/division');
     result = result.data;
@@ -442,10 +442,11 @@ const Article = () => {
 
   /* get list of service type from the backend and display them */
   const getServiceTypes = async() => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
 
     let result = await axios.get(BASE_URL + '/servicetype');
     result = result.data[0];
+    result = result.filter(type => type.ser_type !== null);
     result.sort ((a, b) => a.ser_type.localeCompare(b.ser_type));
     return result;
   }
@@ -786,7 +787,7 @@ const Article = () => {
           :
           <div>
             <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-              <Skeleton style={{minWidth: '300px', minHeight: '2rem'}} />
+              <Skeleton style={{minWidth: '19vw', minHeight: '2.2rem'}} />
             </SkeletonTheme>
           </div>
         }
@@ -850,22 +851,19 @@ const Article = () => {
     </div>
     :
     <ArticleContainer>
-      <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: '8px 16px',
-            backgroundColor: '#ff9800', // a standard warning color
-            borderRadius: '4px',
-            margin: '8px 0',
-            marginRight: '0.3vw'
-          }}
-      >
-        <WarningIcon sx={{ marginRight: '8px', color: '#fff' }} />
-        <Typography variant="body1" sx={{ textAlign: 'center', flexGrow: 1, color: '#fff' }}>
-          Warning
+      <WarningContainer>
+        <WarningIcon sx={{color: '#fff'}} />
+        <Typography variant="body1" sx={{ textAlign: 'center', flexGrow: 1, color: '#fff', fontWeight: 'bold' }}>
+          Is your service not listed? Notice that something needs correcting?{' '}
+          <a href="https://app.smartsheet.com/b/form/7194d9dfdead439286d551134f8d515c" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'underline' }}>
+              Please complete this form
+          </a>.{' '}
+          Alternatively, you can email us, quoting the Service ID at {' '}
+          <a href="mailto:reporting@vt.uniting.org" style={{ color: '#fff', textDecoration: 'underline' }}>
+            reporting@vt.uniting.org
+          </a>.
         </Typography>
-      </Box>
+      </WarningContainer>
 
       <ArticleH1>Find a Uniting service near you</ArticleH1>
         <FilterContainer>
@@ -890,6 +888,7 @@ const Article = () => {
               exportDepartureAddress={transferDepartureAddress}
               loadingChecking={mapFilterLoadingCheck}
               collapseChecking={reportingMapFilterIsCollapse}
+              loadingSignal={(mapFilterIsLoading || addressIsLoading)}
           />
 
         </FilterContainer>
@@ -907,7 +906,7 @@ const Article = () => {
           }
 
           <MapInfoContainer>
-            <MapInfo site={selectedSite} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms } groupList= {groupList} programTypeList={programTypeList}/>
+            <MapInfo site={selectedSite} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms } groupList= {groupList} programTypeList={programTypeList} departureLocation={departureAddress} />
           </MapInfoContainer>
         </MapElement>
     </ArticleContainer>

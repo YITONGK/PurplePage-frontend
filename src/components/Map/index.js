@@ -227,7 +227,9 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
                      <RoomIcon style={{margin: '0', padding: '0'}}></RoomIcon>
                      <InfoWindowP>
                          <strong>
-                            {popUpMarker.street_nbr} {popUpMarker.street_name}, {popUpMarker.suburb}, {popUpMarker.state} {popUpMarker.postcode}
+                             {popUpMarker.street_nbr && popUpMarker.street_name && popUpMarker.suburb && popUpMarker.state && popUpMarker.postcode ?
+                                 `${popUpMarker.street_nbr} ${popUpMarker.street_name}, ${popUpMarker.suburb}, ${popUpMarker.state}, ${popUpMarker.postcode}` : 'None'
+                             }
                          </strong>
                      </InfoWindowP>
                  </InfoWindowContainerRow>

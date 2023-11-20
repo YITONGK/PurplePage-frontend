@@ -22,7 +22,7 @@ const ServiceType = () => {
 
   /* get list of service types from the backend and display them */
   const getServiceTypes = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
     await axios.get(BASE_URL + '/servicetype').then(res => {
       const serviceTypeList = res.data[0];
       const serviceStreamList = res.data[1];

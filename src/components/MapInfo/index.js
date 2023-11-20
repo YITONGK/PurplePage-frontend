@@ -63,7 +63,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import Map from '../Map';
 
 
-const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) => {
+const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, departureLocation}) => {
 
     // Initialise Variable
     const [relatedPrograms, setRelatedPrograms] = useState([]);
@@ -104,6 +104,25 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
 
     }, [advanceFilteredPrograms, site]);
 
+    const programNameProcess = (program_nme) => {
+        let nameString = program_nme.split('-');
+        if (nameString.length > 1) {
+            return (
+                <>
+                    {nameString.map((part, index) => (
+                        <React.Fragment key={index}>
+                            {part}
+                            {index < nameString.length - 1 && <>-<br/></>}
+                        </React.Fragment>
+                    ))}
+                </>
+            );
+        } else {
+            return program_nme;
+        }
+    }
+
+
     // showing program info of a site
     const ProgramInfo = () => {
 
@@ -115,7 +134,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                             return (
                                 <React.Fragment key={index}>
                                     <ListItemButton key={index} onClick= {() => onClickProgram(program)}>
-                                        <ListItemText primary= {program.program_nme}/>
+                                        <ListItemText primary= {programNameProcess(program.program_nme)}/>
                                         <ExpandMore style={{transform: 'rotate(-90deg)'}}></ExpandMore>
                                     </ListItemButton>
                                 </React.Fragment>
@@ -167,7 +186,6 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
         setSelectedSite(site);
         setSitePopUpOpen(true);
         document.body.style.overflow = 'hidden';
-
     }
 
     const closeProgramModal = () => {
@@ -207,7 +225,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
         <InfoAndPopupContainer>
             <InfoContainer>
                 <InfoTitleContainer>
-                    <InfoIcon classname= "" style={{padding: "0", margin: "0"}} fontSize="large" />
+                    <InfoIcon className= "" style={{padding: "0", margin: "0"}} fontSize="large" />
                     <InfoH1>Site Information</InfoH1>
                 </InfoTitleContainer>
                 <InfoDetail>
@@ -222,9 +240,15 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
                             <SiteInfoDetailContainer>
                                 <InfoP>Address</InfoP>
                                 <InfoP2>
-                                    {site.street_nbr} {site.street_name}, <br/>
-                                    {site.suburb}, <br/>
-                                    {site.state} {site.postcode}
+                                    {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ? (
+                                        <>
+                                            {site.street_nbr} {site.street_name}, <br/>
+                                            {site.suburb}, <br/>
+                                            {site.state} {site.postcode}
+                                        </>
+                                    ) : (
+                                        'None'
+                                    )}
                                 </InfoP2>
                             </SiteInfoDetailContainer>
                             <SiteInfoDetailContainer>
@@ -473,33 +497,33 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
 
                             <SiteViewInfoContainer>
                                 <SiteViewH1>{ selectedSite.site_id}</SiteViewH1>
-                                <SiteViewInfoDetailContainer style={{backgroundColor: '#f5f5f5', marginRight: '-10px', gap: '20px'}}>
+                                <SiteViewInfoDetailContainer style={{ width:'42rem', backgroundColor: '#f5f5f5', marginRight: '-10px', justifyContent: '20px'}}>
                                 
                                     <SiteViewInfoDetailRow style={{maxWidth: '50%'}}>
 
-                                    <SiteViewIconContainer>
-                                        <PersonIcon style={{fontSize: '55px'}}></PersonIcon>
-                                    </SiteViewIconContainer>
+                                        <SiteViewIconContainer>
+                                            <PersonIcon style={{fontSize: '55px'}}></PersonIcon>
+                                        </SiteViewIconContainer>
 
-                                    <SiteViewInfoDetailColumn>
-                                        <SiteViewP><strong>Site Manager:</strong></SiteViewP>
-                                        <SiteViewP>{ stringFilterPrefix(selectedSite.site_contact_name)}</SiteViewP>
-                                  
-                                    </SiteViewInfoDetailColumn>
+                                        <SiteViewInfoDetailColumn>
+                                            <SiteViewP><strong>Site Manager:</strong></SiteViewP>
+                                            <SiteViewP>{ stringFilterPrefix(selectedSite.site_contact_name)}</SiteViewP>
+
+                                        </SiteViewInfoDetailColumn>
 
                                     </SiteViewInfoDetailRow>
 
                                     <SiteViewInfoDetailRow style={{maxWidth:'50%'}}>
 
-                                    <SiteViewIconContainer>
-                                        <CallIcon style={{fontSize: '55px'}}></CallIcon>
-                                    </SiteViewIconContainer>
+                                        <SiteViewIconContainer>
+                                            <CallIcon style={{fontSize: '55px'}}></CallIcon>
+                                        </SiteViewIconContainer>
 
-                                    <SiteViewInfoDetailColumn>
-                                        <SiteViewP><strong>Contact Number:</strong></SiteViewP>
-                             
-                                        <SiteViewP>{ stringFilterPrefix(selectedSite.site_contact_nbr)}</SiteViewP>
-                                    </SiteViewInfoDetailColumn>
+                                        <SiteViewInfoDetailColumn>
+                                            <SiteViewP><strong>Contact Number:</strong></SiteViewP>
+
+                                            <SiteViewP>{ stringFilterPrefix(selectedSite.site_contact_nbr)}</SiteViewP>
+                                        </SiteViewInfoDetailColumn>
 
                                     </SiteViewInfoDetailRow>
 
@@ -511,12 +535,12 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
 
                                     <SiteViewInfoDetailColumn>
                                     <SiteViewP2>STREET NUMBER</SiteViewP2>
-                                    <SiteViewP>{ selectedSite.street_nbr}</SiteViewP>
+                                    <SiteViewP>{ stringFilterPrefix(selectedSite.street_nbr)}</SiteViewP>
                                     </SiteViewInfoDetailColumn>
 
                                     <SiteViewInfoDetailColumn>
                                     <SiteViewP2>STREET NAME</SiteViewP2>
-                                    <SiteViewP>{ selectedSite.street_name}</SiteViewP>
+                                    <SiteViewP>{ stringFilterPrefix(selectedSite.street_name)}</SiteViewP>
                                     </SiteViewInfoDetailColumn>
 
                                 </SiteViewInfoDetailContainer>
@@ -525,12 +549,12 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
 
                                     <SiteViewInfoDetailColumn>
                                     <SiteViewP2>SUBURB</SiteViewP2>
-                                    <SiteViewP>{ selectedSite.suburb}</SiteViewP>
+                                    <SiteViewP>{ stringFilterPrefix(selectedSite.suburb)}</SiteViewP>
                                     </SiteViewInfoDetailColumn>
 
                                     <SiteViewInfoDetailColumn>
                                     <SiteViewP2>STATE</SiteViewP2>
-                                    <SiteViewP>{ selectedSite.state}</SiteViewP>
+                                    <SiteViewP>{ stringFilterPrefix(selectedSite.state)}</SiteViewP>
                                     </SiteViewInfoDetailColumn>
 
                                 </SiteViewInfoDetailContainer>
@@ -539,7 +563,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
 
                                     <SiteViewInfoDetailColumn>
                                     <SiteViewP2>POSTCODE</SiteViewP2>
-                                    <SiteViewP>{ selectedSite.postcode}</SiteViewP>
+                                    <SiteViewP>{ stringFilterPrefix(selectedSite.postcode+"")}</SiteViewP>
                                     </SiteViewInfoDetailColumn>
 
                                     <SiteViewInfoDetailColumn>
@@ -562,12 +586,16 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList}) =>
 
                                 <SiteViewH2>Full Address:</SiteViewH2>
 
-                                <SiteViewP style={{paddingLeft: '0.8rem', marginBottom: '0.3rem'}}>{stringFilterPrefix(`${selectedSite.street_nbr} ${selectedSite.street_name}, ${selectedSite.suburb}, ${selectedSite.state}, ${selectedSite.postcode}`)}</SiteViewP>
+                                <SiteViewP style={{ paddingLeft: '0.8rem', marginBottom: '0.3rem' }}>
+                                    {selectedSite.street_nbr && selectedSite.street_name && selectedSite.suburb && selectedSite.state && selectedSite.postcode ?
+                                        `${selectedSite.street_nbr} ${selectedSite.street_name}, ${selectedSite.suburb}, ${selectedSite.state}, ${selectedSite.postcode}` : 'None'
+                                    }
+                                </SiteViewP>
 
                             </SiteViewInfoContainer>
 
                             <SiteViewMapContainer>
-                                <Map sites={[selectedSite]} exportSite={null} exportRef={mapRef} mapWidth={54} mapHeight={70} mapZoom={15} centerLng={selectedSite.lng} centerLat={selectedSite.lat}/>
+                                <Map sites={[selectedSite]} exportSite={null} exportRef={mapRef} mapWidth={54} mapHeight={70} mapZoom={15} centerLng={selectedSite.lng} centerLat={selectedSite.lat} departureLocation={departureLocation}/>
                             </SiteViewMapContainer>
 
                         </SiteViewMapAndInfoContainer>

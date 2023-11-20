@@ -64,7 +64,8 @@ const MapFilter = ({filteredPrograms,
     exportAdvanceFilteredPrograms,
     exportDepartureAddress,
     loadingChecking,
-    collapseChecking}) => {
+    collapseChecking,
+    loadingSignal}) => {
 
     // Variable Declaration
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -1866,7 +1867,14 @@ const MapFilter = ({filteredPrograms,
                 <ProgramDropDownContainer>
                     <SelectDiv>
                         <InputLabel style={{fontSize: '16px'}}>Service Stream</InputLabel>
-                        <ServiceStreamDropdown></ServiceStreamDropdown>
+                        {
+                            (loadingSignal) ?
+                                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                    <Skeleton style={dropDownStyle} height={37} />
+                                </SkeletonTheme>
+                                :
+                                <ServiceStreamDropdown></ServiceStreamDropdown>
+                        }
                     </SelectDiv>
                 </ProgramDropDownContainer>
                 <ProgramDropDownContainer>
@@ -1875,11 +1883,26 @@ const MapFilter = ({filteredPrograms,
                 <ProgramDropDownContainer>
                     <SelectDiv>
                         <InputLabel style={{fontSize: '16px'}}>Service Type</InputLabel>
-                        <ServiceTypeDropdown></ServiceTypeDropdown>
+                        {
+                            (loadingSignal) ?
+                            <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                <Skeleton style={dropDownStyle} height={37} />
+                            </SkeletonTheme>
+                            :
+                            <ServiceTypeDropdown></ServiceTypeDropdown>
+
+                        }
                     </SelectDiv>
                     <SelectDiv>
                         <InputLabel style={{fontSize: '16px'}} >Division</InputLabel>
-                        <DivisionDropdown></DivisionDropdown>
+                        {
+                            (loadingSignal) ?
+                            <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                <Skeleton style={dropDownStyle} height={37} />
+                            </SkeletonTheme>
+                            :
+                            <DivisionDropdown></DivisionDropdown>
+                        }
                     </SelectDiv>
                 </ProgramDropDownContainer>
                 <ProgramDropDownContainer>
@@ -1889,24 +1912,46 @@ const MapFilter = ({filteredPrograms,
                 <ProgramDropDownContainer>
                     <SelectDiv>
                         <InputLabel style={{fontSize: '16px'}}>Program Type</InputLabel>
-                        <ProgramTypeDropdown></ProgramTypeDropdown>
+                        {
+                            (loadingSignal) ?
+                                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                    <Skeleton style={dropDownStyle} height={37} />
+                                </SkeletonTheme>
+                                :
+                                <ProgramTypeDropdown></ProgramTypeDropdown>
+                        }
                     </SelectDiv>
 
                     <SelectDiv>
                         <InputLabel style={{fontSize: '16px'}}>Group</InputLabel>
-                        <GroupDropdown></GroupDropdown>
+                        {
+                            (loadingSignal) ?
+                                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                    <Skeleton style={dropDownStyle} height={37} />
+                                </SkeletonTheme>
+                                :
+                                <GroupDropdown></GroupDropdown>
+
+                        }
                     </SelectDiv>
                 </ProgramDropDownContainer>
 
-                <ProgramDropDownContainer style={{justifyContent: "center", alignItems: "start"}}>
-                    {/*<BreakingLine2></BreakingLine2>*/}
+                <ProgramDropDownContainer style={{justifyContent: "center", alignItems: "center"}}>
                     <Arrow></Arrow>
                 </ProgramDropDownContainer>
 
                 <ProgramDropDownContainer style={{justifyContent: "center", alignItems: "start"}}>
                     <SelectDiv>
                         <InputLabel style={{fontSize: '16px'}}>Program</InputLabel>
-                        <ProgramDropdown></ProgramDropdown>
+                        {
+                            (loadingSignal) ?
+                                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                    <Skeleton style={dropDownStyle} height={37} />
+                                </SkeletonTheme>
+                                :
+                                <ProgramDropdown></ProgramDropdown>
+
+                        }
                     </SelectDiv>
                 </ProgramDropDownContainer>
 
@@ -1916,7 +1961,7 @@ const MapFilter = ({filteredPrograms,
                             {/*    <SendIcon style= {{fontSize: '16px', marginRight: '5px'}}></SendIcon>*/}
                             {/*    <ButtonLabel>Apply Filter</ButtonLabel>*/}
                             {/*</ApplyButton>*/}
-                            <ResetButton onClick={clear} style={ (addressIsLoading || isLoading)? {pointerEvents: 'none'} : {}}>
+                            <ResetButton onClick={clear} style={ (loadingSignal)? {pointerEvents: 'none'} : {}}>
                                 <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
                                 <ButtonLabel style={{color: '#A20066'}}>Clear</ButtonLabel>
                             </ResetButton>

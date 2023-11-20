@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 
 export const SiteViewContainer = styled.div`
-  margin-top: 2%;
+  display: flex;
+  padding-top: 2rem;
   padding-left: 2rem;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
 `;
 
 export const SiteViewH1 = styled.h1`
@@ -34,10 +37,11 @@ export const SiteViewP2 = styled.p`
 export const SiteViewMapAndInfoContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 90vw;
+  width: 95vw;
   height: 80vh;
   border-radius: 20px;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
 `;
 
 export const SiteViewInfoContainer = styled.div`
@@ -46,8 +50,7 @@ export const SiteViewInfoContainer = styled.div`
   justify-content: start;
   width: 40%;
   max-height: 80vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: auto;
 `;
 
 export const SiteViewMapContainer = styled.div`
@@ -60,6 +63,7 @@ export const SiteViewInfoDetailContainer = styled.div`
   align-items: center;
   gap: 50px;
   padding: 0.5rem;
+  width:42rem;
 `;
 
 export const SiteViewInfoDetailRow = styled.div`

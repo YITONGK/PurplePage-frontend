@@ -52,6 +52,7 @@ export const InfoDetail = styled.div`
     //border: 2px solid red;
     height: 100%;
     overflow: auto;
+    padding-right: 0.5rem;
     flex: 1;
 `;
 
@@ -164,9 +165,8 @@ export const ListItemButton = styled.div`
   align-items: center;
   margin: 0 0 0.3rem 0;
   padding: 0.3rem 0 0 0.3rem;
-  //width: 95%;
-  min-width: 15vw;
-  max-width: 15vw;
+  min-width: 15.5vw;
+  max-width: 15.5vw;
   border-radius: 10px;
   background-color: #f2f2f2;
   transition: all 0.2s ease-in-out;
@@ -493,6 +493,8 @@ export const SiteViewInfoDetailContainer = styled.div`
   align-items: center;
   gap: 50px;
   padding: 0.5rem;
+  width:42rem;
+  //border: 2px solid red;
 `;
 
 export const SiteViewInfoDetailRow = styled.div`
@@ -508,11 +510,6 @@ export const SiteViewInfoDetailColumn = styled.div`
   justify-content: center;
   padding: 0 0 0 0.5rem;
   min-width: 10rem;
-
-  @media screen and (min-height: 1080px) {
-        /* Apply new styles for screens with a minimum width of 768px */
-        min-width: 15rem; /* New height on larger screens */
-  }
 `;
 
 export const SiteViewIconContainer = styled.div`

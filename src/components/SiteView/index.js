@@ -29,7 +29,7 @@ const SiteView = () => {
 
   /* get a site from the backend based on the id and display it */
   const getSite = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://api.wernmachine.art";
     await axios.get(BASE_URL + '/site/' + id).then(res => {
       const data = res.data;
       setSite(data);
@@ -54,7 +54,7 @@ const SiteView = () => {
       <SiteViewMapAndInfoContainer>
         <SiteViewInfoContainer>
           <SiteViewH1>{site.site_id}</SiteViewH1>
-          <SiteViewInfoDetailContainer style={{backgroundColor: '#f5f5f5', marginRight: '-10px', gap: '20px'}}>
+          <SiteViewInfoDetailContainer style={{ width:'45rem', backgroundColor: '#f5f5f5', marginRight: '-10px', justifyContent: '20px'}}>
           
             <SiteViewInfoDetailRow style={{maxWidth: '50%'}}>
 
@@ -64,9 +64,7 @@ const SiteView = () => {
 
               <SiteViewInfoDetailColumn>
                 <SiteViewP><strong>Site Manager:</strong></SiteViewP>
-                {
-                  site.site_contact_name === null ? <SiteViewP>{`-`}</SiteViewP> : <SiteViewP>{stringFilterPrefix(site.site_contact_name)}</SiteViewP>
-                }
+                <SiteViewP>{stringFilterPrefix(site.site_contact_name)}</SiteViewP>
               </SiteViewInfoDetailColumn>
 
             </SiteViewInfoDetailRow>
@@ -81,7 +79,7 @@ const SiteView = () => {
                 <SiteViewP><strong>Contact Number:</strong></SiteViewP>
                 <SiteViewP>
                   {
-                    site.site_contact_nbr === null ? <SiteViewP>{`-`}</SiteViewP> : <SiteViewP>{site.site_contact_nbr}</SiteViewP>
+                    <SiteViewP>{stringFilterPrefix(site.site_contact_nbr)}</SiteViewP>
                   }
                 </SiteViewP>
               </SiteViewInfoDetailColumn>
@@ -96,12 +94,12 @@ const SiteView = () => {
 
             <SiteViewInfoDetailColumn>
               <SiteViewP2>STREET NUMBER</SiteViewP2>
-              <SiteViewP>{site.street_nbr}</SiteViewP>
+              <SiteViewP>{stringFilterPrefix(site.street_nbr)}</SiteViewP>
             </SiteViewInfoDetailColumn>
 
             <SiteViewInfoDetailColumn>
               <SiteViewP2>STREET NAME</SiteViewP2>
-              <SiteViewP>{site.street_name}</SiteViewP>
+              <SiteViewP>{stringFilterPrefix(site.street_name)}</SiteViewP>
             </SiteViewInfoDetailColumn>
 
           </SiteViewInfoDetailContainer>
@@ -110,12 +108,12 @@ const SiteView = () => {
 
             <SiteViewInfoDetailColumn>
               <SiteViewP2>SUBURB</SiteViewP2>
-              <SiteViewP>{site.suburb}</SiteViewP>
+              <SiteViewP>{stringFilterPrefix(site.suburb)}</SiteViewP>
             </SiteViewInfoDetailColumn>
 
             <SiteViewInfoDetailColumn>
               <SiteViewP2>STATE</SiteViewP2>
-              <SiteViewP>{site.state}</SiteViewP>
+              <SiteViewP>{stringFilterPrefix(site.state)}</SiteViewP>
             </SiteViewInfoDetailColumn>
 
           </SiteViewInfoDetailContainer>
@@ -124,12 +122,12 @@ const SiteView = () => {
 
             <SiteViewInfoDetailColumn>
               <SiteViewP2>POSTCODE</SiteViewP2>
-              <SiteViewP>{site.postcode}</SiteViewP>
+              <SiteViewP>{stringFilterPrefix(site.postcode+'')}</SiteViewP>
             </SiteViewInfoDetailColumn>
 
             <SiteViewInfoDetailColumn>
               <SiteViewP2>LOCAL GOVERNMENT AREA</SiteViewP2>
-              <SiteViewP>{(site.lga === null)? `-` : `${site.lga}`}</SiteViewP>
+              <SiteViewP>{stringFilterPrefix(site.lga)}</SiteViewP>
             </SiteViewInfoDetailColumn>
 
           </SiteViewInfoDetailContainer>
@@ -138,7 +136,7 @@ const SiteView = () => {
 
             <SiteViewInfoDetailColumn>
               <SiteViewP2>DEPARTMENT OF FAMILIES,FAIRNESS AND HOUSING</SiteViewP2>
-              <SiteViewP>{(site.dffh_area === null)? `-` : `${site.dffh_area}`}</SiteViewP>
+              <SiteViewP>{stringFilterPrefix(site.dffh_area)}</SiteViewP>
             </SiteViewInfoDetailColumn>
 
           </SiteViewInfoDetailContainer>
@@ -150,7 +148,7 @@ const SiteView = () => {
           <SiteViewP style={{paddingLeft: '0.8rem'}}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</SiteViewP>
         </SiteViewInfoContainer>
         <SiteViewMapContainer>
-          <Map sites={[site]} exportSite={null} exportRef={mapRef} mapWidth={54} mapHeight={80}/>
+          <Map sites={[site]} exportSite={null} exportRef={mapRef} mapWidth={60} mapHeight={80}/>
         </SiteViewMapContainer>
       </SiteViewMapAndInfoContainer>
     </SiteViewContainer>

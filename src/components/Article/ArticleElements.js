@@ -34,6 +34,17 @@ export const ArticleH1 = styled.h1`
   padding-top: 0;
 `;
 
+export const WarningContainer =  styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #ee8e00;
+  border-radius: 4px;
+  margin: 8px 0.3vw 0 0;
+  gap: 8px;
+`;
+
 export const FilterContainer = styled.div`
   display: flex;
   flex-direction: column;
