@@ -29,7 +29,7 @@ import Typography from "@mui/material/Typography";
 import {preventDefault} from "leaflet/src/dom/DomEvent";
 
 
-const MapResultFilter = ({importRef, exportSite, exportDepartureAddress, advanceFilteredSites}) => {
+const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddress, advanceFilteredSites}) => {
 
     // Variable Declaration
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -143,6 +143,16 @@ const MapResultFilter = ({importRef, exportSite, exportDepartureAddress, advance
         }
 
     },[addressIsLoading]);
+
+    // Setting the clicked site
+    useEffect(() => {
+        if(importSite && importSite.site_id){
+            if(clickedSite && clickedSite.site_id === importSite.site_id){
+                return;
+            }
+            setClickedSite(importSite);
+        }
+    },[importSite]);
 
 
     const onInputDepartureValue = debounce((e, v) => {
@@ -407,10 +417,11 @@ const MapResultFilter = ({importRef, exportSite, exportDepartureAddress, advance
 
                     </SearchInputContainer>
                 </SearchContainer>
-                <SitesContainer style={addressIsLoading || isLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center' } : {}}>
+                <SitesContainer style={ addressIsLoading || isLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center', width: '100%' } : {}}>
                     <List sx={listStyle}>
                         {
                             (addressIsLoading || isLoading)?
+                            // (true) ?
                                 <ReactLoading type={'spin'} color={'#A20066'} height={80} width={60}></ReactLoading>
                                 :
                                 <AvailableSites></AvailableSites>

@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import Autocomplete from '@mui/material/Autocomplete';
+import Typography from '@mui/material/Typography';
 
 export const ArticleContainer = styled.div`
   height: 100%;
@@ -32,6 +34,10 @@ export const ArticleH1 = styled.h1`
   color: #A20066;
   font-size: 40px;
   padding-top: 0;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    font-size: 25px;
+  }
 `;
 
 export const WarningContainer =  styled.div`
@@ -43,6 +49,20 @@ export const WarningContainer =  styled.div`
   border-radius: 4px;
   margin: 8px 0.3vw 0 0;
   gap: 8px;
+`;
+
+export const WarningText =  styled(Typography)`
+  && {
+    text-align: center;
+    flex-grow: 1;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    
+    @media (min-width: 375px) and (max-width: 450px) {
+      font-size: 14px;
+    }
+  }
 `;
 
 export const FilterContainer = styled.div`
@@ -110,9 +130,9 @@ export const MapInfoContainer = styled.div`
 
 export const LoadindContainer = styled.div`
   display: flex;
-  min-width: 55vw; 
+  min-width: 59.5vw;
+  max-width: 59.5vw;
   min-height: 64.5vh;
-  max-width: 55vw;
   max-height: 64.5vh;
   flex: 1;
   justify-content: center;
@@ -120,3 +140,11 @@ export const LoadindContainer = styled.div`
   background-color: grey;
 `;
 
+
+export const SearchTextField = styled(Autocomplete)`
+  min-width: 400px;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    min-width: 300px;
+  }
+`;

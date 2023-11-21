@@ -79,6 +79,7 @@
   width: fit-content;
   height: 100vh;
   position: fixed;
+  z-index: 10000;
 }
 
 .loading-overlay {

@@ -2,13 +2,12 @@ import axios from 'axios';
 import React, { useState, useEffect, useRef} from 'react';
 import { ArticleContainer, ArticleH1 } from './ArticleElements';
 
-import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer, LoadindContainer, WarningContainer} from './ArticleElements';
+import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer, LoadindContainer, WarningContainer, WarningText ,SearchTextField} from './ArticleElements';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 
-import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
 import Map from '../Map';
@@ -48,6 +47,8 @@ const Article = () => {
   const [mapFilterIsLoading, setMapFilterIsLoading] = useState(false);
   const [searchError, setSearchError] = useState(false);
 
+  const [mapFilterUsed, setMapFilterUsed] = useState(false);
+
   const [filteredSites, setFilteredSites] = useState([]);
   const [filteredPrograms, setFilteredPrograms] = useState([]);
 
@@ -65,8 +66,6 @@ const Article = () => {
   const mapRef = useRef();
 
   // Style
-  const textFieldStyle = { minWidth: "400px"};
-
   const searchTextFieldStyle = {
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
@@ -152,6 +151,7 @@ const Article = () => {
         setAddressIsLoading(false);
 
         if(cancel === false && newFilteredSitesData.length === filteredSites.length) {
+
 
           newFilteredSitesData.sort((s1, s2) => s1.distance - s2.distance);
           setFilteredSites(newFilteredSitesData);
@@ -666,6 +666,7 @@ const Article = () => {
       setDepartureAddress(null);
       setSelectedSite(null);
 
+      setMapFilterUsed(true);
     }
  
   }
@@ -719,14 +720,24 @@ const Article = () => {
   // Clear the search when user click clear button
   const searchClearOnClick = (e) => {
     e.preventDefault();
-
+    
     setSearchError(false);
     setFilteredPrograms(programList);
     setFilteredSites(siteList);
     setAdvanceFilteredSites(siteList);
 
-    setSearchValues({value: '-- What are you looking for? --', type: 'All'});
+    if(mapRef.current) {
+      const map = mapRef.current.getMap();
+      if (map.getLayer('route')) {
+        map.removeLayer('route');
+      }
+      if (map.getSource('route')) {
+        map.removeSource('route');
+      }
+    }
+    setDepartureAddress(null);
 
+    setSearchValues({value: '-- What are you looking for? --', type: 'All'});
   }
 
   // Free text search component
@@ -741,7 +752,7 @@ const Article = () => {
           (!(mapFilterIsLoading || addressIsLoading)) ?
           <>
             <SelectDiv>
-                <Autocomplete
+                <SearchTextField
                   disablePortal
                   id="search-test"
                   options={searchOptions}
@@ -751,7 +762,6 @@ const Article = () => {
                   filterOptions={searchFilterOptions}
                   onChange={onChangeSearch}
                   value={searchValues}
-                  style={textFieldStyle}
                   popupIcon={<SearchIcon />}
                   sx={{"& .MuiAutocomplete-popupIndicator": { transform: "none", pointerEvents: "none"}}}
                   size='small'
@@ -759,7 +769,7 @@ const Article = () => {
                   disableClearable={true}
                   freeSolo
                   forcePopupIcon
-                  renderInput={(params) => <TextField {...params}  sx={searchTextFieldStyle}/>}
+                  renderInput={(params) => <TextField {...params}  sx={searchTextFieldStyle} />}
                   renderGroup={(params) => (
                     <li key={params.key}>
                       <GroupHeader>{params.group}</GroupHeader>
@@ -835,6 +845,11 @@ const Article = () => {
     setMapFilterIsCollapse(isCpllapse);
   }
 
+  const setMapFilterInUse = (isUsed) => {
+    console.log("getCall");
+    setMapFilterUsed(isUsed);
+  }
+
 
   //===================== Main Return Features ===========================================
 
@@ -853,7 +868,7 @@ const Article = () => {
     <ArticleContainer>
       <WarningContainer>
         <WarningIcon sx={{color: '#fff'}} />
-        <Typography variant="body1" sx={{ textAlign: 'center', flexGrow: 1, color: '#fff', fontWeight: 'bold' }}>
+        <WarningText>
           Is your service not listed? Notice that something needs correcting?{' '}
           <a href="https://app.smartsheet.com/b/form/7194d9dfdead439286d551134f8d515c" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'underline' }}>
               Please complete this form
@@ -862,7 +877,7 @@ const Article = () => {
           <a href="mailto:reporting@vt.uniting.org" style={{ color: '#fff', textDecoration: 'underline' }}>
             reporting@vt.uniting.org
           </a>.
-        </Typography>
+        </WarningText>
       </WarningContainer>
 
       <ArticleH1>Find a Uniting service near you</ArticleH1>
@@ -889,24 +904,26 @@ const Article = () => {
               loadingChecking={mapFilterLoadingCheck}
               collapseChecking={reportingMapFilterIsCollapse}
               loadingSignal={(mapFilterIsLoading || addressIsLoading)}
+              mapFilterUsed={setMapFilterInUse}
           />
 
         </FilterContainer>
         <MapElement>
-          <MapResultFilter importRef={mapRef} exportSite={selectingSite} exportDepartureAddress={transferDepartureAddress} advanceFilteredSites={advancefilteredSites}></MapResultFilter>
+          <MapResultFilter importRef={mapRef} importSite={selectedSite} exportSite={selectingSite} exportDepartureAddress={transferDepartureAddress} advanceFilteredSites={advancefilteredSites}></MapResultFilter>
           {
             (addressIsLoading || mapFilterIsLoading) ?
+            // (true)?
               <LoadindContainer>
                 <ReactLoading type={'bars'} color={'white'} height={130} width={130}></ReactLoading>
               </LoadindContainer>
               : 
               <Map 
-                sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef} importSite={selectedSite} departureLocation={departureAddress} mapWidth={(mapFilterIsCollapse) ? 59.5 : 0}
+                sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef} importSite={selectedSite} departureLocation={departureAddress} mapWidth={(mapFilterIsCollapse) ? 59.5 : 0} mapFilterUsed = {mapFilterUsed}
               />
           }
 
           <MapInfoContainer>
-            <MapInfo site={selectedSite} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms } groupList= {groupList} programTypeList={programTypeList} departureLocation={departureAddress} />
+            <MapInfo site={selectedSite} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms } groupList= {groupList} programTypeList={programTypeList} departureLocation={departureAddress}  />
           </MapInfoContainer>
         </MapElement>
     </ArticleContainer>

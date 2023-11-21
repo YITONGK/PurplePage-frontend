@@ -18,6 +18,8 @@ export const HeaderContainer = styled.div`
   position: sticky;
   align-items: center;
   top: 0;
+  
+  
 `;
 
 export const HeaderLogo = styled(LinkRouter)`

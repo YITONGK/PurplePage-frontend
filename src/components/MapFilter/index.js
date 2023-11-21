@@ -65,7 +65,8 @@ const MapFilter = ({filteredPrograms,
     exportDepartureAddress,
     loadingChecking,
     collapseChecking,
-    loadingSignal}) => {
+    loadingSignal,
+    mapFilterUsed}) => {
 
     // Variable Declaration
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -175,7 +176,7 @@ const MapFilter = ({filteredPrograms,
 
     useEffect(() => {
 
-        console.log("in effect of filtered sites");
+        // console.log("in effect of filtered sites");
 
         if(filteredSites && filteredSites[0] && !filteredSites[0].distance) {
             setTmpAddressValue("");
@@ -322,6 +323,20 @@ const MapFilter = ({filteredPrograms,
 
 
         setLocalFilteredProgram(distinctPrograms);
+
+        if (serviceStreamValue === 'All Service Stream' &&
+            serviceTypeValue === 'All Service Type' &&
+            programTypeValue === 'All Program Type' &&
+            programValue === 'All Program' &&
+            divisionValue === 'All Divisions' &&
+            groupValue === 'All Group')
+        {
+            mapFilterUsed(false)
+
+        } else {
+
+            mapFilterUsed(true)
+        }
 
     },[serviceStreamValue, serviceTypeValue, programTypeValue, divisionValue, groupValue])
 
@@ -1121,6 +1136,8 @@ const MapFilter = ({filteredPrograms,
         setDivisionValue('All Divisions');
         setGroupValue('All Group');
 
+        mapFilterUsed(false);
+
         setFilteredServiceStreams(filteringServiceStreams(filteredPrograms));
         setFilteredServiceTypes(filteringServiceTypes(filteredPrograms));
         setFilteredProgramTypes(filteringProgramTypes(filteredPrograms));
@@ -1814,7 +1831,7 @@ const MapFilter = ({filteredPrograms,
     const applyingFilter = () => {
 
         let tmpAdvancedFilteredPrograms = advancedFilteredPrograms;
-        console.log(tmpAdvancedFilteredPrograms);
+        // console.log(tmpAdvancedFilteredPrograms);
 
         if(programValue !== 'All Program') {
             tmpAdvancedFilteredPrograms = tmpAdvancedFilteredPrograms.filter((program) => program.program_nme === programValue);

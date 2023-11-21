@@ -15,12 +15,13 @@ mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoidmhhcnRvbm8iLCJhIjoiY2xoc2l1Z2VzMDd0dTNlcGtwbXYwaGx2cyJ9.C77GVU3YPPgscvXrTGHWfg';
 
-const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom, centerLat, centerLng, departureLocation}) => {
+const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom, centerLat, centerLng, departureLocation, mapFilterUsed}) => {
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
   // useState hooks variable initialise
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [popUpMarker, setPopUpMarker] = useState(null);
+  const [firstLoaded, setFirstLoaded] = useState(false);
 
   const [departureLocationMarker, setDepartureLocationMarker] = useState(null);
 
@@ -42,8 +43,8 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
 
     setPopUpMarker(null);
     setSelectedMarker(null);
-    console.log(sites);
 
+    //focus view
     if(sites.length > 0 && sites[0] && sites[0].lat && sites[0].lng) {
         const bounds = new mapboxgl.LngLatBounds();
 
@@ -52,10 +53,11 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
         })
 
         if(departureLocation) {
-           bounds.extend(new mapboxgl.LngLat(departureLocation.lng, departureLocation.lat));
+            bounds.extend(new mapboxgl.LngLat(departureLocation.lng, departureLocation.lat));
         }
 
-        if(exportRef.current) {
+        // need to fix 250... not a good practice
+        if(exportRef.current && sites.length <= 250) {
             exportRef.current.getMap().fitBounds( bounds, {
                 padding: 30, // or your preferred padding
                 maxZoom: 15, // or your preferred max zoom
