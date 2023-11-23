@@ -10,24 +10,9 @@ export const ArticleContainer = styled.div`
   overflow: hidden;
   margin-bottom: 75px;
 
-  /* Styling for the scrollbar */
-  //&::-webkit-scrollbar {
-  //  width: 10px;
-  //}
-  //
-  //&::-webkit-scrollbar-track {
-  //  background: #f1f1f1;
-  //}
-  //
-  //&::-webkit-scrollbar-thumb {
-  //  background: linear-gradient(135deg, #ff8a00, #e52e71);
-  //  border-radius: 10px;
-  //  border: 3px solid #f1f1f1;
-  //}
-  //
-  //&::-webkit-scrollbar-thumb:hover {
-  //  background: linear-gradient(135deg, #e52e71, #ff8a00);
-  //}
+  @media (min-width: 375px) and (max-width: 450px) {
+    padding-right: 2%;
+  }
 `;
 
 export const ArticleH1 = styled.h1`

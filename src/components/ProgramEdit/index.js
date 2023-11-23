@@ -35,7 +35,7 @@ const ProgramEdit = (props) => {
 
   /* get a program from the backend based on the id and display it */
   const getProgram = async () => {
-    const BASE_URL = "https://api.wernmachine.art";
+    const BASE_URL = "http://localhost:8888";
     await axios.get(BASE_URL + '/program/' + id).then(res => {
       const data = res.data[0];
       const prgm_type = res.data[1];
@@ -53,7 +53,7 @@ const ProgramEdit = (props) => {
 
   /* get list of program types from the backend and display them */
   const getProgramTypes = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'http://localhost:8888';
     await axios.get(BASE_URL + '/programtype').then(res => {
       const list = res.data[0];
       setProgramTypeList(list);
@@ -62,7 +62,7 @@ const ProgramEdit = (props) => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'http://localhost:8888';
     await axios.get(BASE_URL + '/group').then(res => {
       const list = res.data[0];
       setGroupList(list);
@@ -87,7 +87,7 @@ const ProgramEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'http://localhost:8888';
     const url = BASE_URL + '/program/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import InputLabel from '@mui/material/InputLabel';
+import Button from '@mui/material/Button';
 
 export const MapFilterRowContainer = styled.div`
     height: 16rem;
@@ -10,6 +12,13 @@ export const MapFilterRowContainer = styled.div`
     margin-right: 0.3vw;
     background-color: #FBF4F8;
     overflow: hidden;
+
+    @media (min-width: 375px) and (max-width: 450px) {
+      
+      height: fit-content;
+      margin-right: 0;
+    }
+  
 `;
 
 export const FilterContainer = styled.div`
@@ -22,7 +31,90 @@ export const FilterContainer = styled.div`
     flex:1;
     width: fit-content;
     gap: 1.2vw;
-    //border: 1px solid grey;
+
+    @media (min-width: 375px) and (max-width: 450px) {
+     display: none;
+    }
+`;
+
+export const ColumnFilterContainer = styled.div`
+  
+  display: none;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    //border: 1px solid #CCC;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 1rem 0;
+    align-items: center;
+    flex: 1;
+    gap: 1.2vh;
+  }
+`;
+
+export const SMFilterNavigationContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 6vw;
+  background-color: white;
+`;
+
+export const SMFilterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  padding: 0 1vw 0 1vw;
+  height: 100%;
+  flex: 1;
+  gap: 2vh;
+  
+`;
+
+export const SMFilterNavigationBreakLine = styled.div`
+    height: 2vh;
+    width: 0.5vw;
+    background-color: black;
+    border-radius: 10px;
+    border: 1px solid black;
+`;
+
+export const SMFilterNavigationButtonDefault = styled(Button)`
+  && {
+    color: #b0b0b0;
+    padding: 0;
+    font-size: 15px;
+  }
+`;
+
+export const SMFilterNavigationButtonActive = styled(Button)`
+  && {
+    
+    padding: 0;
+    font-size: 15px;
+    color: #a20066;
+    font-weight: bolder;
+    text-decoration: underline;
+    text-shadow: 0 6px 4px rgba(0, 0, 0, 0.2); /* Adjust the values as needed */
+  }
+`;
+
+export const FilterLabel = styled(InputLabel)`
+  && {
+    font-size: 24px;
+    font-weight: bold;
+    color: #A20066;
+    
+    @media (min-width: 375px) and (max-width: 450px) {
+      font-size: 20px;
+      
+    }
+    
+  }
 `;
 
 export const ResultContainer = styled.div`
@@ -48,6 +140,13 @@ export const SelectDiv = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    @media (min-width: 375px) and (max-width: 450px) {
+      align-items: flex-start;
+      width: 100%;
+      
+    }
+  
 `;
 
 export const ProgramDropDownContainer = styled.div`
@@ -58,6 +157,11 @@ export const ProgramDropDownContainer = styled.div`
     justify-content: space-between;
     height: 100%;
     flex: 1;
+
+    @media (min-width: 375px) and (max-width: 450px) {
+      justify-content: center;
+      gap: 2vh;
+    }
     //border: 2px solid grey;
 `;
 

@@ -2,7 +2,9 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {
     MapFilterRowContainer,
-    FilterContainer, 
+    FilterContainer,
+    ColumnFilterContainer,
+    FilterLabel,
     SelectDiv,
     ButtonContainer, 
     ResultContainer, 
@@ -27,7 +29,14 @@ import {
     OptionDetail, 
     OptionIcon, 
     OptionP,
+    SMFilterNavigationContainer,
+    SMFilterNavigationBreakLine,
+    SMFilterNavigationButtonDefault,
+    SMFilterNavigationButtonActive,
+    SMFilterContainer
 } from './MapFilterElements';
+
+import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
@@ -108,6 +117,9 @@ const MapFilter = ({filteredPrograms,
 
     const [clickedSite, setClickedSite] = useState(null);
     const [isCollapse, setIsCollapse] = useState(false);
+
+    const [clickedProgramService, setClickedProgramService] = useState(true);
+    const [clickedGroupDivision, setClickedGroupDivision] = useState(false);
 
     // style
     const dropDownStyle = { minWidth: '16vw', maxWidth: '16vw', fontSize: '15px'};
@@ -1873,12 +1885,90 @@ const MapFilter = ({filteredPrograms,
         collapseChecking(!tmpCollapse);
     }
 
+    const ProgramServiceFilter = () => {
+
+        return (
+
+            <ProgramDropDownContainer>
+                <SelectDiv>
+                    <InputLabel style={{fontSize: '16px'}}>Service Stream</InputLabel>
+                    {
+                        (loadingSignal) ?
+                            <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                <Skeleton style={dropDownStyle} height={37} />
+                            </SkeletonTheme>
+                            :
+                            <ServiceStreamDropdown></ServiceStreamDropdown>
+                    }
+                </SelectDiv>
+
+                <SelectDiv>
+                    <InputLabel style={{fontSize: '16px'}}>Service Type</InputLabel>
+                    {
+                        (loadingSignal) ?
+                            <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                <Skeleton style={dropDownStyle} height={37} />
+                            </SkeletonTheme>
+                            :
+                            <ServiceTypeDropdown></ServiceTypeDropdown>
+
+                    }
+                </SelectDiv>
+
+                <SelectDiv>
+                    <InputLabel style={{fontSize: '16px'}}>Program Type</InputLabel>
+                    {
+                        (loadingSignal) ?
+                            <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                <Skeleton style={dropDownStyle} height={37} />
+                            </SkeletonTheme>
+                            :
+                            <ProgramTypeDropdown></ProgramTypeDropdown>
+                    }
+                </SelectDiv>
+
+                <SelectDiv>
+                    <InputLabel style={{fontSize: '16px'}}>Program</InputLabel>
+                    {
+                        (loadingSignal) ?
+                            <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                <Skeleton style={dropDownStyle} height={37} />
+                            </SkeletonTheme>
+                            :
+                            <ProgramDropdown></ProgramDropdown>
+
+                    }
+                </SelectDiv>
+
+            </ProgramDropDownContainer>
+        )
+    };
+
+    const GroupDivisionFilter = () => {
+
+        return (
+
+            <p>Service Division</p>
+        )
+    };
+
+    const onClickProgramServiceNav = () => {
+        setClickedProgramService(true);
+        setClickedGroupDivision(false);
+    }
+
+    const onClickGroupDivisionNav = () => {
+        setClickedProgramService(false);
+        setClickedGroupDivision(true);
+    }
+
 
     // Main Return of the APP
     return (
         <MapFilterRowContainer>
             <LabelContainer>
-                <InputLabel style={textStyle}>Map Filter</InputLabel>
+                <FilterLabel>Map Filter</FilterLabel>
+                {/*<InputLabel style={textStyle}>Map Filter</InputLabel>*/}
             </LabelContainer>
             <FilterContainer>
                 <ProgramDropDownContainer>
@@ -1971,7 +2061,6 @@ const MapFilter = ({filteredPrograms,
                         }
                     </SelectDiv>
                 </ProgramDropDownContainer>
-
                 <ProgramDropDownContainer style={{justifyContent: "center", marginLeft: "0.5vw"}}>
                         <ButtonContainer>
                             {/*<ApplyButton onClick={applyingFilter} style={ (addressIsLoading || isLoading)? {pointerEvents: 'none'} : {}}>*/}
@@ -1985,6 +2074,32 @@ const MapFilter = ({filteredPrograms,
                         </ButtonContainer>
                 </ProgramDropDownContainer>
             </FilterContainer>
+
+            <ColumnFilterContainer>
+                <SMFilterNavigationContainer>
+
+                    {
+                        (clickedProgramService === true && clickedGroupDivision === false) ?
+                            <>
+                                <SMFilterNavigationButtonActive variant="text" disableRipple onClick={onClickProgramServiceNav}> Service / Program </SMFilterNavigationButtonActive>
+                                <SMFilterNavigationButtonDefault variant="text" disableRipple onClick={onClickGroupDivisionNav}> Group / Division</SMFilterNavigationButtonDefault>
+                            </>
+                            :
+                            <>
+                                <SMFilterNavigationButtonDefault variant="text" disableRipple onClick={onClickProgramServiceNav}> Service / Program </SMFilterNavigationButtonDefault>
+                                <SMFilterNavigationButtonActive variant="text" disableRipple onClick={onClickGroupDivisionNav}> Group / Division</SMFilterNavigationButtonActive>
+                            </>
+                    }
+                </SMFilterNavigationContainer>
+                <SMFilterContainer>
+                    {
+                        (clickedProgramService === true && clickedGroupDivision === false) ?
+                            <ProgramServiceFilter></ProgramServiceFilter> : <GroupDivisionFilter></GroupDivisionFilter>
+                    }
+                </SMFilterContainer>
+            </ColumnFilterContainer>
+
+
         </MapFilterRowContainer>
 
 
