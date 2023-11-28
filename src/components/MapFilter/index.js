@@ -33,7 +33,8 @@ import {
     SMFilterNavigationBreakLine,
     SMFilterNavigationButtonDefault,
     SMFilterNavigationButtonActive,
-    SMFilterContainer
+    SMFilterContainer,
+    DropdownSelect
 } from './MapFilterElements';
 
 import Button from '@mui/material/Button';
@@ -508,10 +509,9 @@ const MapFilter = ({filteredPrograms,
 
             (addressIsLoading === false && isLoading === false)?
         
-            <Select 
+            <DropdownSelect
                 name="Service Stream"
                 size='small'
-                style={dropDownStyle}
                 value={serviceStreamValue}
                 onChange={onChangeServiceStream}
                 MenuProps={{
@@ -532,7 +532,7 @@ const MapFilter = ({filteredPrograms,
                     })
                 }
 
-            </Select>
+            </DropdownSelect>
 
             :
 
@@ -552,10 +552,9 @@ const MapFilter = ({filteredPrograms,
 
             (addressIsLoading === false && isLoading === false)?
             
-            <Select 
+            <DropdownSelect
                 name="Service Type"
                 size='small'
-                style={dropDownStyle}
                 value={serviceTypeValue}
                 onChange={onChangeServiceType}
                 MenuProps={{
@@ -576,7 +575,7 @@ const MapFilter = ({filteredPrograms,
                     })
                 }
 
-            </Select>
+            </DropdownSelect>
 
             :
 
@@ -593,10 +592,9 @@ const MapFilter = ({filteredPrograms,
 
             (addressIsLoading === false && isLoading === false)?
 
-            <Select 
+            <DropdownSelect
                 name="Program Type"
                 size='small'
-                style={dropDownStyle}
                 value={programTypeValue}
                 onChange={onChangeProgramType}
                 MenuProps={{
@@ -617,7 +615,7 @@ const MapFilter = ({filteredPrograms,
                     })
                 }
 
-            </Select>
+            </DropdownSelect>
 
             :
 
@@ -634,10 +632,9 @@ const MapFilter = ({filteredPrograms,
 
             (addressIsLoading === false && isLoading === false)?
 
-            <Select 
+            <DropdownSelect
                 name="Program"
                 size='small'
-                style={dropDownStyle}
                 value={programValue}
                 onChange={onChangeProgram}
                 MenuProps={{
@@ -658,7 +655,7 @@ const MapFilter = ({filteredPrograms,
                     })
                 }
 
-            </Select>
+            </DropdownSelect>
 
             :
 
@@ -675,10 +672,9 @@ const MapFilter = ({filteredPrograms,
         return (
             (addressIsLoading === false && isLoading === false)?
 
-            <Select 
+            <DropdownSelect
                 name="Division"
                 size='small'
-                style={dropDownStyle}
                 value={divisionValue}
                 onChange={onChangeDivision}
                 MenuProps={{
@@ -699,7 +695,7 @@ const MapFilter = ({filteredPrograms,
                     })
                 }
 
-            </Select>
+            </DropdownSelect>
 
             :
 
@@ -718,10 +714,9 @@ const MapFilter = ({filteredPrograms,
 
             (addressIsLoading === false && isLoading === false)?
 
-            <Select 
+            <DropdownSelect
                 name="Group"
                 size='small'
-                style={dropDownStyle}
                 value={groupValue}
                 onChange={onChangeGroup}
                 MenuProps={{
@@ -742,7 +737,7 @@ const MapFilter = ({filteredPrograms,
                     })
                 }
 
-            </Select>
+            </DropdownSelect>
 
             :
 
@@ -1948,7 +1943,33 @@ const MapFilter = ({filteredPrograms,
 
         return (
 
-            <p>Service Division</p>
+            <ProgramDropDownContainer>
+
+                <SelectDiv>
+                    <InputLabel style={{fontSize: '16px'}} >Division</InputLabel>
+                    {
+                        (loadingSignal) ?
+                            <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                <Skeleton style={dropDownStyle} height={37} />
+                            </SkeletonTheme>
+                            :
+                            <DivisionDropdown></DivisionDropdown>
+                    }
+                </SelectDiv>
+
+                <SelectDiv>
+                    <InputLabel style={{fontSize: '16px'}}>Group</InputLabel>
+                    {
+                        (loadingSignal) ?
+                            <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                <Skeleton style={dropDownStyle} height={37} />
+                            </SkeletonTheme>
+                            :
+                            <GroupDropdown></GroupDropdown>
+
+                    }
+                </SelectDiv>
+            </ProgramDropDownContainer>
         )
     };
 
@@ -2069,7 +2090,7 @@ const MapFilter = ({filteredPrograms,
                             {/*</ApplyButton>*/}
                             <ResetButton onClick={clear} style={ (loadingSignal)? {pointerEvents: 'none'} : {}}>
                                 <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
-                                <ButtonLabel style={{color: '#A20066'}}>Clear</ButtonLabel>
+                                <ButtonLabel style={{color: '#A20066'}}>Reset Filter</ButtonLabel>
                             </ResetButton>
                         </ButtonContainer>
                 </ProgramDropDownContainer>
@@ -2097,6 +2118,13 @@ const MapFilter = ({filteredPrograms,
                             <ProgramServiceFilter></ProgramServiceFilter> : <GroupDivisionFilter></GroupDivisionFilter>
                     }
                 </SMFilterContainer>
+
+                <ButtonContainer>
+                    <ResetButton onClick={clear} style={ (loadingSignal)? {pointerEvents: 'none'} : {}}>
+                        <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
+                        <ButtonLabel style={{color: '#A20066'}}>Reset Filter</ButtonLabel>
+                    </ResetButton>
+                </ButtonContainer>
             </ColumnFilterContainer>
 
 

@@ -79,6 +79,24 @@ export const MapElement = styled.div`
   height: 60vh;
   flex: 1;
   padding-bottom: 1rem;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    display: none;
+  }
+  //border: 2px solid mediumvioletred;
+`;
+
+export const SMMapElement = styled.div`
+  display: none;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    height: 60vh;
+    flex: 1;
+    border: 2px solid red;
+  }
   //border: 2px solid mediumvioletred;
 `;
 

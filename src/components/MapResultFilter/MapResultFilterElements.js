@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Tooltip from "@mui/material/Tooltip";
 
 export const MapFilterRowContainer = styled.div`
     margin-right: 1.2vw;
@@ -6,7 +7,15 @@ export const MapFilterRowContainer = styled.div`
     display: flex;
     width: 15.5vw;
     flex-direction: row;
-    gap: 10px; 
+    gap: 10px;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    width: 95vw;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
 `;
 
 export const ResultContainer = styled.div`
@@ -131,3 +140,41 @@ export const OptionP = styled.p`
     margin: 0px;
 `;
 
+export const OriginalToolTips = styled(Tooltip)`
+    &&{
+      background-color: white;
+      color: rgba(0, 0, 0, 0.87);
+      min-width: 13vw;
+      max-width: 13vw;
+      font-size: 12rem;
+      border: 1px solid #A20066;
+      border-radius: 15px;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+
+      @media (min-width: 375px) and (max-width: 450px) {
+        min-width: 80vw;
+        max-width: 80vw;
+      }
+    }
+`;
+
+export const ClickedToolTips = styled(Tooltip)`
+    &&{
+      background-color: #A20066;
+      color: white;
+      min-width: 13vw;
+      max-width: 13vw;
+      font-size: 12rem;
+      border: 1px solid #A20066;
+      border-radius: 15px;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+
+      @media (min-width: 375px) and (max-width: 450px) {
+        min-width: 80vw;
+        max-width: 80vw;
+      }
+      
+    }
+`;

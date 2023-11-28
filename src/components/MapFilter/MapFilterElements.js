@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
 
 export const MapFilterRowContainer = styled.div`
     height: 16rem;
@@ -133,6 +134,10 @@ export const ButtonContainer = styled.div`
   gap: 20px;
   margin-bottom: 0.5rem;
   margin-top: 2rem;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    margin-top: 1rem;
+  }
   //margin-left: 2rem;
 `;
 
@@ -414,5 +419,21 @@ export const OptionP = styled.p`
     font-weight: bold;
     padding: 0px;
     margin: 0px;
+`;
+
+export const DropdownSelect = styled(Select)`
+    && {
+      min-width: 16vw;
+      max-width: 16vw;
+      font-size: 15px;
+
+      @media (min-width: 375px) and (max-width: 450px) {
+        
+        min-width: 80vw;
+        max-width: 80vw;
+        font-size: 14px;
+      }
+      
+    }
 `;
 

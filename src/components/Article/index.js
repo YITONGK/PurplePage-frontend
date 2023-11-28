@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect, useRef} from 'react';
 import { ArticleContainer, ArticleH1 } from './ArticleElements';
 
-import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer, LoadindContainer, WarningContainer, WarningText ,SearchTextField} from './ArticleElements';
+import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer, LoadindContainer, WarningContainer, WarningText, SearchTextField, SMMapElement} from './ArticleElements';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -927,6 +927,10 @@ const Article = () => {
             <MapInfo site={selectedSite} advanceFilteredPrograms = {(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms } groupList= {groupList} programTypeList={programTypeList} departureLocation={departureAddress}  />
           </MapInfoContainer>
         </MapElement>
+
+        <SMMapElement>
+          <MapResultFilter importRef={mapRef} importSite={selectedSite} exportSite={selectingSite} exportDepartureAddress={transferDepartureAddress} advanceFilteredSites={advancefilteredSites}></MapResultFilter>
+        </SMMapElement>
     </ArticleContainer>
   )
 }

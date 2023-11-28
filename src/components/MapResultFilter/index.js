@@ -13,6 +13,8 @@ import {
     SiteOption,
     SiteOptionRoutingContainer,
     SitesContainer,
+    OriginalToolTips,
+    ClickedToolTips
 } from "./MapResultFilterElements";
 import InputLabel from "@mui/material/InputLabel";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
@@ -268,57 +270,113 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
             availableSearchSites && availableSearchSites.map((site, index) => {
                 return (
                     <ListItem key={index}>
-                        <Tooltip
-                            title= {<Typography variant= 'body2' color="inherit" style= {{zIndex: 0}}>
-                                {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
-                                    `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
-                                }
-                        </Typography>}
-                            style={(clickedSite && site.site_id === clickedSite.site_id)? toolTipsStyleClicked: toolTipsStyle}
-                        >
-                            <SiteOption onClick={(e) => { e.preventDefault(); onClickSite(site); }}>
-                                <SiteOptionRoutingContainer>
-                                    <Typography variant='body1'>
-                                        {site.site_id}
-                                    </Typography>
+                        {
+                            (clickedSite && site.site_id === clickedSite.site_id)?
 
-                                    {
-                                        (site.distance) ?
-                                            <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
-                                                {
-                                                    `${Math.round((site.distance / 1000) * 10) / 10} km`
-                                                }
-                                            </Typography>
-                                            : null
-                                    }
-
-                                </SiteOptionRoutingContainer>
-
-                                <SiteOptionRoutingContainer>
-                                    {
-
-                                        (site.duration) ?
-                                            <Typography variant='caption' style={captionStyle}>
-                                                {
-                                                    `Duration: `
-                                                }
-                                                <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
-                                                    {
-                                                        `${timeCalculation(site.duration)}`
-                                                    }
-                                                </Typography>
-                                            </Typography>
-                                            : null
-                                    }
-
-                                </SiteOptionRoutingContainer>
-                                <Typography variant='caption' style={captionStyle}>
+                            <ClickedToolTips
+                                title= {<Typography variant= 'body2' color="inherit" style= {{zIndex: 0}}>
                                     {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
                                         `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
                                     }
-                                </Typography>
-                            </SiteOption>
-                        </Tooltip>
+                                </Typography>}
+                            >
+                                <SiteOption onClick={(e) => { e.preventDefault(); onClickSite(site); }}>
+                                    <SiteOptionRoutingContainer>
+                                        <Typography variant='body1'>
+                                            {site.site_id}
+                                        </Typography>
+
+                                        {
+                                            (site.distance) ?
+                                                <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                    {
+                                                        `${Math.round((site.distance / 1000) * 10) / 10} km`
+                                                    }
+                                                </Typography>
+                                                : null
+                                        }
+
+                                    </SiteOptionRoutingContainer>
+
+                                    <SiteOptionRoutingContainer>
+                                        {
+
+                                            (site.duration) ?
+                                                <Typography variant='caption' style={captionStyle}>
+                                                    {
+                                                        `Duration: `
+                                                    }
+                                                    <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                        {
+                                                            `${timeCalculation(site.duration)}`
+                                                        }
+                                                    </Typography>
+                                                </Typography>
+                                                : null
+                                        }
+
+                                    </SiteOptionRoutingContainer>
+                                    <Typography variant='caption' style={captionStyle}>
+                                        {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
+                                            `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                        }
+                                    </Typography>
+                                </SiteOption>
+                            </ClickedToolTips>
+
+                            :
+
+                            <OriginalToolTips
+                                title= {<Typography variant= 'body2' color="inherit" style= {{zIndex: 0}}>
+                                {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
+                                    `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                }
+                            </Typography>}
+                                >
+                                <SiteOption onClick={(e) => { e.preventDefault(); onClickSite(site); }}>
+                                    <SiteOptionRoutingContainer>
+                                        <Typography variant='body1'>
+                                            {site.site_id}
+                                        </Typography>
+
+                                        {
+                                            (site.distance) ?
+                                                <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                    {
+                                                        `${Math.round((site.distance / 1000) * 10) / 10} km`
+                                                    }
+                                                </Typography>
+                                                : null
+                                        }
+
+                                    </SiteOptionRoutingContainer>
+
+                                    <SiteOptionRoutingContainer>
+                                        {
+
+                                            (site.duration) ?
+                                                <Typography variant='caption' style={captionStyle}>
+                                                    {
+                                                        `Duration: `
+                                                    }
+                                                    <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                        {
+                                                            `${timeCalculation(site.duration)}`
+                                                        }
+                                                    </Typography>
+                                                </Typography>
+                                                : null
+                                        }
+
+                                    </SiteOptionRoutingContainer>
+                                    <Typography variant='caption' style={captionStyle}>
+                                        {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
+                                            `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                        }
+                                    </Typography>
+                                </SiteOption>
+                            </OriginalToolTips>
+                        }
                     </ListItem>
                 )
             })
@@ -394,7 +452,9 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                     </SearchInputContainer>
                     <BreakingLine2></BreakingLine2>
                     <SearchInputContainer>
-                        <InputLabel style={{fontSize: '16px'}}>Search Uniting Sites</InputLabel>
+                        <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', width: '91%'}}>
+                            <InputLabel style={{fontSize: '16px'}}>Search Uniting Sites</InputLabel>
+                        </div>
                         {
                             (addressIsLoading || isLoading)?
                             // (true)?
