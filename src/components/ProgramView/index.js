@@ -74,7 +74,7 @@ const ProgramView = () => {
   // related sites table element
   const RelatedSitesTable = () => {
     return (
-      <TableContainer component={Paper} style={{ width: '95%',  border: '1px solid transparent', boxShadow: '0 0 6px rgba(0, 0, 0, 0.4)'}}>
+      <TableContainer component={Paper} style={{ width: '95%',  border: '1px solid transparent', boxShadow: '0 0 6px rgba(0, 0, 0, 0.4)', marginBottom: '5rem'}}>
         <Table>
           <TableHead style={{backgroundColor: '#FCF0F5', position: 'sticky', top: 0 , zIndex: 1}}>
             <TableRow>

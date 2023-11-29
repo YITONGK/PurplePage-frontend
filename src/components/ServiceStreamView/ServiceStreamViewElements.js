@@ -63,4 +63,5 @@ export const ServiceStreamProgramsContainer = styled.div`
   display: flex;
   width: 98%;
   height: 60vh;
+  margin-bottom: 5rem;
 `;
