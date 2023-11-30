@@ -22,7 +22,7 @@ const Site = () => {
 
   /* get list of sites from the backend and display them */
   const getSites = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
     await axios.get(BASE_URL + '/site').then(res => {
       let list = res.data;
       list = list.map ((list) => {

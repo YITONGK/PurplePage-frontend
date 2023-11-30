@@ -92,10 +92,9 @@ export const SMMapElement = styled.div`
   @media (min-width: 375px) and (max-width: 450px) {
     display: flex;
     flex-direction: column;
-    margin-top: 2rem;
+    margin-top: 1rem;
     height: 60vh;
-    flex: 1;
-    border: 2px solid red;
+    flex: 1;;
   }
   //border: 2px solid mediumvioletred;
 `;

@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {
     BreakingLine2,
     LabelContainer, MapFilterRowContainer,
+    TitleH1,
     OptionContainer,
     OptionDetail,
     OptionIcon,
@@ -14,7 +15,16 @@ import {
     SiteOptionRoutingContainer,
     SitesContainer,
     OriginalToolTips,
-    ClickedToolTips
+    ClickedToolTips,
+    SearchAutocomplete,
+    SearchTextField,
+    SMSitesContainer,
+    AnimatedModalContent,
+    SiteCardContainer,
+    SiteCardHeader,
+    SiteCardHeaderLeft,
+    SiteCardHeaderRight
+
 } from "./MapResultFilterElements";
 import InputLabel from "@mui/material/InputLabel";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
@@ -28,10 +38,18 @@ import {debounce} from "@mui/material/utils";
 import ListItem from "@mui/material/ListItem";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import {preventDefault} from "leaflet/src/dom/DomEvent";
+import Map from '../Map';
+import {
+    CustomClearIcon,
+    ProgramCardHeader,
+    ProgramCardHeaderLeft,
+    ProgramCardHeaderRight
+} from "../MapInfo/MapInfoElements";
+import Button from "@mui/material/Button";
 
 
-const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddress, advanceFilteredSites}) => {
+
+const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddress, advanceFilteredSites, departureLocation}) => {
 
     // Variable Declaration
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -82,6 +100,8 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
     const [routingAddressValue, setRoutingAddressValue] = useState({});
 
     const [clickedSite, setClickedSite] = useState(null);
+
+    const [popUpSite, setPopUpSite] = useState(false);
 
     useEffect(() => {
 
@@ -264,6 +284,16 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
         }
     }
 
+    const smOnClickSite = (site) => {
+        setClickedSite(site);
+        setPopUpSite(true);
+    }
+
+    const closeProgramModal = () => {
+        setClickedSite(null);
+        setPopUpSite(false);
+    }
+
 
     const AvailableSites = () => {
         return (
@@ -383,6 +413,124 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
         )
     }
 
+    const SMAvailableSites = () => {
+        return (
+            availableSearchSites && availableSearchSites.map((site, index) => {
+                return (
+                    <ListItem key={index}>
+                        {
+                            (clickedSite && site.site_id === clickedSite.site_id)?
+
+                                <ClickedToolTips
+                                    title= {<Typography variant= 'body2' color="inherit" style= {{zIndex: 0}}>
+                                        {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
+                                            `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                        }
+                                    </Typography>}
+                                >
+                                    <SiteOption onClick={(e) => { e.preventDefault(); smOnClickSite(site); }}>
+                                        <SiteOptionRoutingContainer>
+                                            <Typography variant='body1'>
+                                                {site.site_id}
+                                            </Typography>
+
+                                            {
+                                                (site.distance) ?
+                                                    <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                        {
+                                                            `${Math.round((site.distance / 1000) * 10) / 10} km`
+                                                        }
+                                                    </Typography>
+                                                    : null
+                                            }
+
+                                        </SiteOptionRoutingContainer>
+
+                                        <SiteOptionRoutingContainer>
+                                            {
+
+                                                (site.duration) ?
+                                                    <Typography variant='caption' style={captionStyle}>
+                                                        {
+                                                            `Duration: `
+                                                        }
+                                                        <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                            {
+                                                                `${timeCalculation(site.duration)}`
+                                                            }
+                                                        </Typography>
+                                                    </Typography>
+                                                    : null
+                                            }
+
+                                        </SiteOptionRoutingContainer>
+                                        <Typography variant='caption' style={captionStyle}>
+                                            {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
+                                                `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                            }
+                                        </Typography>
+                                    </SiteOption>
+                                </ClickedToolTips>
+
+                                :
+
+                                <OriginalToolTips
+                                    title= {<Typography variant= 'body2' color="inherit" style= {{zIndex: 0}}>
+                                        {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
+                                            `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                        }
+                                    </Typography>}
+                                >
+                                    <SiteOption onClick={(e) => { e.preventDefault(); smOnClickSite(site); }}>
+                                        <SiteOptionRoutingContainer>
+                                            <Typography variant='body1'>
+                                                {site.site_id}
+                                            </Typography>
+
+                                            {
+                                                (site.distance) ?
+                                                    <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                        {
+                                                            `${Math.round((site.distance / 1000) * 10) / 10} km`
+                                                        }
+                                                    </Typography>
+                                                    : null
+                                            }
+
+                                        </SiteOptionRoutingContainer>
+
+                                        <SiteOptionRoutingContainer>
+                                            {
+
+                                                (site.duration) ?
+                                                    <Typography variant='caption' style={captionStyle}>
+                                                        {
+                                                            `Duration: `
+                                                        }
+                                                        <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                            {
+                                                                `${timeCalculation(site.duration)}`
+                                                            }
+                                                        </Typography>
+                                                    </Typography>
+                                                    : null
+                                            }
+
+                                        </SiteOptionRoutingContainer>
+                                        <Typography variant='caption' style={captionStyle}>
+                                            {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
+                                                `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                            }
+                                        </Typography>
+                                    </SiteOption>
+                                </OriginalToolTips>
+                        }
+                    </ListItem>
+                )
+            })
+        )
+    }
+
     const onChangeSiteSearch = debounce((e) => {
         const inputValue = e.target.value.trim();
 
@@ -408,12 +556,10 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
         <MapFilterRowContainer>
             <ResultContainer>
                 <LabelContainer>
-                    <InputLabel style={textStyle}>Available Sites</InputLabel>
+                    <TitleH1>Available Sites</TitleH1>
                 </LabelContainer>
                 <SearchContainer>
-                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', width: '91%'}}>
-                        <InputLabel style={{fontSize: '16px'}}>Search Address</InputLabel>
-                    </div>
+                    <InputLabel style={{fontSize: '16px'}}>Search Address</InputLabel>
                     <SearchInputContainer>
                         {
                             (addressIsLoading || isLoading)?
@@ -426,7 +572,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
 
                                 :
 
-                                <Autocomplete
+                                <SearchAutocomplete
                                     disablePortal
                                     id="departureAddress"
                                     className=''
@@ -435,7 +581,6 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                     isOptionEqualToValue={(option, value) => {if(value === "") {return false;} else { return (option === value);}}}
                                     onInputChange={onInputDepartureValue}
                                     value={tmpAddressValue}
-                                    style={textFieldStyle}
                                     popupIcon={ <SearchIcon />}
                                     sx={{
                                         "& .MuiAutocomplete-popupIndicator": { transform: "none", pointerEvents: "none"},
@@ -445,16 +590,14 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                     selectOnFocus
                                     clearOnBlur
                                     forcePopupIcon
-                                    renderInput={(params) => <TextField {...params} size='small' placeholder='E.g., Your Current Address' sx={{...searchTextFieldStyle, alignItems: 'center'}}/>}
+                                    renderInput={(params) => <SearchTextField {...params} size='small' placeholder='E.g., Your Current Address'/>}
                                     renderOption={renderOptions}
                                 />
                         }
                     </SearchInputContainer>
                     <BreakingLine2></BreakingLine2>
+                    <InputLabel style={{fontSize: '16px'}}>Search Uniting Sites</InputLabel>
                     <SearchInputContainer>
-                        <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', width: '91%'}}>
-                            <InputLabel style={{fontSize: '16px'}}>Search Uniting Sites</InputLabel>
-                        </div>
                         {
                             (addressIsLoading || isLoading)?
                             // (true)?
@@ -464,7 +607,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                     </SkeletonTheme>
                                 </div>
                                 :
-                                <TextField sx={{...searchTextFieldStyle, alignItems: 'center'}} id="searchSite" size='small' placeholder='E.g., Harris Street' onChange={onChangeSiteSearch}
+                                <SearchTextField id="searchSite" size='small' placeholder='E.g., Harris Street' onChange={onChangeSiteSearch}
                                            InputProps={{
                                                endAdornment : (
                                                    <InputAdornment position="end">
@@ -472,7 +615,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                                    </InputAdornment>
                                                )
                                            }}
-                                ></TextField>
+                                ></SearchTextField>
                         }
 
                     </SearchInputContainer>
@@ -488,7 +631,52 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                         }
                     </List>
                 </SitesContainer>
+
+                <SMSitesContainer style={ addressIsLoading || isLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center', width: '100%' } : {}}>
+                    <List sx={listStyle}>
+                        {
+                            (addressIsLoading || isLoading)?
+                                // (true) ?
+                                <ReactLoading type={'spin'} color={'#A20066'} height={80} width={60}></ReactLoading>
+                                :
+                                <SMAvailableSites></SMAvailableSites>
+                        }
+                    </List>
+                </SMSitesContainer>
             </ResultContainer>
+
+            <AnimatedModalContent
+                appElement={document.getElementById('root')}
+                isOpen={popUpSite}
+                contentLabel="Program Information Modal"
+                style={{
+                    content: {
+                        width: '90vw', // Set the desired width
+                        height: 'fit-content', // Set the desired height
+                        maxHeight: '70vh',
+                        margin: 'auto', // Center the modal horizontally
+                        borderRadius: '15px',
+                        overflowY: 'auto',
+                        overflowX: 'hidden',
+                    },
+                }}
+            >
+                <SiteCardContainer>
+                    <SiteCardHeader>
+                        <SiteCardHeaderLeft>
+                            <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Info</h2>
+                        </SiteCardHeaderLeft>
+                        <SiteCardHeaderRight>
+                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeProgramModal}>
+                                <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                            </Button>
+                        </SiteCardHeaderRight>
+                    </SiteCardHeader>
+                    <Map sites={[clickedSite]} exportRef={importRef} departureLocation={departureLocation}></Map>
+
+
+                </SiteCardContainer>
+            </AnimatedModalContent>
         </MapFilterRowContainer>
     )
 

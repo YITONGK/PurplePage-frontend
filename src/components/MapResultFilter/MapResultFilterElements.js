@@ -1,5 +1,11 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
+import Modal from 'react-modal';
+
 import Tooltip from "@mui/material/Tooltip";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import ClearIcon from "@mui/icons-material/Clear";
 
 export const MapFilterRowContainer = styled.div`
     margin-right: 1.2vw;
@@ -18,6 +24,23 @@ export const MapFilterRowContainer = styled.div`
   
 `;
 
+export const TitleH1 = styled(InputLabel)`
+  
+  &&{
+
+    font-size: 24px;
+    font-weight: bold;
+    color: #a20066;
+    
+  }
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    font-size: 22px;
+  }
+  
+  
+`;
+
 export const ResultContainer = styled.div`
     border: 1px solid #CCC;
     border-radius: 5px;
@@ -26,17 +49,24 @@ export const ResultContainer = styled.div`
     height: 64.5vh;
     position: relative;
     overflow: hidden;
+  
+    @media (min-width: 375px) and (max-width: 450px) {
+       border: transparent; 
+    }
+    
 `;
 
 export const SearchContainer = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
     border-bottom: 0.2rem solid;
-    padding-bottom: 0.5rem;
-    padding-top: 0.5rem;
+    padding: 0.5rem;
     border-bottom-color: #A20066;
+
+    @media (min-width: 375px) and (max-width: 450px) {
+      padding-left: 0;
+    }
 `;
 
 
@@ -45,14 +75,41 @@ export const SitesContainer = styled.div`
     overflow-x: hidden;
     display: flex;
     justify-content: center;
+    border: 1px solid #cccccc;
+    border-top: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    flex: 1;
+
+    @media (min-width: 375px) and (max-width: 450px) {
+      display: none;
+    }
+`;
+
+export const SMSitesContainer = styled.div`
+  
+  display: none;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #cccccc;
+    border-top: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    flex: 1;
+  }
 `;
 
 export const BreakingLine2 = styled.div`
-    width: 90%;
+    width: 80%;
     border-radius: 10px;
     max-height: 0;
     margin-top: 0.8rem;
     margin-bottom: 0.8rem;
+    align-self: center;
 
     /* Gradient border with a slight inset appearance */
     border: 2px solid #A20066;
@@ -69,8 +126,16 @@ export const SiteOption = styled.div`
     &:hover {
         transform: scale(1.1);
         cursor: pointer;
-
     }
+
+      @media (min-width: 375px) and (max-width: 450px) {
+        &:hover {
+          transform: none; /* Reset the transform on hover for this media query range */
+          cursor: default; /* Set the cursor to default on hover for this media query range */
+        }
+      }
+  
+    
 `;
 
 export const SiteOptionRoutingContainer = styled.div`
@@ -84,8 +149,7 @@ export const SearchInputContainer = styled.div`
     display: flex;
     flex-direction: column;
     margin-bottom: 0.5rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    flex: 1;
 `;
 
 export const LabelContainer = styled.div`
@@ -95,6 +159,12 @@ export const LabelContainer = styled.div`
     align-items: center;
     justify-content: center;
     margin-top: 0.5rem;
+
+    @media (min-width: 375px) and (max-width: 450px) {
+      justify-content: start;
+    }
+  
+    
 `;
 
 
@@ -177,4 +247,137 @@ export const ClickedToolTips = styled(Tooltip)`
       }
       
     }
+`;
+
+export const SearchAutocomplete = styled(Autocomplete)`
+  
+  &&{
+    min-width: 16vw;
+    font-size: 15px;
+    border-radius: 5px;
+
+    @media (min-width: 375px) and (max-width: 450px) {
+      min-width: 100%;
+      max-width: 100%;
+    }
+  }
+  
+`;
+
+export const SearchTextField = styled(TextField)`
+  
+  &&{
+
+    & .MuiOutlinedInput-root {
+      min-width: 14vw;
+      max-width: 14vw;
+
+      & .MuiOutlinedInput-input {
+        font-size: 15px;
+      }
+
+      & fieldset {
+        border: 0.5px solid grey;
+        border-radius: 5px;
+      }
+
+      &.Mui-focused fieldset {
+        border-color: #a20066;
+      }
+      
+    }
+
+    @media (min-width: 375px) and (max-width: 450px) {
+      
+      align-items: start;
+
+      & .MuiOutlinedInput-root {
+        min-width: 100%;
+        max-width: 100%;
+
+      }
+
+    }
+    
+  }
+`;
+
+// Define the animation keyframes
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(-10%, 0%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0%, 40%);
+  }
+`;
+
+// Create a styled component for the modal content with the animation
+export const AnimatedModalContent = styled(Modal)`
+  &.ReactModal__Content {
+    animation: ${fadeIn} 0.3s ease-in-out;
+    transform: translate(0%, 40%);
+    background-color: white;
+    display: flex;
+    box-shadow: 3px 0px 20px rgba(0, 0, 0, 0.4);
+    outline: none;
+  }
+`;
+
+export const SiteCardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  z-index: 2;
+`;
+
+export const SiteCardHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  border-bottom: 1px solid grey;
+  background-color: #A20066;
+`;
+
+
+export const SiteCardHeader2 = styled.div`
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  border-bottom: 1px solid grey;
+  background-color: #A20066;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+`;
+
+export const SiteCardHeaderLeft = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  ${'' /* border: 1px solid yellow; */}
+  width: 50%;
+`;
+
+export const SiteCardHeaderRight = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width: 50%;
+  ${'' /* border: 1px solid red; */}
+`;
+
+export const CustomClearIcon = styled(ClearIcon)`
+  color: white;
+
+  &:hover {
+    color: black; /* Your hover effect color */
+  }
 `;

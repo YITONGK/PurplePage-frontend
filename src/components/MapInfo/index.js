@@ -261,7 +261,9 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                             <SiteInfoDetailContainer>
                                 <InfoP>Accessibility</InfoP>
                                 <InfoP2>
-                                    {(site.accessibility && site.accessibility.accessibility) ? stringFilterPrefix(site.accessibility.accessibility) : 'None'}
+                                    {(site.accessibility && site.accessibility.length > 0)
+                                        ? site.accessibility.map(site => site.accessibility).join(', ')
+                                        : 'None'}
                                 </InfoP2>
                             </SiteInfoDetailContainer>
                             <SiteInfoDetailContainer>
@@ -440,7 +442,11 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 <IconDescriptionContainer>
                                     <ProgramViewCaption>Access Type: </ProgramViewCaption>
                                     <IconDescription style={{ textAlign: 'justify'}}>
-                                        <ProgramViewP2>{(selectedPrograms.at) ? stringFilterPrefix(selectedPrograms.at.at) : 'None'}</ProgramViewP2>
+                                        <ProgramViewP2>
+                                            {(selectedPrograms.at && selectedPrograms.at.length > 0)
+                                            ? selectedPrograms.at.map(program => program.at).join(', ')
+                                            : 'None'}
+                                        </ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
                             </Icon>
@@ -455,7 +461,11 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 <IconDescriptionContainer>
                                     <ProgramViewCaption>Delivery Method: </ProgramViewCaption>
                                     <IconDescription style={{ textAlign: 'justify'}}>
-                                        <ProgramViewP2>{(selectedPrograms.sdm) ? stringFilterPrefix(selectedPrograms.sdm.sdm) : 'None'}</ProgramViewP2>
+                                        <ProgramViewP2>
+                                            {(selectedPrograms.sdm && selectedPrograms.sdm.length > 0)
+                                                ? selectedPrograms.sdm.map(program => program.sdm).join(', ')
+                                                : 'None'}
+                                        </ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
                             </Icon>

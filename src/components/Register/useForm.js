@@ -33,7 +33,7 @@ const useFormRegister = () => {
         password: values.password
       },
       withCredentials:  true,
-      url: 'http://localhost:8888/register'
+      url: 'https://api.wernmachine.art/register'
     }).then((res) => {
       if (Object.keys(res.data).length !== 0) {
         Swal.fire({
