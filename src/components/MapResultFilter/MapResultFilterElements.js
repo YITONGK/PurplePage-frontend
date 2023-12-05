@@ -310,7 +310,7 @@ const fadeIn = keyframes`
   }
   to {
     opacity: 1;
-    transform: translate(0%, 40%);
+    transform: translate(0%, 10%);
   }
 `;
 
@@ -318,7 +318,32 @@ const fadeIn = keyframes`
 export const AnimatedModalContent = styled(Modal)`
   &.ReactModal__Content {
     animation: ${fadeIn} 0.3s ease-in-out;
-    transform: translate(0%, 40%);
+    transform: translate(0%, 10%);
+    background-color: white;
+    display: flex;
+    box-shadow: 3px 0px 20px rgba(0, 0, 0, 0.4);
+    outline: none;
+  }
+`;
+
+// Define the animation keyframes
+const fadeIn2 = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(0%, 100%); /* Start from the bottom of the screen */
+  }
+  to {
+    opacity: 1;
+    transform: translate(0%, 30%); /* Move to the middle of the screen */
+  }
+`;
+
+
+
+export const AnimatedModalContent2 = styled(Modal)`
+  &.ReactModal__Content {
+    animation: ${fadeIn2} 0.3s ease-in-out;
+    transform: translate(0%, 30%);
     background-color: white;
     display: flex;
     box-shadow: 3px 0px 20px rgba(0, 0, 0, 0.4);
@@ -380,4 +405,85 @@ export const CustomClearIcon = styled(ClearIcon)`
   &:hover {
     color: black; /* Your hover effect color */
   }
+`;
+
+
+export const SitePopupContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  gap: 1rem;
+`
+
+export const SitePopupMapContainer = styled.div`
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  margin-bottom: 1rem;
+`;
+
+export const SiteInfoH2 = styled.h2`
+    font-size: 24px; // origin 24
+    color: #41424C;
+    margin: 1rem 0 1rem 0;
+    padding: 0;
+`;
+
+export const SiteInfoP2 = styled.p`
+  color: #262626;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+`;
+
+export const SiteInfoP = styled.p`
+  color: #494949;
+  font-size: 18px;
+  margin: 0;
+  padding: 0;
+`;
+
+export const SiteInfoDetailContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+`;
+
+export const SiteInfoDetailRowContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+`;
+
+export const ListItemButton = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0 0 0.3rem 0;
+  padding: 0.3rem 0 0 0.3rem;
+  min-width: 15.5vw;
+  max-width: 15.5vw;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    min-width: 80vw;
+    max-width: 80vw;
+    border: 1px solid #565656;
+  }
+`;
+
+export const OfferedProgramsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0 0;
+  background-color: white;
+  justify-content: center; 
 `;

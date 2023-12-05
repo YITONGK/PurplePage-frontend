@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
     BreakingLine2,
     LabelContainer, MapFilterRowContainer,
@@ -23,7 +23,17 @@ import {
     SiteCardContainer,
     SiteCardHeader,
     SiteCardHeaderLeft,
-    SiteCardHeaderRight
+    SiteCardHeaderRight,
+    SitePopupMapContainer,
+    SitePopupContentContainer,
+    SiteInfoDetailContainer,
+    SiteInfoH2,
+    SiteInfoP2,
+    SiteInfoP,
+    SiteInfoDetailRowContainer,
+    ListItemButton,
+    OfferedProgramsContainer,
+    AnimatedModalContent2,
 
 } from "./MapResultFilterElements";
 import InputLabel from "@mui/material/InputLabel";
@@ -32,7 +42,6 @@ import Autocomplete from "@mui/material/Autocomplete";
 import SearchIcon from "@mui/icons-material/Search";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import List from "@mui/material/List";
 import ReactLoading from "react-loading";
 import {debounce} from "@mui/material/utils";
 import ListItem from "@mui/material/ListItem";
@@ -46,13 +55,29 @@ import {
     ProgramCardHeaderRight
 } from "../MapInfo/MapInfoElements";
 import Button from "@mui/material/Button";
+import mapboxgl from "mapbox-gl";
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
+import List from "@mui/material/List";
+import ListItemText from '@mui/material/ListItemText';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+
+import DescriptionIcon from '@mui/icons-material/Description';
+import PersonIcon from '@mui/icons-material/Person';
+import CategoryIcon from '@mui/icons-material/Category';
+import CallIcon from '@mui/icons-material/Call';
+import CodeIcon from '@mui/icons-material/Code';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import InfoIcon from '@mui/icons-material/Info';
 
 
 
-const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddress, advanceFilteredSites, departureLocation}) => {
+const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddress, advanceFilteredSites, departureLocation, advanceFilteredPrograms}) => {
 
     // Variable Declaration
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
+    const mapRef = useRef();
 
     const textFieldStyle = {
         minWidth: "16vw",
@@ -100,8 +125,11 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
     const [routingAddressValue, setRoutingAddressValue] = useState({});
 
     const [clickedSite, setClickedSite] = useState(null);
+    const [clickedProgram, setClickedProgram] = useState(null);
 
     const [popUpSite, setPopUpSite] = useState(false);
+    const [popUpProgram, setPopUpProgram] = useState(false);
+    const [popUpMapCenter, setPopUpMapCenter] = useState(null);
 
     useEffect(() => {
 
@@ -175,6 +203,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
             setClickedSite(importSite);
         }
     },[importSite]);
+
 
 
     const onInputDepartureValue = debounce((e, v) => {
@@ -287,11 +316,53 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
     const smOnClickSite = (site) => {
         setClickedSite(site);
         setPopUpSite(true);
+
+        const bounds = new mapboxgl.LngLatBounds();
+
+        bounds.extend(new mapboxgl.LngLat(site.lng, site.lat));
+
+        if(departureLocation) {
+            bounds.extend(new mapboxgl.LngLat(departureLocation.lng, departureLocation.lat));
+        }
+
+        setPopUpMapCenter(bounds.getCenter());
+        document.body.style.overflow = 'hidden';
+
+    }
+
+    const smOnClickProgram = (program) => {
+        setClickedProgram(program);
+        setPopUpProgram(true);
+    }
+
+    const closeSiteModal = () => {
+        setClickedSite(null);
+        setPopUpSite(false);
+        document.body.style.overflow = 'auto';
     }
 
     const closeProgramModal = () => {
-        setClickedSite(null);
-        setPopUpSite(false);
+        setPopUpProgram(false);
+        setClickedProgram(null);
+    }
+
+    const stringFilterPrefix = (string) => {
+
+        if(!string) return 'None';
+
+        // Extract the local part of the email (before '@')
+        const localPart = string.split('@')[0];
+
+        // Replace all '.' with spaces in the local part
+        const result = localPart.replace(/\./g, ' ');
+
+        return result.trim(); // trim() to remove any leading/trailing spaces
+    }
+
+    const stringShiftingLength = (value, stringMaxLength1, stringMaxLength2) => {
+
+        const maxLength = Math.max(stringMaxLength1.length, stringMaxLength2.length);
+        return value.padEnd(maxLength, '\u00A0');
     }
 
 
@@ -531,6 +602,55 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
         )
     }
 
+    const programNameProcess = (program_nme) => {
+        let nameString = program_nme.split('-');
+        if (nameString.length > 1) {
+            return (
+                <>
+                    {nameString.map((part, index) => (
+                        <React.Fragment key={index}>
+                            {part}
+                            {index < nameString.length - 1 && <>-<br/></>}
+                        </React.Fragment>
+                    ))}
+                </>
+            );
+        } else {
+            return program_nme;
+        }
+    }
+
+
+    const OfferedPrograms = ({relatedPrograms}) => {
+
+        return (
+            <OfferedProgramsContainer>
+                {
+                    (relatedPrograms && relatedPrograms.length > 0) ?
+                        relatedPrograms.map((program, index) =>{
+                            return (
+                                <React.Fragment key={index}>
+                                    <ListItemButton key={index} onClick= {() => smOnClickProgram(program)} >
+                                        <ListItemText primary= {programNameProcess(program.program_nme)}/>
+                                        <ExpandMore style={{transform: 'rotate(-90deg)'}}></ExpandMore>
+                                    </ListItemButton>
+                                </React.Fragment>
+
+                            )
+                        })
+                        :
+                        <React.Fragment>
+                            <ListItemButton>
+                                <ListItemText primary= {'No Program'}/>
+                            </ListItemButton>
+                        </React.Fragment>
+
+                }
+            </OfferedProgramsContainer>
+        )
+
+    }
+
     const onChangeSiteSearch = debounce((e) => {
         const inputValue = e.target.value.trim();
 
@@ -550,6 +670,32 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
         setAvailableSearchSites(filterSearchSite);
 
     },300);
+
+    const filterProgramBasedOnSite = (site) => {
+
+        if(advanceFilteredPrograms && site) {
+
+            const tmpFilteredProgram = advanceFilteredPrograms.filter((program) => {
+                return program.site_id === site.site_id ;
+            })
+
+            const distinctProgram = tmpFilteredProgram.filter((program, index, self) => {
+                return index === self.findIndex((obj) => obj.program_nme === program.program_nme);
+            });
+
+            if (distinctProgram[0] && distinctProgram[0].program_nme !== null) {
+                distinctProgram.sort((a, b) => {
+                    if (a.program_nme === null && b.program_nme === null) return 0; // both are null, they are equal
+                    if (a.program_nme === null) return -1; // a comes first
+                    if (b.program_nme === null) return 1;  // b comes first
+                    return a.program_nme.localeCompare(b.program_nme);
+                });
+            }
+
+            return distinctProgram;
+        }
+
+    }
 
 
     return (
@@ -645,38 +791,277 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                 </SMSitesContainer>
             </ResultContainer>
 
-            <AnimatedModalContent
-                appElement={document.getElementById('root')}
-                isOpen={popUpSite}
-                contentLabel="Program Information Modal"
-                style={{
-                    content: {
-                        width: '90vw', // Set the desired width
-                        height: 'fit-content', // Set the desired height
-                        maxHeight: '70vh',
-                        margin: 'auto', // Center the modal horizontally
-                        borderRadius: '15px',
-                        overflowY: 'auto',
-                        overflowX: 'hidden',
-                    },
-                }}
-            >
-                <SiteCardContainer>
-                    <SiteCardHeader>
-                        <SiteCardHeaderLeft>
-                            <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Info</h2>
-                        </SiteCardHeaderLeft>
-                        <SiteCardHeaderRight>
-                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeProgramModal}>
-                                <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
-                            </Button>
-                        </SiteCardHeaderRight>
-                    </SiteCardHeader>
-                    <Map sites={[clickedSite]} exportRef={importRef} departureLocation={departureLocation}></Map>
+            {
+                (clickedSite) ?
+                <AnimatedModalContent
+                    appElement={document.getElementById('root')}
+                    isOpen={popUpSite}
+                    contentLabel="Site Information Modal"
+                    style={{
+                        content: {
+                            width: '90vw', // Set the desired width
+                            height: 'fit-content', // Set the desired height
+                            maxHeight: '80vh',
+                            margin: 'auto', // Center the modal horizontally
+                            borderRadius: '15px',
+                            overflowY: 'auto',
+                            overflowX: 'hidden',
+                        },
+                    }}
+                >
+                    <SiteCardContainer>
+                        <SiteCardHeader>
+                            <SiteCardHeaderLeft>
+                                <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Info</h2>
+                            </SiteCardHeaderLeft>
+                            <SiteCardHeaderRight>
+                                <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeSiteModal}>
+                                    <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                                </Button>
+                            </SiteCardHeaderRight>
+                        </SiteCardHeader>
+                        <SitePopupContentContainer>
+
+                            <SiteInfoH2 style={{alignSelf:"center"}}>Site ID - {stringFilterPrefix(clickedSite.site_id)}</SiteInfoH2>
+
+                            <SitePopupMapContainer>
+                                <Map sites={[clickedSite]} exportRef={mapRef} departureLocation={departureLocation} mapWidth={90} mapHeight={30} centerLng={(popUpMapCenter) ? popUpMapCenter.lng : 0} centerLat={(popUpMapCenter) ? popUpMapCenter.lat : 0}></Map>
+                            </SitePopupMapContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoP>Address: </SiteInfoP>
+                                <SiteInfoP2>
+                                    {clickedSite.street_nbr && clickedSite.street_name && clickedSite.suburb && clickedSite.state && clickedSite.postcode ? (
+                                        <>
+                                            {clickedSite.street_nbr} {clickedSite.street_name},
+                                            {clickedSite.suburb},
+                                            {clickedSite.state} {clickedSite.postcode}
+                                        </>
+                                    ) : (
+                                        'None'
+                                    )}
+                                </SiteInfoP2>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoP>Hours: </SiteInfoP>
+                                <SiteInfoDetailRowContainer>
+                                    <AccessTimeIcon></AccessTimeIcon>
+                                    <SiteInfoP2>
+                                        Opens {(stringFilterPrefix(clickedSite.site_open) === 'None') ? 'TBA' : stringFilterPrefix(clickedSite.site_open)}
+                                        - {(stringFilterPrefix(clickedSite.site_close) === 'None') ? 'TBA' : stringFilterPrefix(clickedSite.site_close)}
+                                    </SiteInfoP2>
+                                </SiteInfoDetailRowContainer>
+                            </SiteInfoDetailContainer>
 
 
-                </SiteCardContainer>
-            </AnimatedModalContent>
+                            <SiteInfoDetailContainer>
+                                <SiteInfoP>Contact Name: </SiteInfoP>
+                                <SiteInfoP2>
+                                    {stringFilterPrefix(clickedSite.site_contact_name)}
+                                </SiteInfoP2>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoP>Contact Number: </SiteInfoP>
+                                <SiteInfoP2>
+                                    {stringFilterPrefix(clickedSite.site_contact_nbr)}
+                                </SiteInfoP2>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoP>Accessibility: </SiteInfoP>
+                                <SiteInfoP2>
+                                    {(clickedSite.accessibility && clickedSite.accessibility.length > 0)
+                                        ? clickedSite.accessibility.map(site => site.accessibility).join(', ')
+                                        : 'None'}
+                                </SiteInfoP2>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoP>Offered Programs: </SiteInfoP>
+                                <List>
+                                    <OfferedPrograms relatedPrograms={filterProgramBasedOnSite(clickedSite)}></OfferedPrograms>
+
+                                </List>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoP>Local Government Area: </SiteInfoP>
+                                <SiteInfoP2>
+                                    {stringFilterPrefix(clickedSite.lga)}
+                                </SiteInfoP2>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoP>Department of Families, <br/>Fairness and Housing: </SiteInfoP>
+                                <SiteInfoP2>
+                                    {stringFilterPrefix(clickedSite.dffh_area)}
+                                </SiteInfoP2>
+                            </SiteInfoDetailContainer>
+
+                        </SitePopupContentContainer>
+
+                    </SiteCardContainer>
+                </AnimatedModalContent> : <></>
+
+            }
+            {
+
+                // Program Side
+                (clickedProgram) ?
+
+                <AnimatedModalContent2
+                    appElement={document.getElementById('root')}
+                    isOpen={popUpProgram}
+                    contentLabel="Program Information Modal"
+                    style={{
+                        content: {
+                            width: '90vw', // Set the desired width
+                            height: 'fit-content', // Set the desired height
+                            maxHeight: '60vh',
+                            margin: 'auto', // Center the modal horizontally
+                            borderRadius: '15px',
+                            overflowY: 'auto',
+                            overflowX: 'hidden',
+                        },
+                    }}
+                >
+                    <SiteCardContainer>
+                        <SiteCardHeader>
+                            <SiteCardHeaderLeft>
+                                <h2 style={{margin: '0', padding: '0', color: 'white'}}>Program Info</h2>
+                            </SiteCardHeaderLeft>
+                            <SiteCardHeaderRight>
+                                <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeProgramModal}>
+                                    <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                                </Button>
+                            </SiteCardHeaderRight>
+                        </SiteCardHeader>
+
+                        <SitePopupContentContainer>
+
+                            <SiteInfoH2 style={{alignSelf:"center"}}>Program ID - {stringFilterPrefix(clickedProgram.title)}</SiteInfoH2>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoDetailRowContainer>
+                                    <CodeIcon style={{fontSize: '40px', margin: '0'}}></CodeIcon>
+                                    <SiteInfoDetailContainer>
+                                        <SiteInfoP>Program Name: </SiteInfoP>
+                                        <SiteInfoP2>
+                                            {stringFilterPrefix(clickedProgram.program_nme)}
+                                        </SiteInfoP2>
+                                    </SiteInfoDetailContainer>
+                                </SiteInfoDetailRowContainer>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoDetailRowContainer>
+                                    <DescriptionIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <SiteInfoDetailContainer>
+                                        <SiteInfoP>Program Description: </SiteInfoP>
+                                        <SiteInfoP2 style={{textAlign: 'justify'}}>
+                                            {stringFilterPrefix(clickedProgram.service_desc)}
+                                        </SiteInfoP2>
+                                    </SiteInfoDetailContainer>
+                                </SiteInfoDetailRowContainer>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoDetailRowContainer>
+                                    <PersonIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <SiteInfoDetailContainer>
+                                        <SiteInfoP>Program Manager: </SiteInfoP>
+                                        <SiteInfoP2 style={{textAlign: 'justify'}}>
+                                            {stringFilterPrefix(clickedProgram.prgm_mgr)}
+                                        </SiteInfoP2>
+                                    </SiteInfoDetailContainer>
+                                </SiteInfoDetailRowContainer>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoDetailRowContainer>
+                                    <CallIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <SiteInfoDetailContainer>
+                                        <SiteInfoP>Program Contact: </SiteInfoP>
+                                        <SiteInfoP2 style={{textAlign: 'justify'}}>
+                                            {stringFilterPrefix(clickedProgram.prgm_cont_no)}
+                                        </SiteInfoP2>
+                                    </SiteInfoDetailContainer>
+                                </SiteInfoDetailRowContainer>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoDetailRowContainer>
+                                    <PersonIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <SiteInfoDetailContainer>
+                                        <SiteInfoP>General Manager: </SiteInfoP>
+                                        <SiteInfoP2 style={{textAlign: 'justify'}}>
+                                            {stringFilterPrefix(clickedProgram.gm)}
+                                        </SiteInfoP2>
+                                    </SiteInfoDetailContainer>
+                                </SiteInfoDetailRowContainer>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoDetailRowContainer>
+                                    <PersonIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <SiteInfoDetailContainer>
+                                        <SiteInfoP>Executive Officer: </SiteInfoP>
+                                        <SiteInfoP2 style={{textAlign: 'justify'}}>
+                                            {stringFilterPrefix(clickedProgram.eo)}
+                                        </SiteInfoP2>
+                                    </SiteInfoDetailContainer>
+                                </SiteInfoDetailRowContainer>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoDetailRowContainer>
+                                    <CategoryIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <SiteInfoDetailContainer>
+                                        <SiteInfoP>Program Type: </SiteInfoP>
+                                        <SiteInfoP2 style={{textAlign: 'justify'}}>
+                                            {stringFilterPrefix(clickedProgram.prgm_type)}
+                                        </SiteInfoP2>
+                                    </SiteInfoDetailContainer>
+                                </SiteInfoDetailRowContainer>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoDetailRowContainer>
+                                    <VpnKeyIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <SiteInfoDetailContainer>
+                                        <SiteInfoP>Access Type: </SiteInfoP>
+                                        <SiteInfoP2 style={{textAlign: 'justify'}}>
+                                            {(clickedProgram.at && clickedProgram.at.length > 0)
+                                                ? clickedProgram.at.map(program => program.at).join(', ')
+                                                : 'None'}
+                                        </SiteInfoP2>
+                                    </SiteInfoDetailContainer>
+                                </SiteInfoDetailRowContainer>
+                            </SiteInfoDetailContainer>
+
+                            <SiteInfoDetailContainer>
+                                <SiteInfoDetailRowContainer>
+                                    <LocalShippingIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <SiteInfoDetailContainer>
+                                        <SiteInfoP>Delivery Method: </SiteInfoP>
+                                        <SiteInfoP2 style={{textAlign: 'justify'}}>
+                                            {(clickedProgram.sdm && clickedProgram.sdm.length > 0)
+                                                ? clickedProgram.sdm.map(program => program.sdm).join(', ')
+                                                : 'None'}
+                                        </SiteInfoP2>
+                                    </SiteInfoDetailContainer>
+                                </SiteInfoDetailRowContainer>
+                            </SiteInfoDetailContainer>
+
+                        </SitePopupContentContainer>
+
+                    </SiteCardContainer>
+                </AnimatedModalContent2> : <></>
+
+            }
+
         </MapFilterRowContainer>
     )
 

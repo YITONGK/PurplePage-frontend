@@ -26,7 +26,7 @@ const DivisionCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'http://localhost:8888';
     const url = BASE_URL + '/division';
     const { division_name, gm, status } = values;
     await axios.post(url, {division_name, gm, status}).then(() => {

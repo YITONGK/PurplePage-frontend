@@ -22,7 +22,7 @@ const ProgramType = () => {
 
   /* get list of program types from the backend and display them */
   const getProgramTypes = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'http://localhost:8888';
     await axios.get(BASE_URL + '/programtype').then(res => {
       const programTypeList = res.data[0];
       const serviceTypeList = res.data[1];

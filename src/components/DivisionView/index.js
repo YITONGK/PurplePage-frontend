@@ -65,7 +65,7 @@ const DivisionView = () => {
 
   /* get a division from the backend based on the id and display it */
   const getDivision = async () => {
-    const BASE_URL = "https://api.wernmachine.art";
+    const BASE_URL = "http://localhost:8888";
     await axios.get(BASE_URL + '/division/' + id).then(res => {
       const data = res.data;
       setDivision(data);
@@ -74,14 +74,14 @@ const DivisionView = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'http://localhost:8888';
     let result =  await axios.get(BASE_URL + '/group');
     result = result.data[0];
     return result;
   }
 
   const getPrograms = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'http://localhost:8888';
     let result = await axios.get(BASE_URL + '/program');
     result = result.data[0];
     return result;

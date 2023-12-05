@@ -22,7 +22,7 @@ const Program = () => {
 
   /* get list of programs from the backend and display them */
   const getPrograms = async () => {
-    const BASE_URL = 'https://api.wernmachine.art';
+    const BASE_URL = 'http://localhost:8888';
     await axios.get(BASE_URL + '/program').then(res => {
       const list = res.data[0];
       const programTypeList = res.data[1];

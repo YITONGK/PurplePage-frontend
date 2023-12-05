@@ -8,6 +8,10 @@ export const Nav = styled.nav`
   display: flex;
   justify-content: start;
   background-color: #A20066;
+  
+  @media (min-width: 375px) and (max-width: 450px) {
+    height: 70px;
+  }
 `;
 
 export const HeaderContainer = styled.div`
@@ -18,6 +22,10 @@ export const HeaderContainer = styled.div`
   position: sticky;
   align-items: center;
   top: 0;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    height: 70px;
+  }
   
   
 `;
@@ -56,6 +64,10 @@ export const SideNavButton = styled(Button)`
       && svg {
         filter: drop-shadow(0px 0px 10px black);
       }
+    }
+
+    @media (min-width: 375px) and (max-width: 450px) {
+      display: none;
     }
   }
 `;

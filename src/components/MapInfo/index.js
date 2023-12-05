@@ -254,8 +254,8 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                             <SiteInfoDetailContainer>
                                 <InfoP>Hours</InfoP>
                                 <InfoP2>
-                                    Opening- {(stringFilterPrefix(site.site_open) === 'None') ? 'TBA' : stringFilterPrefix(site.site_open)} <br/>
-                                    Closing- {(stringFilterPrefix(site.site_close) === 'None') ? 'TBA' : stringFilterPrefix(site.site_close)}
+                                    Opening - {(stringFilterPrefix(site.site_open) === 'None') ? 'TBA' : stringFilterPrefix(site.site_open)} <br/>
+                                    Closing - {(stringFilterPrefix(site.site_close) === 'None') ? 'TBA' : stringFilterPrefix(site.site_close)}
                                 </InfoP2>
                             </SiteInfoDetailContainer>
                             <SiteInfoDetailContainer>

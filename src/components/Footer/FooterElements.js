@@ -23,10 +23,21 @@ export const FooterWrapper = styled.div`
   max-width: 1100px;
   margin: 0 auto;
   padding-bottom: 1%;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    padding-top: 0;
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+  
+  
 `;
 
 export const FooterText = styled.p`
   font-size: 14px;
   font-style: italic;
+  font-weight: bold;
   color: #fff;
+  margin:0;
+  padding: 0;
 `;
