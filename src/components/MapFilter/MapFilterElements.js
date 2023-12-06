@@ -1,7 +1,9 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
+import Modal from 'react-modal';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
+import ClearIcon from "@mui/icons-material/Clear";
 
 export const MapFilterRowContainer = styled.div`
     height: 16rem;
@@ -18,6 +20,9 @@ export const MapFilterRowContainer = styled.div`
       
       height: fit-content;
       margin-right: 0;
+      border: transparent;
+      background-color: transparent;
+      width: fit-content;
     }
   
 `;
@@ -51,6 +56,7 @@ export const ColumnFilterContainer = styled.div`
     align-items: center;
     flex: 1;
     gap: 1.2vh;
+    
   }
 `;
 
@@ -61,7 +67,7 @@ export const SMFilterNavigationContainer = styled.div`
   align-items: center;
   width: 100%;
   gap: 6vw;
-  background-color: white;
+  background-color: rgba(128, 128, 128, 0.21);
 `;
 
 export const SMFilterContainer = styled.div`
@@ -88,7 +94,7 @@ export const SMFilterNavigationButtonDefault = styled(Button)`
   && {
     color: #b0b0b0;
     padding: 0;
-    font-size: 15px;
+    font-size: 16px;
   }
 `;
 
@@ -96,7 +102,7 @@ export const SMFilterNavigationButtonActive = styled(Button)`
   && {
     
     padding: 0;
-    font-size: 15px;
+    font-size: 16px;
     color: #a20066;
     font-weight: bolder;
     text-decoration: underline;
@@ -112,7 +118,6 @@ export const FilterLabel = styled(InputLabel)`
     
     @media (min-width: 375px) and (max-width: 450px) {
       font-size: 20px;
-      
     }
     
   }
@@ -297,6 +302,11 @@ export const LabelContainer = styled.div`
   justify-content: center;
   background-color: rgb(234, 234, 234);
   padding: 0.5rem;
+
+  @media (min-width: 375px) and (max-width: 450px) {
+    display: none;
+  }
+  
 `;
 
 export const CollapseButtonContainer = styled.div`
@@ -435,5 +445,97 @@ export const DropdownSelect = styled(Select)`
       }
       
     }
+`;
+
+// Define the animation keyframes
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(-10%, 0%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0%, 35%);
+  }
+`;
+
+// Create a styled component for the modal content with the animation
+export const AnimatedModalContent = styled(Modal)`
+  &.ReactModal__Content {
+    animation: ${fadeIn} 0.3s ease-in-out;
+    transform: translate(0%, 35%);
+    background-color: white;
+    display: flex;
+    box-shadow: 3px 0px 20px rgba(0, 0, 0, 0.4);
+    outline: none;
+  }
+`;
+
+
+export const SMMapFilterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  z-index: 2;
+`;
+
+export const SMMapFilterHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  border-bottom: 1px solid grey;
+  background-color: #A20066;
+`;
+
+
+export const SMMapFilterHeaderLeft = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  ${'' /* border: 1px solid yellow; */}
+  width: 50%;
+`;
+
+export const SMMapFilterHeaderRight = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width: 50%;
+  ${'' /* border: 1px solid red; */}
+`;
+
+export const CustomClearIcon = styled(ClearIcon)`
+  color: white;
+
+  &:hover {
+    color: black; /* Your hover effect color */
+  }
+`;
+
+export const SMFilterButton = styled(Button)`
+
+  && {
+    display: none;
+
+    @media (min-width: 375px) and (max-width: 450px) {
+      display: flex;
+      width: fit-content;
+      text-transform: capitalize;
+      padding: 4px;
+      font-size: 15px;
+      color: white;
+      font-weight: bold;
+      border: 1px solid white;
+      border-radius: 10px;
+      background-color: #a20066;
+    }
+    
+    
+
+  }
+
 `;
 

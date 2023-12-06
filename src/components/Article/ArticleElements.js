@@ -12,6 +12,7 @@ export const ArticleContainer = styled.div`
 
   @media (min-width: 375px) and (max-width: 450px) {
     padding-right: 2%;
+    margin-bottom: 65px;
   }
 `;
 

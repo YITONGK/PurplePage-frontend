@@ -25,20 +25,21 @@ export const MapFilterRowContainer = styled.div`
 `;
 
 export const TitleH1 = styled(InputLabel)`
-  
-  &&{
+
+  && {
 
     font-size: 24px;
     font-weight: bold;
     color: #a20066;
-    
-  }
 
-  @media (min-width: 375px) and (max-width: 450px) {
-    font-size: 22px;
+    @media (min-width: 375px) and (max-width: 450px) {
+      font-size: 22px;
+    }
+
   }
   
-  
+
+
 `;
 
 export const ResultContainer = styled.div`
@@ -51,22 +52,27 @@ export const ResultContainer = styled.div`
     overflow: hidden;
   
     @media (min-width: 375px) and (max-width: 450px) {
-       border: transparent; 
+       border: transparent;
     }
     
 `;
 
 export const SearchContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-bottom: 0.2rem solid;
-    padding: 0.5rem;
-    border-bottom-color: #A20066;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 0.2rem solid;
+  padding: 0.5rem;
+  border-bottom-color: #A20066;
 
-    @media (min-width: 375px) and (max-width: 450px) {
-      padding-left: 0;
-    }
+  @media (min-width: 375px) and (max-width: 450px) {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border: transparent;
+    background-color: rgba(222, 0, 137, 0.29);
+    border-radius: 10px;
+    margin-top: 1rem;
+  }
 `;
 
 
@@ -95,10 +101,6 @@ export const SMSitesContainer = styled.div`
     overflow-x: hidden;
     display: flex;
     justify-content: center;
-    border: 1px solid #cccccc;
-    border-top: 0;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
     flex: 1;
   }
 `;
@@ -223,8 +225,8 @@ export const OriginalToolTips = styled(Tooltip)`
       padding-right: 0.5rem;
 
       @media (min-width: 375px) and (max-width: 450px) {
-        min-width: 80vw;
-        max-width: 80vw;
+        min-width: 85vw;
+        max-width: 85vw;
       }
     }
 `;
@@ -242,8 +244,8 @@ export const ClickedToolTips = styled(Tooltip)`
       padding-right: 0.5rem;
 
       @media (min-width: 375px) and (max-width: 450px) {
-        min-width: 80vw;
-        max-width: 80vw;
+        min-width: 85vw;
+        max-width: 85vw;
       }
       
     }
@@ -271,6 +273,7 @@ export const SearchTextField = styled(TextField)`
     & .MuiOutlinedInput-root {
       min-width: 14vw;
       max-width: 14vw;
+      background-color: white;
 
       & .MuiOutlinedInput-input {
         font-size: 15px;

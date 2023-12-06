@@ -34,7 +34,15 @@ import {
     SMFilterNavigationButtonDefault,
     SMFilterNavigationButtonActive,
     SMFilterContainer,
-    DropdownSelect
+    DropdownSelect,
+    SMFilterButton,
+    SMMapFilterContainer,
+    SMMapFilterHeader,
+    SMMapFilterHeaderLeft,
+    SMMapFilterHeaderRight,
+    AnimatedModalContent,
+    CustomClearIcon
+
 } from './MapFilterElements';
 
 import Button from '@mui/material/Button';
@@ -55,6 +63,8 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import SendIcon from '@mui/icons-material/Send';
 import ClearIcon from '@mui/icons-material/Clear';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import ReactLoading from 'react-loading';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
@@ -121,6 +131,8 @@ const MapFilter = ({filteredPrograms,
 
     const [clickedProgramService, setClickedProgramService] = useState(true);
     const [clickedGroupDivision, setClickedGroupDivision] = useState(false);
+
+    const [smFilterPopup, setSMFilterPopup] = useState(false);
 
     // style
     const dropDownStyle = { minWidth: '16vw', maxWidth: '16vw', fontSize: '15px'};
@@ -1831,6 +1843,16 @@ const MapFilter = ({filteredPrograms,
 
     },300);
 
+    const openFilterPopup = () => {
+        setSMFilterPopup(true);
+        document.body.style.overflow = 'hidden';
+    }
+
+    const closeFilterPopup = () => {
+        setSMFilterPopup(false);
+        document.body.style.overflow = 'auto';
+    }
+
     //============================== End Event Trigger Section ==================================
 
 
@@ -1987,6 +2009,7 @@ const MapFilter = ({filteredPrograms,
     // Main Return of the APP
     return (
         <MapFilterRowContainer>
+            <SMFilterButton disableRipple endIcon={<ArrowForwardIosIcon style={{padding: '0', margin: '0'}}/>} onClick={openFilterPopup}> Search Filter</SMFilterButton>
             <LabelContainer>
                 <FilterLabel>Map Filter</FilterLabel>
                 {/*<InputLabel style={textStyle}>Map Filter</InputLabel>*/}
@@ -2096,42 +2119,79 @@ const MapFilter = ({filteredPrograms,
                 </ProgramDropDownContainer>
             </FilterContainer>
 
-            <ColumnFilterContainer>
-                <SMFilterNavigationContainer>
+            <AnimatedModalContent
+                appElement={document.getElementById('root')}
+                isOpen={smFilterPopup}
+                contentLabel="Filter Modal"
+                style={{
+                    overlay: {
+                        backgroundColor: 'rgba(91,91,91,0.28)', // Set the desired overlay background color
+                    },
+                    content: {
+                        width: '90vw', // Set the desired width
+                        height: '55vh', // Set the desired height
+                        maxHeight: '80vh',
+                        margin: 'auto', // Center the modal horizontally
+                        borderRadius: '15px',
+                        overflowY: 'auto',
+                        overflowX: 'hidden'
+                    },
+                }}
+            >
+                <SMMapFilterContainer>
+                    <SMMapFilterHeader>
+                        <SMMapFilterHeaderLeft>
+                            <h2 style={{margin: '0', padding: '0', color: 'white'}}>Search Filter</h2>
+                        </SMMapFilterHeaderLeft>
+                        <SMMapFilterHeaderRight>
+                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeFilterPopup}>
+                                <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                            </Button>
+                        </SMMapFilterHeaderRight>
+                    </SMMapFilterHeader>
 
-                    {
-                        (clickedProgramService === true && clickedGroupDivision === false) ?
-                            <>
-                                <SMFilterNavigationButtonActive variant="text" disableRipple onClick={onClickProgramServiceNav}> Service / Program </SMFilterNavigationButtonActive>
-                                <SMFilterNavigationButtonDefault variant="text" disableRipple onClick={onClickGroupDivisionNav}> Group / Division</SMFilterNavigationButtonDefault>
-                            </>
-                            :
-                            <>
-                                <SMFilterNavigationButtonDefault variant="text" disableRipple onClick={onClickProgramServiceNav}> Service / Program </SMFilterNavigationButtonDefault>
-                                <SMFilterNavigationButtonActive variant="text" disableRipple onClick={onClickGroupDivisionNav}> Group / Division</SMFilterNavigationButtonActive>
-                            </>
-                    }
-                </SMFilterNavigationContainer>
-                <SMFilterContainer>
-                    {
-                        (clickedProgramService === true && clickedGroupDivision === false) ?
-                            <ProgramServiceFilter></ProgramServiceFilter> : <GroupDivisionFilter></GroupDivisionFilter>
-                    }
-                </SMFilterContainer>
+                    <ColumnFilterContainer>
+                        <SMFilterNavigationContainer>
 
-                <ButtonContainer>
-                    <ResetButton onClick={clear} style={ (loadingSignal)? {pointerEvents: 'none'} : {}}>
-                        <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
-                        <ButtonLabel style={{color: '#A20066'}}>Reset Filter</ButtonLabel>
-                    </ResetButton>
-                </ButtonContainer>
-            </ColumnFilterContainer>
+                            {
+                                (clickedProgramService === true && clickedGroupDivision === false) ?
+                                    <>
+                                        <SMFilterNavigationButtonActive variant="text" disableRipple onClick={onClickProgramServiceNav}> Service / Program </SMFilterNavigationButtonActive>
+                                        <SMFilterNavigationButtonDefault variant="text" disableRipple onClick={onClickGroupDivisionNav}> Group / Division</SMFilterNavigationButtonDefault>
+                                    </>
+                                    :
+                                    <>
+                                        <SMFilterNavigationButtonDefault variant="text" disableRipple onClick={onClickProgramServiceNav}> Service / Program </SMFilterNavigationButtonDefault>
+                                        <SMFilterNavigationButtonActive variant="text" disableRipple onClick={onClickGroupDivisionNav}> Group / Division</SMFilterNavigationButtonActive>
+                                    </>
+                            }
+                        </SMFilterNavigationContainer>
+                        <SMFilterContainer>
+                            {
+                                (clickedProgramService === true && clickedGroupDivision === false) ?
+                                    <ProgramServiceFilter></ProgramServiceFilter> : <GroupDivisionFilter></GroupDivisionFilter>
+                            }
+                        </SMFilterContainer>
+
+                        <ButtonContainer>
+                            <ResetButton onClick={clear} style={ (loadingSignal)? {pointerEvents: 'none'} : {}}>
+                                <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
+                                <ButtonLabel style={{color: '#A20066'}}>Reset Filter</ButtonLabel>
+                            </ResetButton>
+                        </ButtonContainer>
+                    </ColumnFilterContainer>
+                </SMMapFilterContainer>
+
+
+            </AnimatedModalContent>
 
 
         </MapFilterRowContainer>
 
 
-       
+
+
+
     )
 }
 

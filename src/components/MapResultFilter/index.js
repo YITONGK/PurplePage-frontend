@@ -507,7 +507,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
 
                                             {
                                                 (site.distance) ?
-                                                    <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                    <Typography variant='body2' style={{...captionStyle, fontWeight: 'bold'}}>
                                                         {
                                                             `${Math.round((site.distance / 1000) * 10) / 10} km`
                                                         }
@@ -521,11 +521,11 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                             {
 
                                                 (site.duration) ?
-                                                    <Typography variant='caption' style={captionStyle}>
+                                                    <Typography variant='body2' style={captionStyle}>
                                                         {
                                                             `Duration: `
                                                         }
-                                                        <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                        <Typography variant='body2' style={{...captionStyle, fontWeight: 'bold'}}>
                                                             {
                                                                 `${timeCalculation(site.duration)}`
                                                             }
@@ -535,7 +535,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                             }
 
                                         </SiteOptionRoutingContainer>
-                                        <Typography variant='caption' style={captionStyle}>
+                                        <Typography variant='body2' style={captionStyle}>
                                             {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
                                                 `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
                                             }
@@ -554,13 +554,13 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                 >
                                     <SiteOption onClick={(e) => { e.preventDefault(); smOnClickSite(site); }}>
                                         <SiteOptionRoutingContainer>
-                                            <Typography variant='body1'>
+                                            <Typography variant='h6'>
                                                 {site.site_id}
                                             </Typography>
 
                                             {
                                                 (site.distance) ?
-                                                    <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                    <Typography variant='body1' style={{...captionStyle, fontWeight: 'bold'}}>
                                                         {
                                                             `${Math.round((site.distance / 1000) * 10) / 10} km`
                                                         }
@@ -574,11 +574,11 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                             {
 
                                                 (site.duration) ?
-                                                    <Typography variant='caption' style={captionStyle}>
+                                                    <Typography variant='body1' style={captionStyle}>
                                                         {
                                                             `Duration: `
                                                         }
-                                                        <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                        <Typography variant='body1' style={{...captionStyle, fontWeight: 'bold'}}>
                                                             {
                                                                 `${timeCalculation(site.duration)}`
                                                             }
@@ -588,7 +588,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                             }
 
                                         </SiteOptionRoutingContainer>
-                                        <Typography variant='caption' style={captionStyle}>
+                                        <Typography variant='body1' style={captionStyle}>
                                             {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
                                                 `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
                                             }
