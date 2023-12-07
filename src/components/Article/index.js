@@ -30,7 +30,7 @@ const Article = () => {
 
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
   const [searchValues, setSearchValues] = useState({
-    value: 'what are you looking for',
+    value: 'start typing and search for anything',
     type: 'All',
   })
 
@@ -313,10 +313,10 @@ const Article = () => {
       const filteredOptions = [];
     
       filteredOptions.push(...programTypesOptions, ...groupsOptions);
-      filteredOptions.unshift({ value: '-- What are you looking for? --',type: 'All'});
+      filteredOptions.unshift({ value: 'start typing and search for anything',type: 'All'});
 
       setSearchOptions(filteredOptions);
-      setSearchValues({value: '-- What are you looking for? --', type: 'All'});
+      setSearchValues({value: 'start typing and search for anything', type: 'All'});
 
       setIsLoading(false);
 
@@ -585,15 +585,19 @@ const Article = () => {
         const programTypeIds = filteringProgramTypes.map(programType => programType.prgm_type_id);
 
         //lower table
-        const filteringDivisions = divisionList.filter(division => filteredPattern.test(division.division_name));
+        const filteringDivisions = divisionList.filter(division => filteredPattern.test(division.division_name) || filteredPattern.test(division.gm));
         const divisionIds = filteringDivisions.map(division => division.division_id);
 
-        const filteringGroups = groupList.filter(group => filteredPattern.test(group.group_name) || divisionIds.includes(group.division_id));
+        const filteringGroups = groupList.filter(group => filteredPattern.test(group.group_name) || filteredPattern.test(group.eo) || divisionIds.includes(group.division_id));
         const groupsIds = filteringGroups.map(group => group.group_id);
 
         // Program Filtering
         const filteringPrograms = programList.filter(program => 
           filteredPattern.test(program.program_nme) ||
+          filteredPattern.test(program.prgm_mgr) ||
+          filteredPattern.test(program.prgm_cont_no) ||
+          (program.at && program.at.length > 0 && program.at.some((accessType) => filteredPattern.test(accessType))) ||
+          (program.sdm && program.sdm.length > 0 && program.sdm.some((deliveryMethod) => filteredPattern.test(deliveryMethod))) ||
           (program.service_desc && filteredPattern.test(program.service_desc)) ||
           programTypeIds.includes(program.prgm_type_id) ||
           groupsIds.includes(program.group_id)
@@ -736,7 +740,7 @@ const Article = () => {
     }
     setDepartureAddress(null);
 
-    setSearchValues({value: '-- What are you looking for? --', type: 'All'});
+    setSearchValues({value: 'start typing and search for anything', type: 'All'});
   }
 
   // Free text search component

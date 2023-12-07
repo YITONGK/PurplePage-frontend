@@ -24,7 +24,7 @@ export const FooterWrapper = styled.div`
   margin: 0 auto;
   padding-bottom: 1%;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     padding-top: 0;
     padding-right: 1rem;
     padding-left: 1rem;

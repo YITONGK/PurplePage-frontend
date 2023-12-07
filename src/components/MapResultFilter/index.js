@@ -34,6 +34,7 @@ import {
     ListItemButton,
     OfferedProgramsContainer,
     AnimatedModalContent2,
+    CustomClearIcon
 
 } from "./MapResultFilterElements";
 import InputLabel from "@mui/material/InputLabel";
@@ -48,12 +49,6 @@ import ListItem from "@mui/material/ListItem";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Map from '../Map';
-import {
-    CustomClearIcon,
-    ProgramCardHeader,
-    ProgramCardHeaderLeft,
-    ProgramCardHeaderRight
-} from "../MapInfo/MapInfoElements";
 import Button from "@mui/material/Button";
 import mapboxgl from "mapbox-gl";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -554,13 +549,13 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                 >
                                     <SiteOption onClick={(e) => { e.preventDefault(); smOnClickSite(site); }}>
                                         <SiteOptionRoutingContainer>
-                                            <Typography variant='h6'>
+                                            <Typography variant='body1'>
                                                 {site.site_id}
                                             </Typography>
 
                                             {
                                                 (site.distance) ?
-                                                    <Typography variant='body1' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                    <Typography variant='body2' style={{...captionStyle, fontWeight: 'bold'}}>
                                                         {
                                                             `${Math.round((site.distance / 1000) * 10) / 10} km`
                                                         }
@@ -574,11 +569,11 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                             {
 
                                                 (site.duration) ?
-                                                    <Typography variant='body1' style={captionStyle}>
+                                                    <Typography variant='body2' style={captionStyle}>
                                                         {
                                                             `Duration: `
                                                         }
-                                                        <Typography variant='body1' style={{...captionStyle, fontWeight: 'bold'}}>
+                                                        <Typography variant='body2' style={{...captionStyle, fontWeight: 'bold'}}>
                                                             {
                                                                 `${timeCalculation(site.duration)}`
                                                             }
@@ -588,7 +583,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                             }
 
                                         </SiteOptionRoutingContainer>
-                                        <Typography variant='body1' style={captionStyle}>
+                                        <Typography variant='body2' style={captionStyle}>
                                             {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
                                                 `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
                                             }
@@ -654,22 +649,22 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
     const onChangeSiteSearch = debounce((e) => {
         const inputValue = e.target.value.trim();
 
-        if(!inputValue) {
-            if(availableSearchSites.length !== advanceFilteredSites.length) {
+        if (!inputValue) {
+            if (availableSearchSites.length !== advanceFilteredSites.length) {
                 setAvailableSearchSites(advanceFilteredSites);
                 return;
             }
         }
 
-        const pattern = new RegExp(inputValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'); // pattern to search more accurately
-        const filterSearchSite = availableSearchSites.filter((site) => {
-            const fullAddress = `${site.site_id} ${site.street_nbr} ${site.street_name} ${site.suburb} ${site.state} ${site.postcode}`;
-            return pattern.test(fullAddress);
-        })
+        const inputWords = inputValue.split(/\s+/);
+        const filterSearchSite = advanceFilteredSites.filter((site) => {
+            const filterContent = `${site.site_id} ${site.street_nbr} ${site.street_name} ${site.suburb} ${site.state} ${site.postcode} ${site.site_contact_name} ${site.site_contact_nbr} ${site.site_mgr_cont_nbr} ${site.lga} ${site.dffh_area}`;
+            return inputWords.every((word) => new RegExp(word, 'i').test(filterContent));
+        });
 
         setAvailableSearchSites(filterSearchSite);
+    }, 300);
 
-    },300);
 
     const filterProgramBasedOnSite = (site) => {
 
@@ -844,7 +839,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                             </SiteInfoDetailContainer>
 
                             <SiteInfoDetailContainer>
-                                <SiteInfoP>Hours: </SiteInfoP>
+                                <SiteInfoP>Hours (Holiday Open Hours in Brackets): </SiteInfoP>
                                 <SiteInfoDetailRowContainer>
                                     <AccessTimeIcon></AccessTimeIcon>
                                     <SiteInfoP2>

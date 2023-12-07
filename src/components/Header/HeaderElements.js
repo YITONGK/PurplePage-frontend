@@ -9,7 +9,7 @@ export const Nav = styled.nav`
   justify-content: start;
   background-color: #A20066;
   
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     height: 70px;
   }
 `;
@@ -23,7 +23,7 @@ export const HeaderContainer = styled.div`
   align-items: center;
   top: 0;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     height: 70px;
   }
   
@@ -66,7 +66,7 @@ export const SideNavButton = styled(Button)`
       }
     }
 
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       display: none;
     }
   }

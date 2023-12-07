@@ -15,7 +15,7 @@ export const MapFilterRowContainer = styled.div`
     flex-direction: row;
     gap: 10px;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     width: 95vw;
     display: flex;
     flex-direction: column;
@@ -32,7 +32,7 @@ export const TitleH1 = styled(InputLabel)`
     font-weight: bold;
     color: #a20066;
 
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       font-size: 22px;
     }
 
@@ -51,7 +51,7 @@ export const ResultContainer = styled.div`
     position: relative;
     overflow: hidden;
   
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
        border: transparent;
     }
     
@@ -65,7 +65,7 @@ export const SearchContainer = styled.div`
   padding: 0.5rem;
   border-bottom-color: #A20066;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     border: transparent;
@@ -87,7 +87,7 @@ export const SitesContainer = styled.div`
     border-bottom-right-radius: 5px;
     flex: 1;
 
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       display: none;
     }
 `;
@@ -96,7 +96,7 @@ export const SMSitesContainer = styled.div`
   
   display: none;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     overflow-y: auto;
     overflow-x: hidden;
     display: flex;
@@ -130,7 +130,7 @@ export const SiteOption = styled.div`
         cursor: pointer;
     }
 
-      @media (min-width: 375px) and (max-width: 450px) {
+      @media (min-width: 360px) and (max-width: 450px) {
         &:hover {
           transform: none; /* Reset the transform on hover for this media query range */
           cursor: default; /* Set the cursor to default on hover for this media query range */
@@ -162,7 +162,7 @@ export const LabelContainer = styled.div`
     justify-content: center;
     margin-top: 0.5rem;
 
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       justify-content: start;
     }
   
@@ -224,7 +224,7 @@ export const OriginalToolTips = styled(Tooltip)`
       padding-left: 0.5rem;
       padding-right: 0.5rem;
 
-      @media (min-width: 375px) and (max-width: 450px) {
+      @media (min-width: 360px) and (max-width: 450px) {
         min-width: 85vw;
         max-width: 85vw;
       }
@@ -243,7 +243,7 @@ export const ClickedToolTips = styled(Tooltip)`
       padding-left: 0.5rem;
       padding-right: 0.5rem;
 
-      @media (min-width: 375px) and (max-width: 450px) {
+      @media (min-width: 360px) and (max-width: 450px) {
         min-width: 85vw;
         max-width: 85vw;
       }
@@ -258,7 +258,7 @@ export const SearchAutocomplete = styled(Autocomplete)`
     font-size: 15px;
     border-radius: 5px;
 
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       min-width: 100%;
       max-width: 100%;
     }
@@ -290,7 +290,7 @@ export const SearchTextField = styled(TextField)`
       
     }
 
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       
       align-items: start;
 
@@ -476,7 +476,7 @@ export const ListItemButton = styled.div`
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     min-width: 80vw;
     max-width: 80vw;
     border: 1px solid #565656;

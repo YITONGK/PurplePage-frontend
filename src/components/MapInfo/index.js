@@ -61,6 +61,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import InfoIcon from '@mui/icons-material/Info';
 
 import Map from '../Map';
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 
 const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, departureLocation}) => {
@@ -252,11 +253,15 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 </InfoP2>
                             </SiteInfoDetailContainer>
                             <SiteInfoDetailContainer>
-                                <InfoP>Hours</InfoP>
-                                <InfoP2>
-                                    Opening - {(stringFilterPrefix(site.site_open) === 'None') ? 'TBA' : stringFilterPrefix(site.site_open)} <br/>
-                                    Closing - {(stringFilterPrefix(site.site_close) === 'None') ? 'TBA' : stringFilterPrefix(site.site_close)}
-                                </InfoP2>
+                                <InfoP>Hours (Holiday Open Hours in Brackets)</InfoP>
+                                <SiteViewInfoDetailRow style={{justifyContent: 'start', gap:'0.5rem'}}>
+                                    <AccessTimeIcon></AccessTimeIcon>
+                                    <InfoP2>
+                                        Opens {(stringFilterPrefix(site.site_open) === 'None') ? 'TBA' : stringFilterPrefix(site.site_open)}
+                                         - {(stringFilterPrefix(site.site_close) === 'None') ? 'TBA' : stringFilterPrefix(site.site_close)}
+                                    </InfoP2>
+                                </SiteViewInfoDetailRow>
+
                             </SiteInfoDetailContainer>
                             <SiteInfoDetailContainer>
                                 <InfoP>Accessibility</InfoP>

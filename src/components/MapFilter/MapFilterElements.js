@@ -16,7 +16,7 @@ export const MapFilterRowContainer = styled.div`
     background-color: #FBF4F8;
     overflow: hidden;
 
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       
       height: fit-content;
       margin-right: 0;
@@ -38,7 +38,7 @@ export const FilterContainer = styled.div`
     width: fit-content;
     gap: 1.2vw;
 
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
      display: none;
     }
 `;
@@ -47,7 +47,7 @@ export const ColumnFilterContainer = styled.div`
   
   display: none;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     //border: 1px solid #CCC;
     border-radius: 5px;
     display: flex;
@@ -116,7 +116,7 @@ export const FilterLabel = styled(InputLabel)`
     font-weight: bold;
     color: #A20066;
     
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       font-size: 20px;
     }
     
@@ -140,7 +140,7 @@ export const ButtonContainer = styled.div`
   margin-bottom: 0.5rem;
   margin-top: 2rem;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     margin-top: 1rem;
   }
   //margin-left: 2rem;
@@ -151,7 +151,7 @@ export const SelectDiv = styled.div`
     flex-direction: column;
     align-items: flex-start;
 
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       align-items: flex-start;
       width: 100%;
       
@@ -168,7 +168,7 @@ export const ProgramDropDownContainer = styled.div`
     height: 100%;
     flex: 1;
 
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       justify-content: center;
       gap: 2vh;
     }
@@ -303,7 +303,7 @@ export const LabelContainer = styled.div`
   background-color: rgb(234, 234, 234);
   padding: 0.5rem;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     display: none;
   }
   
@@ -437,7 +437,7 @@ export const DropdownSelect = styled(Select)`
       max-width: 16vw;
       font-size: 15px;
 
-      @media (min-width: 375px) and (max-width: 450px) {
+      @media (min-width: 360px) and (max-width: 450px) {
         
         min-width: 80vw;
         max-width: 80vw;
@@ -520,7 +520,7 @@ export const SMFilterButton = styled(Button)`
   && {
     display: none;
 
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       display: flex;
       width: fit-content;
       text-transform: capitalize;

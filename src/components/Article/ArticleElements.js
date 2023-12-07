@@ -10,7 +10,7 @@ export const ArticleContainer = styled.div`
   overflow: hidden;
   margin-bottom: 75px;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     padding-right: 2%;
     margin-bottom: 65px;
   }
@@ -21,7 +21,7 @@ export const ArticleH1 = styled.h1`
   font-size: 40px;
   padding-top: 0;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     font-size: 25px;
   }
 `;
@@ -45,7 +45,7 @@ export const WarningText =  styled(Typography)`
     font-size: 16px;
     font-weight: bold;
     
-    @media (min-width: 375px) and (max-width: 450px) {
+    @media (min-width: 360px) and (max-width: 450px) {
       font-size: 14px;
     }
   }
@@ -81,7 +81,7 @@ export const MapElement = styled.div`
   flex: 1;
   padding-bottom: 1rem;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     display: none;
   }
   //border: 2px solid mediumvioletred;
@@ -90,7 +90,7 @@ export const MapElement = styled.div`
 export const SMMapElement = styled.div`
   display: none;
 
-  @media (min-width: 375px) and (max-width: 450px) {
+  @media (min-width: 360px) and (max-width: 450px) {
     display: flex;
     flex-direction: column;
     margin-top: 1rem;
@@ -147,7 +147,7 @@ export const LoadindContainer = styled.div`
 export const SearchTextField = styled(Autocomplete)`
   min-width: 400px;
 
-  @media (min-width: 375px) and (max-width: 450px) {
-    min-width: 300px;
+  @media (min-width: 360px) and (max-width: 450px) {
+    min-width: 73vw;
   }
 `;
