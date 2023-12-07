@@ -6,6 +6,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import ClearIcon from "@mui/icons-material/Clear";
+import Skeleton from "react-loading-skeleton";
 
 export const MapFilterRowContainer = styled.div`
     margin-right: 1.2vw;
@@ -489,4 +490,14 @@ export const OfferedProgramsContainer = styled.div`
   padding: 0 0;
   background-color: white;
   justify-content: center; 
+`;
+
+export const LoadingSkeleton = styled(Skeleton)`
+  width: 14vw;
+
+  @media (min-width: 360px) and (max-width: 450px) {
+    width: 100%;
+  }
+  
+  
 `;

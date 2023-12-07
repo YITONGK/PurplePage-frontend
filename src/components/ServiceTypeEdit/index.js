@@ -31,7 +31,7 @@ const ServiceTypeEdit = (props) => {
 
   /* get a service type from the backend based on the id and display it */
   const getServiceType = async () => {
-    const BASE_URL = "http://localhost:8888";
+    const BASE_URL = "https://api.wernmachine.art";
     await axios.get(BASE_URL + '/servicetype/' + id).then(res => {
       const data = res.data[0];
       const ser_stream = res.data[1];
@@ -46,7 +46,7 @@ const ServiceTypeEdit = (props) => {
 
   /* get list of service streams from the backend and display them */
   const getServiceStreams = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
     await axios.get(BASE_URL + '/servicestream').then(res => {
       const list = res.data;
       setServiceStreamList(list);
@@ -71,7 +71,7 @@ const ServiceTypeEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
     const url = BASE_URL + '/servicetype/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

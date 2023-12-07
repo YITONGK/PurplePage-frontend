@@ -20,6 +20,7 @@ const Header = ({showSideNav}) => {
           <HeaderLogo to={homeLink}>
             <HeaderImg src={logo}></HeaderImg>
           </HeaderLogo>
+
         </HeaderContainer>
       </Nav>
     </>

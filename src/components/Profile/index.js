@@ -13,7 +13,7 @@ const Profile = () => {
 
   // get the current user
   const getUser = async () => {
-    const BASE_URL = "http://localhost:8888/";
+    const BASE_URL = "https://api.wernmachine.art/";
     await axios.get(BASE_URL + sessionStorage.email).then(res => {
       const data = res.data;
       setUser(data);

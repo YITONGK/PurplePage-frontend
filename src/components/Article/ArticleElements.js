@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Autocomplete from '@mui/material/Autocomplete';
 import Typography from '@mui/material/Typography';
+import Skeleton from 'react-loading-skeleton';
 
 export const ArticleContainer = styled.div`
   height: 100%;
@@ -51,6 +52,7 @@ export const WarningText =  styled(Typography)`
   }
 `;
 
+
 export const FilterContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -76,7 +78,7 @@ export const SearchContainer = styled.div`
 export const MapElement = styled.div`
   display: flex;
   flex-direction: row;
-  margin-top: 2rem;
+  margin-top: 1rem;
   height: 60vh;
   flex: 1;
   padding-bottom: 1rem;
@@ -149,5 +151,13 @@ export const SearchTextField = styled(Autocomplete)`
 
   @media (min-width: 360px) and (max-width: 450px) {
     min-width: 73vw;
+  }
+`;
+
+export const LoadingSkeleton = styled(Skeleton)`
+  width: 19vw;
+
+  @media (min-width: 360px) and (max-width: 450px) {   
+    width: 75vw;
   }
 `;

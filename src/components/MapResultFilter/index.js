@@ -34,7 +34,8 @@ import {
     ListItemButton,
     OfferedProgramsContainer,
     AnimatedModalContent2,
-    CustomClearIcon
+    CustomClearIcon,
+    LoadingSkeleton,
 
 } from "./MapResultFilterElements";
 import InputLabel from "@mui/material/InputLabel";
@@ -707,7 +708,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                             // (true)?
                                 <div>
                                     <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                        <Skeleton style={{width: '14vw'}} height={35} />
+                                        <LoadingSkeleton height={35} />
                                     </SkeletonTheme>
                                 </div>
 
@@ -744,7 +745,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                             // (true)?
                                 <div>
                                     <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                        <Skeleton style={{width: '14vw'}} height={35} />
+                                        <LoadingSkeleton height={35} />
                                     </SkeletonTheme>
                                 </div>
                                 :

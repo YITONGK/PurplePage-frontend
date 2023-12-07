@@ -25,7 +25,7 @@ const ServiceStreamCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'https://api.wernmachine.art';
     const url = BASE_URL + '/servicestream';
     const { ser_stream, status } = values;
     await axios.post(url, {ser_stream, status}).then(() => {
