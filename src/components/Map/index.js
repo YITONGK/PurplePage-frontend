@@ -21,7 +21,6 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
   // useState hooks variable initialise
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [popUpMarker, setPopUpMarker] = useState(null);
-  const [firstLoaded, setFirstLoaded] = useState(false);
 
   const [departureLocationMarker, setDepartureLocationMarker] = useState(null);
 
@@ -48,9 +47,9 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
     if(sites.length > 0 && sites[0] && sites[0].lat && sites[0].lng) {
         const bounds = new mapboxgl.LngLatBounds();
 
-        sites.map((site) => {
-            bounds.extend(new mapboxgl.LngLat(site.lng, site.lat));
-        })
+        sites.map((site) =>
+            bounds.extend(new mapboxgl.LngLat(site.lng, site.lat))
+        )
 
         if(departureLocation) {
             bounds.extend(new mapboxgl.LngLat(departureLocation.lng, departureLocation.lat));

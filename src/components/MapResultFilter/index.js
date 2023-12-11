@@ -39,15 +39,12 @@ import {
 
 } from "./MapResultFilterElements";
 import InputLabel from "@mui/material/InputLabel";
-import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
-import Autocomplete from "@mui/material/Autocomplete";
+import {SkeletonTheme} from "react-loading-skeleton";
 import SearchIcon from "@mui/icons-material/Search";
-import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import ReactLoading from "react-loading";
 import {debounce} from "@mui/material/utils";
 import ListItem from "@mui/material/ListItem";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Map from '../Map';
 import Button from "@mui/material/Button";
@@ -65,7 +62,6 @@ import CallIcon from '@mui/icons-material/Call';
 import CodeIcon from '@mui/icons-material/Code';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import InfoIcon from '@mui/icons-material/Info';
 
 
 
@@ -75,15 +71,6 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
     const mapRef = useRef();
 
-    const textFieldStyle = {
-        minWidth: "16vw",
-        fontSize: '15px',
-        borderRadius: '5px'
-    };
-
-    const textStyle = { fontSize: '24px', fontWeight: 'bold', color: '#A20066'};
-    const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', minWidth: '13vw', maxWidth: '13vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
-    const toolTipsStyleClicked = {backgroundColor: '#A20066',  color: 'white', minWidth: '13vw', maxWidth: '13vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
     const captionStyle = {
         margin: 0,
         overflow: 'hidden',
@@ -92,27 +79,10 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
     }
 
     const listStyle = { marginTop: '0'};
-    const searchTextFieldStyle = {
-        '& .MuiOutlinedInput-root': {
-            minWidth: '14vw',
-            maxWidth: '14vw',
-            '& .MuiOutlinedInput-input' : {
-                fontSize: '15px'
-            },
-            '& fieldset': {
-                border: '0.5px solid grey',
-                borderRadius: '5px',
-            },
-            '&.Mui-focused fieldset': {
-                borderColor: "#A20066", // Change the outline color on focus to black
-            },
-        },
-    };
 
     const [availableSearchSites, setAvailableSearchSites] = useState([]);
 
     const [addressIsLoading, setAddressIsLoading] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
     const [tmpAddressValue, setTmpAddressValue] = useState(null);
     const [onChangeAddressValue, setOnChangeAddressValue] = useState('');
@@ -217,7 +187,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
             setTmpAddressValue(v);
         }
         else {
-            setTmpAddressValue("");
+            setTmpAddressValue(null);
         }
 
         const addressDetail = suggestAddressOptions.filter((address) => address.address === v);
@@ -355,12 +325,6 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
         return result.trim(); // trim() to remove any leading/trailing spaces
     }
 
-    const stringShiftingLength = (value, stringMaxLength1, stringMaxLength2) => {
-
-        const maxLength = Math.max(stringMaxLength1.length, stringMaxLength2.length);
-        return value.padEnd(maxLength, '\u00A0');
-    }
-
 
     const AvailableSites = () => {
         return (
@@ -452,16 +416,18 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                         {
 
                                             (site.duration) ?
-                                                <Typography variant='caption' style={captionStyle}>
-                                                    {
-                                                        `Duration: `
-                                                    }
+                                                <div style={{display: 'flex', flexDirection: 'row', gap: '5px'}}>
+                                                    <Typography variant='caption' style={captionStyle}>
+                                                        {
+                                                            `Duration: `
+                                                        }
+                                                    </Typography>
                                                     <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
                                                         {
                                                             `${timeCalculation(site.duration)}`
                                                         }
                                                     </Typography>
-                                                </Typography>
+                                                </div>
                                                 : null
                                         }
 
@@ -517,16 +483,18 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                             {
 
                                                 (site.duration) ?
-                                                    <Typography variant='body2' style={captionStyle}>
-                                                        {
-                                                            `Duration: `
-                                                        }
+                                                    <div style={{display: 'flex', flexDirection: 'row', gap: '5px'}}>
+                                                        <Typography variant='body2' style={captionStyle}>
+                                                            {
+                                                                `Duration: `
+                                                            }
+                                                        </Typography>
                                                         <Typography variant='body2' style={{...captionStyle, fontWeight: 'bold'}}>
                                                             {
                                                                 `${timeCalculation(site.duration)}`
                                                             }
                                                         </Typography>
-                                                    </Typography>
+                                                    </div>
                                                     : null
                                             }
 
@@ -570,16 +538,18 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                             {
 
                                                 (site.duration) ?
-                                                    <Typography variant='body2' style={captionStyle}>
-                                                        {
-                                                            `Duration: `
-                                                        }
+                                                    <div style={{display: 'flex', flexDirection: 'row', gap: '5px'}}>
+                                                        <Typography variant='body2' style={captionStyle}>
+                                                            {
+                                                                `Duration: `
+                                                            }
+                                                        </Typography>
                                                         <Typography variant='body2' style={{...captionStyle, fontWeight: 'bold'}}>
                                                             {
                                                                 `${timeCalculation(site.duration)}`
                                                             }
                                                         </Typography>
-                                                    </Typography>
+                                                    </div>
                                                     : null
                                             }
 
@@ -704,7 +674,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                     <InputLabel style={{fontSize: '16px'}}>Search Address</InputLabel>
                     <SearchInputContainer>
                         {
-                            (addressIsLoading || isLoading)?
+                            (addressIsLoading)?
                             // (true)?
                                 <div>
                                     <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
@@ -716,11 +686,16 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
 
                                 <SearchAutocomplete
                                     disablePortal
-                                    id="departureAddress"
-                                    className=''
-                                    options={suggestAddressOptions.map((address) => address.address)}
+                                    id="departureAddressSearch"
+                                    options={suggestAddressOptions.map((address) => address.address) || []}
                                     onChange={onChangeDepartureAddress}
-                                    isOptionEqualToValue={(option, value) => {if(value === "") {return false;} else { return (option === value);}}}
+                                    isOptionEqualToValue={(option, value) => {
+                                        if (value === "" || value === null) {
+                                            return false; // Treat empty string as not matching any option
+                                        } else {
+                                            return option === value;
+                                        }
+                                    }}
                                     onInputChange={onInputDepartureValue}
                                     value={tmpAddressValue}
                                     popupIcon={ <SearchIcon />}
@@ -741,7 +716,7 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                     <InputLabel style={{fontSize: '16px'}}>Search Uniting Sites</InputLabel>
                     <SearchInputContainer>
                         {
-                            (addressIsLoading || isLoading)?
+                            (addressIsLoading)?
                             // (true)?
                                 <div>
                                     <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
@@ -762,10 +737,10 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
 
                     </SearchInputContainer>
                 </SearchContainer>
-                <SitesContainer style={ addressIsLoading || isLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center', width: '100%' } : {}}>
+                <SitesContainer style={ addressIsLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center', width: '100%' } : {}}>
                     <List sx={listStyle}>
                         {
-                            (addressIsLoading || isLoading)?
+                            (addressIsLoading)?
                             // (true) ?
                                 <ReactLoading type={'spin'} color={'#A20066'} height={80} width={60}></ReactLoading>
                                 :
@@ -774,10 +749,10 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                     </List>
                 </SitesContainer>
 
-                <SMSitesContainer style={ addressIsLoading || isLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center', width: '100%' } : {}}>
+                <SMSitesContainer style={ addressIsLoading ? { flex:'1', justifyContent: 'center', alignItems: 'center', width: '100%' } : {}}>
                     <List sx={listStyle}>
                         {
-                            (addressIsLoading || isLoading)?
+                            (addressIsLoading)?
                                 // (true) ?
                                 <ReactLoading type={'spin'} color={'#A20066'} height={80} width={60}></ReactLoading>
                                 :

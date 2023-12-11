@@ -1,9 +1,6 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { mkConfig, generateCsv, download } from "export-to-csv";
-import Button from '@mui/material/Button';
 import {ExportInfoContainer, ExportInfoText} from './ExportCSVElements';
-import WarningIcon from "@mui/icons-material/Warning";
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
 const ExportCSV = ({advanceFilteredPrograms, advanceFilteredSites, groupsList, divisionList, serviceStreamList, serviceTypeList, programTypeList}) => {
@@ -90,9 +87,9 @@ const ExportCSV = ({advanceFilteredPrograms, advanceFilteredSites, groupsList, d
             <SaveAltIcon sx={{color: '#3d3d3d'}} />
             <ExportInfoText>
                 Require to export data?{' '}
-                <a onClick={onClickDownload} style={{ color: '#3d3d3d', textDecoration: 'underline' }}>
+                <span onClick={onClickDownload} style={{ color: '#3d3d3d', textDecoration: 'underline', cursor: 'pointer' }}>
                     Please click here to export your filtered data to CSV format.
-                </a>
+                </span>
             </ExportInfoText>
         </ExportInfoContainer>
     )

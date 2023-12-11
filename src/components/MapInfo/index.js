@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Grid} from '@mui/material';
 import {
     InfoContainer,
     InfoTitleContainer,
-    TruncatedText,
     InfoH1, 
     InfoH2, 
     InfoP, 
@@ -217,9 +215,6 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
         return result.trim(); // trim() to remove any leading/trailing spaces
     }
 
-
-    // styles
-    const gridStyle = { display: "flex", flexDirection: "row", alignItems: "center", marginBottom: "-1rem", color: "#A20066", overflow: "hidden"};
 
     // Return UI
     return (

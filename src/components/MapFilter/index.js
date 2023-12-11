@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {
     MapFilterRowContainer,
@@ -6,31 +5,14 @@ import {
     ColumnFilterContainer,
     FilterLabel,
     SelectDiv,
-    ButtonContainer, 
-    ResultContainer, 
-    SearchContainer, 
-    SitesContainer, 
-    SiteOption, 
-    SiteOptionRoutingContainer,
-    ProgramDropDownContainer, 
-    GroupDropDownContainer, 
-    BreakingLine,
-    SearchInputContainer,
+    ButtonContainer,
+    ProgramDropDownContainer,
     BreakingLine2,
-    BreakingLine3,
     Arrow,
-    LabelContainer, 
-    CollapseButtonContainer, 
-    CollapseButton, 
-    ApplyButton, 
+    LabelContainer,
     ResetButton, 
-    ButtonLabel, 
-    OptionContainer, 
-    OptionDetail, 
-    OptionIcon, 
-    OptionP,
+    ButtonLabel,
     SMFilterNavigationContainer,
-    SMFilterNavigationBreakLine,
     SMFilterNavigationButtonDefault,
     SMFilterNavigationButtonActive,
     SMFilterContainer,
@@ -47,26 +29,11 @@ import {
 
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
-import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
-import { debounce } from '@mui/material/utils';
-import Autocomplete from '@mui/material/Autocomplete';
 
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-
-import SendIcon from '@mui/icons-material/Send';
 import ClearIcon from '@mui/icons-material/Clear';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-import ReactLoading from 'react-loading';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -88,8 +55,6 @@ const MapFilter = ({filteredPrograms,
     loadingSignal,
     mapFilterUsed}) => {
 
-    // Variable Declaration
-    const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
     // user's input value
     const [serviceStreamValue, setServiceStreamValue] = useState('');
@@ -100,13 +65,8 @@ const MapFilter = ({filteredPrograms,
     const [divisionValue, setDivisionValue] = useState('');
     const [groupValue, setGroupValue] = useState('');
 
-    const [suggestAddressOptions, setSuggestAddressOptions] = useState([]);
-    const [routingAddressValue, setRoutingAddressValue] = useState({});
-    const [tmpAddressValue, setTmpAddressValue] = useState(null);
-    const [onChangeAddressValue, setOnChangeAddressValue] = useState('');
 
     const [isLoading, setIsLoading] = useState(false);
-    const [addressIsLoading, setAddressIsLoading] = useState(false);
 
     // drop down option
     const [filteredServiceStreams, setFilteredServiceStreams] = useState([]);
@@ -117,17 +77,10 @@ const MapFilter = ({filteredPrograms,
     const [filteredDivisions, setFilteredDivisions] = useState([]);
     const [filteredGroups, setFilteredGroups] = useState([]);
 
-    // site data ori
-    const [advanceFilteredSites, setAdvanceFilteredSites] = useState([]);
-
-    // site data that may effect by filter
-    const [availableSearchSites, setAvailableSearchSites] = useState([]);
 
     // program data filtered by drop down option
     const [advancedFilteredPrograms, setAdvancedFilteredPrograms] = useState([]);
 
-    const [clickedSite, setClickedSite] = useState(null);
-    const [isCollapse, setIsCollapse] = useState(false);
 
     const [clickedProgramService, setClickedProgramService] = useState(true);
     const [clickedGroupDivision, setClickedGroupDivision] = useState(false);
@@ -136,41 +89,6 @@ const MapFilter = ({filteredPrograms,
 
     // style
     const dropDownStyle = { minWidth: '16vw', maxWidth: '16vw', fontSize: '15px'};
-
-    const textFieldStyle = {
-        minWidth: "16vw",
-        fontSize: '15px',
-        borderRadius: '5px'
-    };
-
-    const textStyle = { fontSize: '24px', fontWeight: 'bold', color: '#A20066'};
-    const toolTipsStyle = {backgroundColor: 'white',  color: 'rgba(0, 0, 0, 0.87)', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
-    const toolTipsStyleClicked = {backgroundColor: '#A20066',  color: 'white', minWidth: '13.5vw', maxWidth: '13.5vw', fontSize: '12rem', border: '1px solid #A20066', borderRadius: '15px', paddingLeft: '0.5rem', paddingRight: '0.5rem'};
-
-    const listStyle = { marginTop: '0'};
-    const captionStyle = {
-        margin: 0,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-    }
-
-    const searchTextFieldStyle = {
-        '& .MuiOutlinedInput-root': {
-            minWidth: '16vw',
-            maxWidth: '16vw',
-          '& .MuiOutlinedInput-input' : {
-            fontSize: '15px'
-          },
-          '& fieldset': {
-            border: '0.5px solid grey',
-            borderRadius: '5px',
-          },
-          '&.Mui-focused fieldset': {
-            borderColor: "#A20066", // Change the outline color on focus to black
-          },
-        },
-    };
 
     // Loading all data on the first load
     useEffect(()=> {
@@ -199,33 +117,6 @@ const MapFilter = ({filteredPrograms,
 
     },[filteredPrograms])
 
-    useEffect(() => {
-
-        // console.log("in effect of filtered sites");
-
-        if(filteredSites && filteredSites[0] && !filteredSites[0].distance) {
-            setTmpAddressValue("");
-        }
-
-        setAdvanceFilteredSites(filteredSites);
-        setAvailableSearchSites(filteredSites);
-
-        // if(availableSearchSites.length <= 0) {
-        //     console.log("in effect of filtered sites - if 1");
-        //     setAvailableSearchSites(filteredSites);
-        // }
-        // else {
-        //     console.log("in effect of filtered sites - if 2");
-        //     const tmpAvailableSiteIds = availableSearchSites.map(site => site.site_id);
-        //     const tmpAvailableSites = filteredSites.filter((site) => tmpAvailableSiteIds.includes(site.site_id));
-        //     setAvailableSearchSites(tmpAvailableSites);
-        // }
-
-        setAddressIsLoading(false);
-        setClickedSite(null);
-
-    },[filteredSites])
-
 
     useEffect(() => {
 
@@ -241,16 +132,6 @@ const MapFilter = ({filteredPrograms,
 
     } , [filteredServiceStreams, filteredServiceTypes, filteredProgramTypes, filteredDivisions, filteredGroups])
 
-
-    // Setting the clicked site
-    useEffect(() => {
-        if(importSite && importSite.site_id){
-            if(clickedSite && clickedSite.site_id === importSite.site_id){
-                return;
-            }
-            setClickedSite(importSite);
-        }
-    },[importSite]);
 
     // Filtering the Program Based on the filter
     useEffect(() => {
@@ -365,54 +246,6 @@ const MapFilter = ({filteredPrograms,
 
     },[serviceStreamValue, serviceTypeValue, programTypeValue, divisionValue, groupValue])
 
-    // Geting the relevant address drop down base on the user current address
-    useEffect(() => {
-
-        if(!onChangeAddressValue) return setSuggestAddressOptions([]);
-
-        let cancel = false;
-
-        const geocoding_url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
-
-        axios.get(geocoding_url + onChangeAddressValue.split(' ').join('%20') + `.json?proximity=ip&&country=au&&language=en&access_token=${MAPBOX_TOKEN}`).then((res) =>{
-            if(cancel) return;
-            const addressSuggestions = res.data.features.map((feature) => {
-                return {
-                    address: feature.place_name,
-                    lng: feature.geometry.coordinates[0],
-                    lat: feature.geometry.coordinates[1],
-                }
-            });
-            setSuggestAddressOptions(addressSuggestions);
-        })
-
-        return () => (cancel = true);
-
-    },[onChangeAddressValue])
-
-    // Getting the map routing and distance from Article
-    useEffect(()=> {
-        if(routingAddressValue.address && tmpAddressValue === routingAddressValue.address) {
-            exportDepartureAddress(routingAddressValue);
-            setAddressIsLoading(true);
-        }
-        else {
-            exportDepartureAddress(null);
-        }
-
-    }, [routingAddressValue]);
-
-    // Zoom to the current user location after getting they current address
-    useEffect(() => {
-
-        if(addressIsLoading) return;
-
-        if(routingAddressValue && routingAddressValue.lat && routingAddressValue.lng) {
-            
-            flyingToLocation(routingAddressValue.lat, routingAddressValue.lng);
-        }
-
-    },[addressIsLoading]);
 
     useEffect(() => {
         applyingFilter();
@@ -519,7 +352,7 @@ const MapFilter = ({filteredPrograms,
     const ServiceStreamDropdown = () => {
         return (
 
-            (addressIsLoading === false && isLoading === false)?
+            (isLoading === false)?
         
             <DropdownSelect
                 name="Service Stream"
@@ -562,7 +395,7 @@ const MapFilter = ({filteredPrograms,
     const ServiceTypeDropdown = () => {
         return (
 
-            (addressIsLoading === false && isLoading === false)?
+            (isLoading === false)?
             
             <DropdownSelect
                 name="Service Type"
@@ -602,7 +435,7 @@ const MapFilter = ({filteredPrograms,
     const ProgramTypeDropdown = () => {
         return (
 
-            (addressIsLoading === false && isLoading === false)?
+            (isLoading === false)?
 
             <DropdownSelect
                 name="Program Type"
@@ -642,7 +475,7 @@ const MapFilter = ({filteredPrograms,
     const ProgramDropdown = () => {
         return (
 
-            (addressIsLoading === false && isLoading === false)?
+            (isLoading === false)?
 
             <DropdownSelect
                 name="Program"
@@ -682,7 +515,7 @@ const MapFilter = ({filteredPrograms,
     const DivisionDropdown = () => {
 
         return (
-            (addressIsLoading === false && isLoading === false)?
+            (isLoading === false)?
 
             <DropdownSelect
                 name="Division"
@@ -724,7 +557,7 @@ const MapFilter = ({filteredPrograms,
 
         return (
 
-            (addressIsLoading === false && isLoading === false)?
+            (isLoading === false)?
 
             <DropdownSelect
                 name="Group"
@@ -763,91 +596,7 @@ const MapFilter = ({filteredPrograms,
     }
 
     //============================= End Filter Dropdown ===================================
-    
-    // Available Site Result
-    const AvailableSites = () => {
-        return (
-            availableSearchSites && availableSearchSites.map((site, index) => {
-                return (
-                    <ListItem key={index}>
-                        <Tooltip 
-                            title= {<Typography variant= 'body2' color="inherit" style= {{zIndex: 0}}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>} 
-                            style={(clickedSite && site.site_id === clickedSite.site_id)? toolTipsStyleClicked: toolTipsStyle}
-                        >
-                            <SiteOption onClick={() => onClickSite(site)}>
-                                <SiteOptionRoutingContainer>
-                                    <Typography variant='body1'>
-                                        {site.site_id}
-                                    </Typography>
 
-                                    {
-                                        (site.distance) ? 
-                                            <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
-                                            {
-                                                `${Math.round((site.distance / 1000) * 10) / 10} km`
-                                            }
-                                            </Typography> 
-                                        : null
-                                    }
-
-                                </SiteOptionRoutingContainer>
-
-                                <SiteOptionRoutingContainer>
-                                {
-
-                                    (site.duration) ? 
-                                    <Typography variant='caption' style={captionStyle}>
-                                        {
-                                            `Duration: `
-                                        }
-                                        <Typography variant='caption' style={{...captionStyle, fontWeight: 'bold'}}>
-                                        {
-                                            `${timeCalculation(site.duration)}`
-                                        }
-                                        </Typography> 
-                                    </Typography> 
-                                    : null
-                                }
-
-                                </SiteOptionRoutingContainer>
-                                <Typography variant='caption' style={captionStyle}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</Typography>
-                            </SiteOption>
-                        </Tooltip>
-                    </ListItem>
-                )
-            })
-        )
-    }
-
-    // Hours Diplay
-    const timeCalculation = (seconds) => {
-
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const remainingSeconds = Math.round(seconds % 60);
-
-        let formattedTime = '';
-
-        if (hours > 0) {
-            formattedTime += `${hours}h `;
-        }
-
-        if (minutes > 0 || (hours === 0 && seconds < 60)) {
-            formattedTime += `${minutes}m `;
-        }
-
-        formattedTime += `${remainingSeconds}s`;
-
-        return formattedTime.trim(); // Trim any leading or trailing spaces
-
-    }
-
-    // Fly to a specific location of a map base on lat and lng
-    const flyingToLocation = (lat, lng) => {
-        if(importRef.current) {
-            importRef.current.getMap().flyTo({ center: [lng, lat], zoom: 16, essential: true });
-        }
-    }
 
     //================================= Filter Assistance Method ====================================
 
@@ -1166,45 +915,8 @@ const MapFilter = ({filteredPrograms,
         setFilteredGroups(filteringGroups(filteredPrograms));
 
         exportAdvanceFilteredPrograms(filteredPrograms);
-        setAvailableSearchSites(filteredSites);
         exportAdvanceFilteredSites(filteredSites);
         
-    }
-
-    const onClickSite = (site) => {
-        setClickedSite(site); 
-        flyingToLocation(site.lat, site.lng);
-        exportSite(site);
-
-        if(site.geojson) {
-            if(importRef.current) {
-                const map = importRef.current.getMap();
-                // if the route already exists on the map, we'll reset it using setData
-                if (map.getSource('route')) {
-                    map.getSource('route').setData(site.geojson);
-                }
-                // otherwise, we'll make a new request
-                else {
-                    map.addLayer({
-                    id: 'route',
-                    type: 'line',
-                    source: {
-                        type: 'geojson',
-                        data: site.geojson
-                    },
-                    layout: {
-                        'line-join': 'round',
-                        'line-cap': 'square',
-                    },
-                    paint: {
-                        'line-color': '#A20066',
-                        'line-width': 5,
-                        'line-opacity': 0.75
-                    }
-                    });
-                }
-            }
-        }
     }
 
     const onChangeServiceStream = (e) => {
@@ -1793,55 +1505,7 @@ const MapFilter = ({filteredPrograms,
 
     }
 
-      
-    const onChangeDepartureAddress = (e, v) => {
-        e.preventDefault();
 
-        if(v) {
-            setTmpAddressValue(v);
-        }
-        else {
-            setTmpAddressValue("");
-        }
-
-        const addressDetail = suggestAddressOptions.filter((address) => address.address === v);
-
-        if(addressDetail.length > 0) {
-            setRoutingAddressValue(addressDetail[0]);
-        }
-        else {
-            setRoutingAddressValue({});
-        }
-
-    };
-
-    const onInputDepartureValue = debounce((e, v) => {
-        let value = v;
-        if(!value) {
-            value = null;
-        }
-        setOnChangeAddressValue(value);
-    }, 500)
-
-    const onChangeSiteSearch = debounce((e) => {
-        const inputValue = e.target.value.trim();
-
-        if(!inputValue) {
-            if(availableSearchSites.length !== advanceFilteredSites.length) {
-                setAvailableSearchSites(advanceFilteredSites);
-                return;
-            }
-        }
-
-        const pattern = new RegExp(inputValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'); // pattern to search more accurately
-        const filterSearchSite = availableSearchSites.filter((site) => {
-            const fullAddress = `${site.site_id} ${site.street_nbr} ${site.street_name} ${site.suburb} ${site.state} ${site.postcode}`;
-            return pattern.test(fullAddress);
-        })
-
-        setAvailableSearchSites(filterSearchSite);
-
-    },300);
 
     const openFilterPopup = () => {
         setSMFilterPopup(true);
@@ -1875,32 +1539,11 @@ const MapFilter = ({filteredPrograms,
 
         
         exportAdvanceFilteredPrograms(tmpAdvancedFilteredPrograms);
-        setAvailableSearchSites(tmpAdvanceFilteredSites);
         exportAdvanceFilteredSites(tmpAdvanceFilteredSites);
     
 
     }
 
-    //============================= Render of the Options ===================================
-    const renderOptions = (option) => {
-        return (
-            <OptionContainer {...option} className=''>
-                <OptionIcon>
-                    <img src={require('../../images/optionMarker.png')} style= {{width: "35px", height: "auto"}} alt="Marker Icon" />
-                </OptionIcon>
-                <OptionDetail>
-                    <OptionP>{option.key}</OptionP>
-                </OptionDetail>
-            </OptionContainer>
-        )
-    }
-
-    //Collapse of UI
-    const collapseRequest = () => {
-        const tmpCollapse = isCollapse;
-        setIsCollapse(!tmpCollapse);
-        collapseChecking(!tmpCollapse);
-    }
 
     const ProgramServiceFilter = () => {
 
@@ -2107,10 +1750,6 @@ const MapFilter = ({filteredPrograms,
                 </ProgramDropDownContainer>
                 <ProgramDropDownContainer style={{justifyContent: "center", marginLeft: "0.5vw"}}>
                         <ButtonContainer>
-                            {/*<ApplyButton onClick={applyingFilter} style={ (addressIsLoading || isLoading)? {pointerEvents: 'none'} : {}}>*/}
-                            {/*    <SendIcon style= {{fontSize: '16px', marginRight: '5px'}}></SendIcon>*/}
-                            {/*    <ButtonLabel>Apply Filter</ButtonLabel>*/}
-                            {/*</ApplyButton>*/}
                             <ResetButton onClick={clear} style={ (loadingSignal)? {pointerEvents: 'none'} : {}}>
                                 <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
                                 <ButtonLabel style={{color: '#A20066'}}>Reset Filter</ButtonLabel>
