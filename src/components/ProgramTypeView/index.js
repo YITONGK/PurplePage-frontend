@@ -10,6 +10,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Cookies from "js-cookie";
 
 const ProgramTypeView = () => {
   // useState hooks
@@ -44,8 +45,12 @@ const ProgramTypeView = () => {
 
   /* get a program type from the backend based on the id and display it */
   const getProgramType = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/programtype/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/programtype/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       console.log(res);
       const data = res.data[0];
       data['ser_type'] = res.data[1];
@@ -54,8 +59,12 @@ const ProgramTypeView = () => {
   }
 
   const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    const result = await axios.get(BASE_URL + '/program');
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const result = await axios.get(BASE_URL + '/program', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
     setPrograms(result.data[0]);
     setIsLoading(false);
 
@@ -68,7 +77,7 @@ const ProgramTypeView = () => {
 
   /* delete the program type */
   // const deleteProgramType = () => {
-  //   const BASE_URL = 'http://localhost:8888';
+  //   const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
   //   Swal.fire({
   //     title: "Warning!",
   //     text: "Are you sure you want to delete this program type?",

@@ -7,6 +7,7 @@ import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 const ServiceStreamEdit = (props) => {
   // initial values
@@ -27,8 +28,12 @@ const ServiceStreamEdit = (props) => {
 
   /* get a service stream from the backend based on the id and display it */
   const getServiceStream = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/servicestream/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/servicestream/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data;
       setValues({
         ser_stream_id: data.ser_stream_id,
@@ -56,7 +61,7 @@ const ServiceStreamEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/servicestream/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

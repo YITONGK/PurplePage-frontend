@@ -6,6 +6,7 @@ import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 const ServiceTypeCreate = () => {
   // useState hooks
@@ -31,8 +32,12 @@ const ServiceTypeCreate = () => {
 
   /* get list of service streams from the backend and display them */
   const getServiceStreams = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/servicestream').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/servicestream', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const list = res.data;
       setServiceStreamList(list);
     })
@@ -41,7 +46,7 @@ const ServiceTypeCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/servicetype';
     const { ser_type, ser_stream, status } = values;
     await axios.post(url, {ser_type, ser_stream, status}).then(() => {

@@ -7,6 +7,7 @@ import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 const GroupEdit = (props) => {
   // initial values
@@ -32,8 +33,12 @@ const GroupEdit = (props) => {
 
   /* get a group from the backend based on the id and display it */
   const getGroup = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/group/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/group/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data[0];
       const division_name = res.data[1];
       setValues({
@@ -48,8 +53,12 @@ const GroupEdit = (props) => {
 
   /* get list of divisions from the backend and display them */
   const getDivisions = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/division').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/division', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const list = res.data;
       setDivisionList(list);
     })
@@ -73,7 +82,7 @@ const GroupEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/group/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

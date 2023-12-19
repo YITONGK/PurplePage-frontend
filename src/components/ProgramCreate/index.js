@@ -6,6 +6,7 @@ import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 const ProgramCreate = () => {
   // useState hooks
@@ -35,8 +36,12 @@ const ProgramCreate = () => {
 
   /* get list of program types from the backend and display them */
   const getProgramTypes = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/programtype').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/programtype', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const list = res.data[0];
       setProgramTypeList(list);
     })
@@ -44,8 +49,12 @@ const ProgramCreate = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/group').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/group', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const list = res.data[0];
       setGroupList(list);
     })
@@ -54,7 +63,7 @@ const ProgramCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/program';
     const { program_nme, prgm_mgr, prgm_type, group_name, prgm_status } = values;
     await axios.post(url, {program_nme, prgm_mgr, prgm_type, group_name, prgm_status}).then(() => {

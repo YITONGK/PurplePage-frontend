@@ -7,6 +7,7 @@ import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 const ProgramEdit = (props) => {
   // initial values
@@ -35,8 +36,12 @@ const ProgramEdit = (props) => {
 
   /* get a program from the backend based on the id and display it */
   const getProgram = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/program/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/program/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data[0];
       const prgm_type = res.data[1];
       const group_name = res.data[2];
@@ -53,8 +58,12 @@ const ProgramEdit = (props) => {
 
   /* get list of program types from the backend and display them */
   const getProgramTypes = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/programtype').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/programtype', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const list = res.data[0];
       setProgramTypeList(list);
     })
@@ -62,8 +71,12 @@ const ProgramEdit = (props) => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/group').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/group', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const list = res.data[0];
       setGroupList(list);
     })
@@ -87,7 +100,7 @@ const ProgramEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/program/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

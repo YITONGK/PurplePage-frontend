@@ -6,6 +6,7 @@ import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 const GroupCreate = () => {
   // useState hooks
@@ -32,8 +33,12 @@ const GroupCreate = () => {
 
   /* get list of divisions from the backend and display them */
   const getDivisions = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/division').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/division', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const list = res.data;
       setDivisionList(list);
     })
@@ -42,7 +47,7 @@ const GroupCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/group';
     const { group_name, eo, division_name, status } = values;
     await axios.post(url, {group_name, eo, division_name, status}).then(() => {

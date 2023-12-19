@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import { SiteContainer, SiteH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './SiteElements';
+import Cookies from "js-cookie";
 
 const Site = () => {
   // useState hooks
@@ -22,8 +23,12 @@ const Site = () => {
 
   /* get list of sites from the backend and display them */
   const getSites = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/site').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/site', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       let list = res.data;
       list = list.map ((list) => {
         return {

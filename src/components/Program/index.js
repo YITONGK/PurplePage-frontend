@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ProgramContainer, ProgramH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './ProgramElements';
+import Cookies from "js-cookie";
 
 const Program = () => {
   // useState hooks
@@ -22,8 +23,12 @@ const Program = () => {
 
   /* get list of programs from the backend and display them */
   const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/program').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/program', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const list = res.data[0];
       const programTypeList = res.data[1];
       const groupList = res.data[2];

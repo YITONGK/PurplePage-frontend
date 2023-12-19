@@ -11,6 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Cookies from "js-cookie";
 
 const ServiceStreamView = () => {
   // useState hooks
@@ -71,8 +72,12 @@ const ServiceStreamView = () => {
 
   /* get a service stream from the backend based on the id and display it */
   const getServiceStream = async () => {
-    const BASE_URL = "http://localhost:8888";
-    const result = await axios.get(BASE_URL + '/servicestream/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    const result = await axios.get(BASE_URL + '/servicestream/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data;
       return data;
     })
@@ -83,22 +88,34 @@ const ServiceStreamView = () => {
   }
 
   const getServiceTypes = async () => {
-    const BASE_URL = "http://localhost:8888";
-    let result = await axios.get(BASE_URL + '/servicetype/');
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    let result = await axios.get(BASE_URL + '/servicetype/', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
     result = result.data[1]; // type id - service stream name
     return result;
   }
 
   const getProgramTypes = async () => {
-    const BASE_URL = "http://localhost:8888";
-    let result = await axios.get(BASE_URL + '/programtype');
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    let result = await axios.get(BASE_URL + '/programtype', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
     result = result.data[0];
     return result;
   }
 
   const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    let result = await axios.get(BASE_URL + '/program');
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    let result = await axios.get(BASE_URL + '/program', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
     result = result.data[0];
     return result;
   }
@@ -148,7 +165,7 @@ const ServiceStreamView = () => {
 
   // /* delete the service stream */
   // const deleteServiceStream = () => {
-  //   const BASE_URL = 'http://localhost:8888';
+  //   const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
   //   Swal.fire({
   //     title: "Warning!",
   //     text: "Are you sure you want to delete this service stream?",

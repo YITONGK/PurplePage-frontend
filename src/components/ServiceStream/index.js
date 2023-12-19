@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ServiceStreamContainer, ServiceStreamH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './ServiceStreamElements';
+import Cookies from "js-cookie";
 
 const ServiceStream = () => {
   // useState hooks
@@ -22,8 +23,12 @@ const ServiceStream = () => {
 
   /* get list of service streams from the backend and display them */
   const getServiceStreams = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/servicestream').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/servicestream', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const list = res.data;
       setServiceStreamList(list);
       setIsLoading(false);

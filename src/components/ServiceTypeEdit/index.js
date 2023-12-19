@@ -7,6 +7,7 @@ import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 const ServiceTypeEdit = (props) => {
   // initial values
@@ -31,8 +32,12 @@ const ServiceTypeEdit = (props) => {
 
   /* get a service type from the backend based on the id and display it */
   const getServiceType = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/servicetype/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/servicetype/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data[0];
       const ser_stream = res.data[1];
       setValues({
@@ -46,8 +51,12 @@ const ServiceTypeEdit = (props) => {
 
   /* get list of service streams from the backend and display them */
   const getServiceStreams = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/servicestream').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/servicestream', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const list = res.data;
       setServiceStreamList(list);
     })
@@ -71,7 +80,7 @@ const ServiceTypeEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/servicetype/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

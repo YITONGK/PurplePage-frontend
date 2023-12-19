@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useRef} from 'react';
+import Cookies from 'js-cookie';
 import { ArticleContainer, ArticleH1 } from './ArticleElements';
 
 import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer, LoadindContainer, WarningContainer, WarningText, SearchTextField, SMMapElement, LoadingSkeleton} from './ArticleElements';
@@ -330,20 +331,30 @@ const Article = () => {
 
   // =============================Data Collect Method From Database====================================
 
+
   /* get a list of sites from the backend and display it */
   const getSites = async () => {
-    const BASE_URL = "http://localhost:8888";
-    const result = await axios.get(BASE_URL+ '/site');
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+
+    const result = await axios.get(BASE_URL+ '/site', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
     const filteredResult = result.data;
     return filteredResult.filter(site => site.lng !== null && site.lat != null);
   }
 
   /* get list of site accessibility from the db */
   const getSiteAccessibilities = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     try {
 
-      const result = await axios.get(BASE_URL + '/siteaccess');
+      const result = await axios.get(BASE_URL + '/siteaccess', {
+        headers : {
+          'authorization': `Bearer ${Cookies.get('accessToken')}`
+        }
+      });
       return result.data;
 
     } catch (err){
@@ -355,8 +366,13 @@ const Article = () => {
 
   /* get list of programs from the backend and display them */
   const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    let result = await axios.get(BASE_URL + '/program');
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    let result = await axios.get(BASE_URL + '/program', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
+
     result = result.data[0];
     result = result.filter((r) => r.program_nme !== null && r.program_nme !== '')
     result.sort((a, b) => {
@@ -367,9 +383,14 @@ const Article = () => {
 
   /* get list of programs Access Type from the db */
   const getProgramAts = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     try{
-      const result = await axios.get(BASE_URL + '/programat');
+      const result = await axios.get(BASE_URL + '/programat', {
+        headers : {
+          'authorization': `Bearer ${Cookies.get('accessToken')}`
+        }
+      });
+
       return result.data;
 
     } catch (err) {
@@ -379,10 +400,15 @@ const Article = () => {
 
   /* get list of programs delivery method from the db */
   const getProgramSdms = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
 
     try {
-      const result = await axios.get(BASE_URL + '/programsdm');
+      const result = await axios.get(BASE_URL + '/programsdm', {
+        headers : {
+          'authorization': `Bearer ${Cookies.get('accessToken')}`
+        }
+      });
+
       return result.data;
 
     } catch (err) {
@@ -393,9 +419,13 @@ const Article = () => {
 
   /* get list of program types from the backend and display them */
   const getProgramTypes = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
 
-    let result = await axios.get(BASE_URL + '/programtype');
+    let result = await axios.get(BASE_URL + '/programtype', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
     result = result.data[0];
 
     result.sort((a, b) => {
@@ -410,9 +440,13 @@ const Article = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
 
-    let result =  await axios.get(BASE_URL + '/group');
+    let result =  await axios.get(BASE_URL + '/group', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
     result = result.data[0];
     result.sort ((a, b) => a.group_name.localeCompare(b.group_name));
     return result;
@@ -420,9 +454,14 @@ const Article = () => {
 
   /* get list of service stream from the backend and display them */
   const getServiceStreams = async() => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
 
-    let result = await axios.get(BASE_URL + '/servicestream');
+    let result = await axios.get(BASE_URL + '/servicestream', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
+
     result = result.data;
     result.sort((a, b) => a.ser_stream.localeCompare(b.ser_stream));
     return result;
@@ -430,9 +469,14 @@ const Article = () => {
 
   /* get list of divisions from the backend and display them */
   const getDivisions = async() => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
 
-    let result = await axios.get(BASE_URL + '/division');
+    let result = await axios.get(BASE_URL + '/division', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
+
     result = result.data;
     result.sort((a, b) => a.division_name.localeCompare(b.division_name));
     return result;
@@ -441,9 +485,14 @@ const Article = () => {
 
   /* get list of service type from the backend and display them */
   const getServiceTypes = async() => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
 
-    let result = await axios.get(BASE_URL + '/servicetype');
+    let result = await axios.get(BASE_URL + '/servicetype', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
+
     result = result.data[0];
     result = result.filter(type => type.ser_type !== null);
     result.sort ((a, b) => a.ser_type.localeCompare(b.ser_type));

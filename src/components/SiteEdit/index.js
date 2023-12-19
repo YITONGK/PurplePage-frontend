@@ -7,6 +7,7 @@ import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 const SiteEdit = (props) => {
   // initial values
@@ -33,8 +34,12 @@ const SiteEdit = (props) => {
 
   /* get a site from the backend based on the id and display it */
   const getSite = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/site/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/site/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data;
       setValues({
         id: data.id,
@@ -68,7 +73,7 @@ const SiteEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/site/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

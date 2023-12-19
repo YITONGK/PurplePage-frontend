@@ -11,6 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Cookies from "js-cookie";
 
 const GroupView = () => {
   // useState hooks
@@ -58,8 +59,12 @@ const GroupView = () => {
 
   /* get a group from the backend based on the id and display it */
   const getGroup = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/group/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/group/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data[0];
       data['division_name'] = res.data[1];
       setGroup(data);
@@ -67,8 +72,12 @@ const GroupView = () => {
   }
 
   const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    let result = await axios.get(BASE_URL + '/program');
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    let result = await axios.get(BASE_URL + '/program', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
     result = result.data[0];
     return result;
   }
@@ -80,7 +89,7 @@ const GroupView = () => {
 
   // /* delete the group */
   // const deleteGroup = () => {
-  //   const BASE_URL = 'http://localhost:8888';
+  //   const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
   //   Swal.fire({
   //     title: "Warning!",
   //     text: "Are you sure you want to delete this group?",

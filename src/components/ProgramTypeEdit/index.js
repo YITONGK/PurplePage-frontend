@@ -7,6 +7,7 @@ import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 const ProgramTypeEdit = (props) => {
   // initial values
@@ -31,8 +32,12 @@ const ProgramTypeEdit = (props) => {
 
   /* get a program type from the backend based on the id and display it */
   const getProgramType = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/programtype/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/programtype/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data[0];
       const ser_type = res.data[1];
       setValues({
@@ -46,8 +51,12 @@ const ProgramTypeEdit = (props) => {
 
   /* get list of service types from the backend and display them */
   const getServiceTypes = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/servicetype').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/servicetype', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const list = res.data[0];
       setServiceTypeList(list);
     })
@@ -71,7 +80,7 @@ const ProgramTypeEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/programtype/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { UserViewContainer, UserViewH1, UserViewP } from './UserViewElements';
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 const UserView = () => {
   // useState hooks
@@ -18,8 +19,12 @@ const UserView = () => {
 
   /* get a user from the backend based on the id and display it */
   const getUser = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/users/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/users/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data;
       setUser(data);
     })
@@ -32,7 +37,7 @@ const UserView = () => {
 
   /* delete the user */
   const deleteUser = () => {
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     Swal.fire({
       title: "Warning!",
       text: "Are you sure you want to delete this user?",

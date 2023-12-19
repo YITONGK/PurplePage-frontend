@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ServiceTypeContainer, ServiceTypeH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './ServiceTypeElements';
+import Cookies from "js-cookie";
 
 const ServiceType = () => {
   // useState hooks
@@ -22,8 +23,12 @@ const ServiceType = () => {
 
   /* get list of service types from the backend and display them */
   const getServiceTypes = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/servicetype').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/servicetype', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const serviceTypeList = res.data[0];
       const serviceStreamList = res.data[1];
       for (let i=0; i < serviceTypeList.length; i++) {

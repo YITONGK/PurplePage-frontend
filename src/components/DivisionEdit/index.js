@@ -7,6 +7,7 @@ import Select from '@mui/material/Select';
 import MenuItem from "@mui/material/MenuItem";
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 const DivisionEdit = (props) => {
   // initial values
@@ -28,8 +29,12 @@ const DivisionEdit = (props) => {
 
   /* get a division from the backend based on the id and display it */
   const getDivision = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/division/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/division/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data;
       setValues({
         division_id: data.division_id,
@@ -58,7 +63,7 @@ const DivisionEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://localhost:8888';
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/division/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

@@ -38,7 +38,7 @@ const UserCreate = () => {
         password: values.password
       },
       withCredentials:  true,
-      url: 'http://localhost:8888/users'
+      url: 'http://purplepagesbackend.vt.uniting.org/users'
     }).then((res) => {
       if (Object.keys(res.data).length !== 0) {
         Swal.fire({

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { UsersContainer, UsersH1, ActionsButtonLink, ActionsColumnWrapper, DataGridWrapper, ButtonWrapper, UsersButtonLink } from './UsersElements';
 import { DataGrid } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
+import Cookies from "js-cookie";
 
 const Users = () => {
   // useState hooks
@@ -20,8 +21,12 @@ const Users = () => {
 
   // get the current user
   const getUsers = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/users').then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/users', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data;
       setUsers(data);
       setIsLoading(false);

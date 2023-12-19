@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import { DivisionContainer, DivisionH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './DivisionElements';
+import Cookies from "js-cookie";
 
 const Division = () => {
   // useState hooks
@@ -22,12 +23,16 @@ const Division = () => {
 
   /* get list of divisions from the backend and display them */
   const getDivisions = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/division').then(res => {
-      const list = res.data;
-      setDivisionList(list);
-      setIsLoading(false);
-    })
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/division', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
+          const list = res.data;
+          setDivisionList(list);
+          setIsLoading(false);
+        })
   }
 
   const ActionsColumn = {

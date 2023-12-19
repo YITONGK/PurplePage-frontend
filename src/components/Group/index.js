@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import { GroupContainer, GroupH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './GroupElements';
+import Cookies from "js-cookie";
 
 const Group = () => {
   // useState hooks
@@ -22,8 +23,12 @@ const Group = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    await axios.get(BASE_URL + '/group').then(res => {
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    await axios.get(BASE_URL + '/group', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const groupList = res.data[0];
       const divisionList = res.data[1];
       for (let i=0; i < groupList.length; i++) {

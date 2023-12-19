@@ -11,6 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Cookies from "js-cookie";
 
 const DivisionView = () => {
   // useState hooks
@@ -65,8 +66,12 @@ const DivisionView = () => {
 
   /* get a division from the backend based on the id and display it */
   const getDivision = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/division/' + id).then(res => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/division/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(res => {
       const data = res.data;
       setDivision(data);
     })
@@ -74,15 +79,23 @@ const DivisionView = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    let result =  await axios.get(BASE_URL + '/group');
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    let result =  await axios.get(BASE_URL + '/group', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
     result = result.data[0];
     return result;
   }
 
   const getPrograms = async () => {
-    const BASE_URL = 'http://localhost:8888';
-    let result = await axios.get(BASE_URL + '/program');
+    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    let result = await axios.get(BASE_URL + '/program', {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
     result = result.data[0];
     return result;
   }

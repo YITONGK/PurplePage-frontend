@@ -19,6 +19,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import CallIcon from '@mui/icons-material/Call';
 import WorkIcon from '@mui/icons-material/Work';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import Cookies from "js-cookie";
 
 const ProgramView = () => {
   // useState hooks
@@ -40,13 +41,21 @@ const ProgramView = () => {
 
   /* get a program from the backend based on the id and display it */
   const getProgram = async () => {
-    const BASE_URL = "http://localhost:8888";
-    await axios.get(BASE_URL + '/program/' + id).then(async (res) => {
+    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    await axios.get(BASE_URL + '/program/' + id, {
+      headers : {
+        'authorization': `Bearer ${Cookies.get('accessToken')}`
+      }
+    }).then(async (res) => {
       const data = res.data[0];
       data['prgm_type'] = res.data[1];
       data['group_name'] = res.data[2];
       setProgram(data);
-      await axios.get(BASE_URL + '/program/sites/' + data.program_id).then(res => {
+      await axios.get(BASE_URL + '/program/sites/' + data.program_id, {
+        headers : {
+          'authorization': `Bearer ${Cookies.get('accessToken')}`
+        }
+      }).then(res => {
         const sites = res.data;
         setSites(sites);
       })
