@@ -4,13 +4,12 @@ import { RegisterBackground, RegisterContainer, RegisterFormContentLeft, Registe
 
 // register page
 const RegisterPage = () => {
-  const imgLink = 'http://rev.u22s2101.monash-ie.me/img/church.png'
 
   return (
     <RegisterBackground>
       <RegisterContainer>
         <RegisterFormContentLeft>
-          <RegisterImage src={imgLink} alt="welcome" />
+          <RegisterImage src={require('../images/uniting-icon.png')} alt="welcome" />
         </RegisterFormContentLeft>
         <Register />
       </RegisterContainer>

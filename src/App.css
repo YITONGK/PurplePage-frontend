@@ -109,6 +109,33 @@
   z-index: -1; /* This places the image behind the loading text */
 }
 
+.loading-overlay2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  background-color: #282c34;
+}
+
+.loading-overlay2::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('./images/Uniting_Background.jpeg'); /* Replace with your image path */
+  background-size: cover; /* This will cover the entire viewport */
+  background-position: center; /* This will center the background image */
+  opacity: 0.8; /* This will make the image semi-transparent */
+  z-index: -1; /* This places the image behind the loading text */
+}
+
 .loading-container {
   background-color: #333;
   padding: 20px;
@@ -134,6 +161,7 @@
   margin: 0;
   padding: 0;
 }
+
 
 
 

@@ -6,7 +6,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 // header component
 const Header = ({showSideNav}) => {
 
-  const logo = 'http://rev.u22s2101.monash-ie.me/img/uniting-logo-white.png';
   const homeLink = '/';
 
   return (
@@ -18,7 +17,10 @@ const Header = ({showSideNav}) => {
           </SideNavButton>
 
           <HeaderLogo to={homeLink}>
-            <HeaderImg src={logo}></HeaderImg>
+            <HeaderImg
+                src={require('../../images/uniting-icon.png')}
+                style={{ filter: 'brightness(0) invert(1)' }}
+                alt="Logo"></HeaderImg>
           </HeaderLogo>
 
         </HeaderContainer>

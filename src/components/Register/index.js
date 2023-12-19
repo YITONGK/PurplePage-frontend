@@ -6,8 +6,6 @@ import { RegisterFormContentRight, RegisterForm, RegisterLogo, RegisterHr, Regis
 const Register = () => {
   const { handleChange, values, onSubmit, errors } = useFormRegister();
 
-  const logo = 'http://rev.u22s2101.monash-ie.me/img/uniting-logo.png';
-
   const home = () => {
     window.location = '/';
   }
@@ -17,7 +15,7 @@ const Register = () => {
   return (
     <RegisterFormContentRight>
       <RegisterForm onSubmit={onSubmit}>
-        <RegisterLogo src={logo} onClick={home} />
+        <RegisterLogo src={require('../../images/uniting-icon.png')} onClick={home} />
         <RegisterHr />
         <RegisterH1>Welcome! Create your account by filling out the information below.</RegisterH1>
         <RegisterFormInputs>

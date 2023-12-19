@@ -910,7 +910,7 @@ const Article = () => {
 
     <div className="loading-overlay">
       <div className="loading-container">
-        <span className="loading-text"><img src='http://rev.u22s2101.monash-ie.me/img/uniting-logo-white.png' style={{width: '150px', height: 'auto', marginBottom: '10px'}} alt={"Uniting Logo"} /> </span>
+        <span className="loading-text"><img src={require('../../images/uniting-icon.png')}  style={{filter: 'brightness(0) invert(1)', width: '150px', height: 'auto', marginBottom: '10px'}} alt={"Uniting Logo"} /> </span>
         <ReactLoading type={'spin'} color={'#A20066'} height={150} width={110}></ReactLoading>
         <span className="loading-text">Loading...</span>
       </div>

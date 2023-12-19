@@ -7,8 +7,6 @@ import { LoginFormContentRight, LoginForm, LoginLogo, LoginHr, LoginH1, LoginFor
 const Login = () => {
   const { handleChange, values, onSubmit, errors } = useFormLogin(validateInfo);
 
-  const logo = 'http://rev.u22s2101.monash-ie.me/img/uniting-logo.png';
-
   const home = () => {
     window.location = '/';
   }
@@ -18,7 +16,7 @@ const Login = () => {
   return (
     <LoginFormContentRight>
       <LoginForm onSubmit={onSubmit}>
-        <LoginLogo src={logo} onClick={home} />
+        <LoginLogo src={require('../../images/uniting-icon.png')} onClick={home} />
         <LoginHr />
         <LoginH1>Welcome back! Please login to your account.</LoginH1>
         <LoginFormInputs>

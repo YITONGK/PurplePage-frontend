@@ -4,13 +4,12 @@ import { LoginBackground, LoginContainer, LoginFormContentLeft, LoginImage } fro
 
 // login page
 const LoginPage = () => {
-  const imgLink = 'http://rev.u22s2101.monash-ie.me/img/church.png'
 
   return (
     <LoginBackground>
       <LoginContainer>
         <LoginFormContentLeft>
-          <LoginImage src={imgLink} alt="welcome" />
+          <LoginImage src={require('../images/uniting-icon.png')} alt="welcome" />
         </LoginFormContentLeft>
         <Login />
       </LoginContainer>

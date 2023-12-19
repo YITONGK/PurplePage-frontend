@@ -6,8 +6,6 @@ import { SideNavButton, ButtonContainer, HeaderImg} from './MySidebarElements';
 import MenuIcon from '@mui/icons-material/Menu';
 
 const MySidebar = ({showSideNav}) => {
-  //logo
-  const logo = 'http://rev.u22s2101.monash-ie.me/img/uniting-logo-white.png';
 
   // change selected tab
   const onSelect = (selected) => {
@@ -34,7 +32,7 @@ const MySidebar = ({showSideNav}) => {
         <SideNavButton size='small' variant='text' onClick={showSideNav} disableRipple>
           <MenuIcon style={{color: 'white', fontSize: '35px'}}></MenuIcon>
         </SideNavButton>
-        <HeaderImg src={logo}></HeaderImg>
+        <HeaderImg src={require('../../images/uniting-icon.png')}></HeaderImg>
       </ButtonContainer>
 
       <Nav defaultSelected="home">
