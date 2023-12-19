@@ -23,7 +23,7 @@ const ServiceStream = () => {
 
   /* get list of service streams from the backend and display them */
   const getServiceStreams = async () => {
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     await axios.get(BASE_URL + '/servicestream', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`

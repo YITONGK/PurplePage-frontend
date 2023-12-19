@@ -23,7 +23,7 @@ const Division = () => {
 
   /* get list of divisions from the backend and display them */
   const getDivisions = async () => {
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     await axios.get(BASE_URL + '/division', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`

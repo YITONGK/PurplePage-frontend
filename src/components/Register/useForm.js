@@ -33,7 +33,7 @@ const useFormRegister = () => {
         password: values.password
       },
       withCredentials:  true,
-      url: 'http://purplepagesbackend.vt.uniting.org/register'
+      url: 'https://purplepagesbackend.vt.uniting.org/register'
     }).then((res) => {
       if (Object.keys(res.data).length !== 0) {
         Swal.fire({

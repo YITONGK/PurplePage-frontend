@@ -25,7 +25,7 @@ const ServiceStreamCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/servicestream';
     const { ser_stream, status } = values;
     await axios.post(url, {ser_stream, status}).then(() => {

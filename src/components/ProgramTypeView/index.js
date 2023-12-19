@@ -45,7 +45,7 @@ const ProgramTypeView = () => {
 
   /* get a program type from the backend based on the id and display it */
   const getProgramType = async () => {
-    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
     await axios.get(BASE_URL + '/programtype/' + id, {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -59,7 +59,7 @@ const ProgramTypeView = () => {
   }
 
   const getPrograms = async () => {
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     const result = await axios.get(BASE_URL + '/program', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -77,7 +77,7 @@ const ProgramTypeView = () => {
 
   /* delete the program type */
   // const deleteProgramType = () => {
-  //   const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+  //   const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
   //   Swal.fire({
   //     title: "Warning!",
   //     text: "Are you sure you want to delete this program type?",

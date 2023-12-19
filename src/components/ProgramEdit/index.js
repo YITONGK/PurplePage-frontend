@@ -36,7 +36,7 @@ const ProgramEdit = (props) => {
 
   /* get a program from the backend based on the id and display it */
   const getProgram = async () => {
-    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
     await axios.get(BASE_URL + '/program/' + id, {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -58,7 +58,7 @@ const ProgramEdit = (props) => {
 
   /* get list of program types from the backend and display them */
   const getProgramTypes = async () => {
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     await axios.get(BASE_URL + '/programtype', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -71,7 +71,7 @@ const ProgramEdit = (props) => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     await axios.get(BASE_URL + '/group', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -100,7 +100,7 @@ const ProgramEdit = (props) => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/program/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

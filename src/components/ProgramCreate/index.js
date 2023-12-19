@@ -36,7 +36,7 @@ const ProgramCreate = () => {
 
   /* get list of program types from the backend and display them */
   const getProgramTypes = async () => {
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     await axios.get(BASE_URL + '/programtype', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -49,7 +49,7 @@ const ProgramCreate = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     await axios.get(BASE_URL + '/group', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -63,7 +63,7 @@ const ProgramCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/program';
     const { program_nme, prgm_mgr, prgm_type, group_name, prgm_status } = values;
     await axios.post(url, {program_nme, prgm_mgr, prgm_type, group_name, prgm_status}).then(() => {

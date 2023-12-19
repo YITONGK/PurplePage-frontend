@@ -23,7 +23,7 @@ const Group = () => {
 
   /* get list of groups from the backend and display them */
   const getGroups = async () => {
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     await axios.get(BASE_URL + '/group', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`

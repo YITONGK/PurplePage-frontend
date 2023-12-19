@@ -30,7 +30,7 @@ const SiteView = () => {
 
   /* get a site from the backend based on the id and display it */
   const getSite = async () => {
-    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
     await axios.get(BASE_URL + '/site/' + id, {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`

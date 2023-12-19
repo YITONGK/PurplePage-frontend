@@ -21,7 +21,7 @@ const Users = () => {
 
   // get the current user
   const getUsers = async () => {
-    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
     await axios.get(BASE_URL + '/users', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`

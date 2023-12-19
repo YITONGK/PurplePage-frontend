@@ -32,7 +32,7 @@ const ServiceTypeCreate = () => {
 
   /* get list of service streams from the backend and display them */
   const getServiceStreams = async () => {
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     await axios.get(BASE_URL + '/servicestream', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -46,7 +46,7 @@ const ServiceTypeCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/servicetype';
     const { ser_type, ser_stream, status } = values;
     await axios.post(url, {ser_type, ser_stream, status}).then(() => {

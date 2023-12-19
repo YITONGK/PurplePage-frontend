@@ -32,7 +32,7 @@ const ProgramTypeCreate = () => {
 
   /* get list of service types from the backend and display them */
   const getServiceTypes = async () => {
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     await axios.get(BASE_URL + '/servicetype', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -46,7 +46,7 @@ const ProgramTypeCreate = () => {
   // handle submitting the data to the backend
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/programtype';
     const { prgm_type, ser_type, pgm_type_status } = values;
     await axios.post(url, {prgm_type, ser_type, pgm_type_status}).then(() => {

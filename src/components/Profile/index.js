@@ -13,7 +13,7 @@ const Profile = () => {
 
   // get the current user
   const getUser = async () => {
-    const BASE_URL = "http://purplepagesbackend.vt.uniting.org/";
+    const BASE_URL = "https://purplepagesbackend.vt.uniting.org/";
     await axios.get(BASE_URL + sessionStorage.email).then(res => {
       const data = res.data;
       setUser(data);

@@ -41,7 +41,7 @@ const ProgramView = () => {
 
   /* get a program from the backend based on the id and display it */
   const getProgram = async () => {
-    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
     await axios.get(BASE_URL + '/program/' + id, {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`

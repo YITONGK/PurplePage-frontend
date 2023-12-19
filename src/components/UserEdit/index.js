@@ -29,7 +29,7 @@ const UserEdit = () => {
 
   /* get a user from the backend based on the id and display it */
   const getUser = async () => {
-    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
     await axios.get(BASE_URL + '/users/' + id, {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -63,7 +63,7 @@ const UserEdit = () => {
    */
   const onSubmit = async (e) => {
     e.preventDefault();
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     const url = BASE_URL + '/users/edit';
     await axios.post(url, { ...values }).then(() => {
       Swal.fire({

@@ -59,7 +59,7 @@ const GroupView = () => {
 
   /* get a group from the backend based on the id and display it */
   const getGroup = async () => {
-    const BASE_URL = "http://purplepagesbackend.vt.uniting.org";
+    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
     await axios.get(BASE_URL + '/group/' + id, {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -72,7 +72,7 @@ const GroupView = () => {
   }
 
   const getPrograms = async () => {
-    const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
     let result = await axios.get(BASE_URL + '/program', {
       headers : {
         'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -89,7 +89,7 @@ const GroupView = () => {
 
   // /* delete the group */
   // const deleteGroup = () => {
-  //   const BASE_URL = 'http://purplepagesbackend.vt.uniting.org';
+  //   const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
   //   Swal.fire({
   //     title: "Warning!",
   //     text: "Are you sure you want to delete this group?",
