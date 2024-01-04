@@ -32,7 +32,10 @@ const MySidebar = ({showSideNav}) => {
         <SideNavButton size='small' variant='text' onClick={showSideNav} disableRipple>
           <MenuIcon style={{color: 'white', fontSize: '35px'}}></MenuIcon>
         </SideNavButton>
-        <HeaderImg src={require('../../images/uniting-icon.png')}></HeaderImg>
+        <HeaderImg
+            src={require('../../images/uniting-icon.png')}
+            style={{ filter: 'brightness(0) invert(1)' }}
+            alt="Logo"></HeaderImg>
       </ButtonContainer>
 
       <Nav defaultSelected="home">

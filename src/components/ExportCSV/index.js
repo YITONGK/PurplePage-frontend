@@ -10,55 +10,57 @@ const ExportCSV = ({advanceFilteredPrograms, advanceFilteredSites, groupsList, d
 
     useEffect(() => {
 
-        const CSVData = advanceFilteredPrograms.map(program => {
-
-            const tmpProgramType = programTypeList.find(type => type.prgm_type_id === program.prgm_type_id);
-
-            const tmpServiceTypeId = (tmpProgramType) ? tmpProgramType.ser_type_id : null;
-            const tmpServiceType = (tmpServiceTypeId) ? serviceTypeList.find(type => type.ser_type_id === tmpServiceTypeId) : null;
-
-            const tmpServiceStreamId = (tmpServiceType) ? tmpServiceType.ser_stream_id : null;
-            const tmpServiceStream = (tmpServiceStreamId) ? serviceStreamList.find(stream => stream.ser_stream_id === tmpServiceStreamId) : null;
-
-            const tmpGroup = groupsList.find(group => group.group_id === program.group_id);
-
-            const tmpDivisionId = (tmpGroup)? tmpGroup.division_id : null;
-            const tmpDivision = (tmpDivisionId) ? divisionList.find((division) => division.division_id === tmpDivisionId) : null;
-
-            const tmpSite = advanceFilteredSites.find((site) => site.site_id === program.site_id);
+        if(advanceFilteredPrograms.length > 0) {
 
 
+            const CSVData = advanceFilteredPrograms.map(program => {
+
+                const tmpProgramType = programTypeList.find(type => type.prgm_type_id === program.prgm_type_id);
+
+                const tmpServiceTypeId = (tmpProgramType) ? tmpProgramType.ser_type_id : null;
+                const tmpServiceType = (tmpServiceTypeId) ? serviceTypeList.find(type => type.ser_type_id === tmpServiceTypeId) : null;
+
+                const tmpServiceStreamId = (tmpServiceType) ? tmpServiceType.ser_stream_id : null;
+                const tmpServiceStream = (tmpServiceStreamId) ? serviceStreamList.find(stream => stream.ser_stream_id === tmpServiceStreamId) : null;
+
+                const tmpGroup = groupsList.find(group => group.group_id === program.group_id);
+
+                const tmpDivisionId = (tmpGroup) ? tmpGroup.division_id : null;
+                const tmpDivision = (tmpDivisionId) ? divisionList.find((division) => division.division_id === tmpDivisionId) : null;
+
+                const tmpSite = advanceFilteredSites.find((site) => site.site_id === program.site_id);
 
 
-            return {
-                Title: program.title,
-                'Service Stream': (tmpServiceStream) ? tmpServiceStream.ser_stream : 'None',
-                'Service Type' : (tmpServiceStream) ? tmpServiceType.ser_type : 'None',
-                'Program Type': (tmpProgramType) ? tmpProgramType.prgm_type : 'None',
-                'Division': (tmpDivision) ? tmpDivision.division_name : 'None',
-                'Cluster/Group': (tmpGroup) ? tmpGroup.group_name : 'None',
-                'Program Name': program.program_nme,
-                'Service Basic Description': program.service_desc,
-                'Program Manager': program.prgm_mgr,
-                'Program Contact Number': program.prgm_cont_no,
-                'Group Manager/Executive Officer': (tmpGroup) ? tmpGroup.eo : 'None',
-                'General Manager': (tmpDivision) ? tmpDivision.gm : 'None',
-                'Site ID': (tmpSite)? tmpSite.site_id: 'None',
-                'Long Form Address': (tmpSite && tmpSite.street_nbr && tmpSite.street_name && tmpSite.suburb && tmpSite.state && tmpSite.postcode) ?
+                return {
+                    Title: program.title,
+                    'Service Stream': (tmpServiceStream) ? tmpServiceStream.ser_stream : 'None',
+                    'Service Type': (tmpServiceStream) ? tmpServiceType.ser_type : 'None',
+                    'Program Type': (tmpProgramType) ? tmpProgramType.prgm_type : 'None',
+                    'Division': (tmpDivision) ? tmpDivision.division_name : 'None',
+                    'Cluster/Group': (tmpGroup) ? tmpGroup.group_name : 'None',
+                    'Program Name': program.program_nme,
+                    'Service Basic Description': program.service_desc,
+                    'Program Manager': program.prgm_mgr,
+                    'Program Contact Number': program.prgm_cont_no,
+                    'Group Manager/Executive Officer': (tmpGroup) ? tmpGroup.eo : 'None',
+                    'General Manager': (tmpDivision) ? tmpDivision.gm : 'None',
+                    'Site ID': (tmpSite) ? tmpSite.site_id : 'None',
+                    'Long Form Address': (tmpSite && tmpSite.street_nbr && tmpSite.street_name && tmpSite.suburb && tmpSite.state && tmpSite.postcode) ?
                         `${tmpSite.street_nbr} ${tmpSite.street_name}, ${tmpSite.suburb}, ${tmpSite.state}, ${tmpSite.postcode}` : 'None',
-                'State' : (tmpSite)? tmpSite.state : 'None',
-                'Postcode' : (tmpSite)? tmpSite.postcode: 'None',
-                'Site Contact' : (tmpSite)? tmpSite.site_contact_name: 'None',
-                'Site Contact Number' : (tmpSite)? tmpSite.site_contact_nbr: 'None',
-                'Site Manager Contact Number' : (tmpSite)? tmpSite.site_mgr_cont_nbr: 'None',
-                'Site Opening Time': (tmpSite && tmpSite.site_open) ? tmpSite.site_open : 'None',
-                'Site Closing Time' : (tmpSite && tmpSite.site_close) ? tmpSite.site_close : 'None',
-                'Local Government Area': (tmpSite)? tmpSite.lga : 'None',
-                'Department of Families, Fairness and Housing' : (tmpSite)? tmpSite.dffh_area : 'None'
-            }
-        });
+                    'State': (tmpSite) ? tmpSite.state : 'None',
+                    'Postcode': (tmpSite) ? tmpSite.postcode : 'None',
+                    'Site Contact': (tmpSite) ? tmpSite.site_contact_name : 'None',
+                    'Site Contact Number': (tmpSite) ? tmpSite.site_contact_nbr : 'None',
+                    'Site Manager Contact Number': (tmpSite) ? tmpSite.site_mgr_cont_nbr : 'None',
+                    'Site Opening Time': (tmpSite && tmpSite.site_open) ? tmpSite.site_open : 'None',
+                    'Site Closing Time': (tmpSite && tmpSite.site_close) ? tmpSite.site_close : 'None',
+                    'Local Government Area': (tmpSite) ? tmpSite.lga : 'None',
+                    'Department of Families, Fairness and Housing': (tmpSite) ? tmpSite.dffh_area : 'None'
+                }
+            });
 
-        setCsvData(CSVData);
+            setCsvData(CSVData);
+        }
 
     },[advanceFilteredPrograms, advanceFilteredSites])
 

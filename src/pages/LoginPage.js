@@ -1,11 +1,9 @@
 // LoginPage.js
-import React, { useState, useEffect, useRef} from 'react';
+import React, { useEffect } from 'react';
 import { useMsal } from '@azure/msal-react';
 import { LoginButton, MicrosoftLogo} from './LoginPageElement';
 import '../App.css'
 
-
-// ... (import statements)
 
 function SignInButton() {
     const { instance } = useMsal();
@@ -52,6 +50,7 @@ function LoginPage() {
                         scopes: loginRequest.scopes,
                     })
                     .then((tokenResponse) => {
+                        console.log(tokenResponse);
                         document.cookie = `accessToken=${tokenResponse.idToken};`;
                     })
                     .catch((error) => {

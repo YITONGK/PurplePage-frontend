@@ -24,6 +24,7 @@ import '../../App.css';
 import MapResultFilter from "../MapResultFilter";
 
 import WarningIcon from '@mui/icons-material/Warning';
+import {useNavigate} from "react-router-dom";
 
 const Article = () => {
 
@@ -65,6 +66,8 @@ const Article = () => {
   const [mapFilterIsCollapse, setMapFilterIsCollapse] = useState(true);
 
   const mapRef = useRef();
+
+  const navigate = useNavigate();
 
   // Style
   const searchTextFieldStyle = {
@@ -153,7 +156,6 @@ const Article = () => {
 
         if(cancel === false && newFilteredSitesData.length === filteredSites.length) {
 
-
           newFilteredSitesData.sort((s1, s2) => s1.distance - s2.distance);
           setFilteredSites(newFilteredSitesData);
 
@@ -185,7 +187,6 @@ const Article = () => {
   // Finding The Match Site Access According to the title
   const findMatchInSiteAccess = (list, findingId) => {
     if (list && findingId) {
-
       const tmpValue = list.filter((v) => v && v.site_id === findingId);
       return (tmpValue.length > 0) ? tmpValue : null;
     }
@@ -259,8 +260,10 @@ const Article = () => {
         }
       })
 
-      setProgramList(tmpProgramList);
-      setFilteredPrograms(tmpProgramList); //keeps in artical only
+      const tmpActiveProgramList = tmpProgramList.filter((program) => program.service_closed === null || (program.service_closed && program.service_closed.toLowerCase() !== 'yes'));
+
+      setProgramList(tmpActiveProgramList);
+      setFilteredPrograms(tmpActiveProgramList); //keeps in artical only
 
       const distinctSites = sites.filter((site, index, self) => {
         return index === self.findIndex((obj) => obj.site_id === site.site_id);
@@ -276,13 +279,11 @@ const Article = () => {
         }
       });
 
-      setSiteList(tmpSites);
-      setFilteredSites(tmpSites); //keeps in artical only
-      setAdvanceFilteredSites(tmpSites); //keeps in artical only
+      const tmpFinalActiveSites = tmpSites.filter((site) => (site.status && site.status.toLowerCase() === 'active'));
 
-      setSiteList(distinctSites);
-      setFilteredSites(distinctSites); //keeps in artical only
-      setAdvanceFilteredSites(distinctSites); //keeps in artical only
+      setSiteList(tmpFinalActiveSites);
+      setFilteredSites(tmpFinalActiveSites); //keeps in artical only
+      setAdvanceFilteredSites(tmpFinalActiveSites); //keeps in artical only
 
       setServiceStreamList(serviceStreams);
       setServiceTypeList(serviceTypes);
@@ -334,15 +335,33 @@ const Article = () => {
 
   /* get a list of sites from the backend and display it */
   const getSites = async () => {
-    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
 
-    const result = await axios.get(BASE_URL+ '/site', {
-      headers : {
-        'authorization': `Bearer ${Cookies.get('accessToken')}`
+    try {
+
+      const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+
+      const result = await axios.get(BASE_URL+ '/site', {
+        headers : {
+          'authorization': `Bearer ${Cookies.get('accessToken')}`
+        }
+      });
+      const filteredResult = result.data;
+      return filteredResult.filter(site => site.lng !== null && site.lat != null);
+
+    } catch (err) {
+
+      if(err.response) {
+
+        if(err.response.status === 401) {
+
+          navigate("/")
+
+
+
+        }
+
       }
-    });
-    const filteredResult = result.data;
-    return filteredResult.filter(site => site.lng !== null && site.lat != null);
+    }
   }
 
   /* get list of site accessibility from the db */
@@ -454,6 +473,7 @@ const Article = () => {
 
   /* get list of service stream from the backend and display them */
   const getServiceStreams = async() => {
+
     const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
 
     let result = await axios.get(BASE_URL + '/servicestream', {
