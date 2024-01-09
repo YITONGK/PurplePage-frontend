@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useRef} from 'react';
+import { useMsal } from '@azure/msal-react';
 import Cookies from 'js-cookie';
 import { ArticleContainer, ArticleH1 } from './ArticleElements';
 
@@ -31,6 +32,9 @@ const Article = () => {
   // Variable Initialise and Declaration
 
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
+
+  const { instance, accounts } = useMsal();
+
   const [searchValues, setSearchValues] = useState({
     value: 'start typing and search for anything',
     type: 'All',
@@ -323,9 +327,32 @@ const Article = () => {
       setIsLoading(false);
 
 
-    } catch (error) {
+    } catch (error) { //401 404
 
-      console.log(error);
+      if (error.status === 401) {
+
+        // Check if there is an active account
+        if (accounts.length > 0) {
+          instance.acquireTokenSilent({
+            account: accounts[0],
+            scopes: ['User.Read']
+          })
+          .then((tokenResponse) => {
+            console.log(tokenResponse);
+            document.cookie = `accessToken=${tokenResponse.idToken};`;
+            navigate("/home");
+          })
+          .catch((error) => {
+            console.log("error");
+            console.error(error);
+          });
+        } else {
+          // Handle the case where there is no active account
+          console.error('No active account. Please sign in.');
+        }
+        console.log(error);
+
+      }
     }
 
   }
@@ -352,13 +379,12 @@ const Article = () => {
 
       if(err.response) {
 
-        if(err.response.status === 401) {
-
-          navigate("/")
-
-
-
-        }
+        // if(err.response.status === 401) {
+        //   navigate("/")
+        //
+        //
+        //
+        // }
 
       }
     }

@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useMsal } from '@azure/msal-react';
 import { LoginButton, MicrosoftLogo} from './LoginPageElement';
 import '../App.css'
+import {CacheLookupPolicy} from "@azure/msal-browser";
 
 
 function SignInButton() {
@@ -10,7 +11,7 @@ function SignInButton() {
 
     const handleLogin = (loginType) => {
         const loginRequest = {
-            scopes: ['User.Read']
+            scopes: ['User.Read'],
         };
 
         if (loginType === 'popup') {
@@ -47,13 +48,14 @@ function LoginPage() {
                 if (accounts.length > 0) {
                     instance.acquireTokenSilent({
                         account: accounts[0],
-                        scopes: loginRequest.scopes,
+                        scopes: loginRequest.scopes
                     })
                     .then((tokenResponse) => {
                         console.log(tokenResponse);
                         document.cookie = `accessToken=${tokenResponse.idToken};`;
                     })
                     .catch((error) => {
+                        console.log("error");
                         console.error(error);
                     });
                 } else {
