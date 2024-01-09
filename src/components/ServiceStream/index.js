@@ -2,9 +2,9 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
-import CircularProgress from '@mui/material/CircularProgress';
 import { ServiceStreamContainer, ServiceStreamH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './ServiceStreamElements';
 import Cookies from "js-cookie";
+import LinearProgress from "@mui/material/LinearProgress";
 
 const ServiceStream = () => {
   // useState hooks
@@ -81,11 +81,11 @@ const ServiceStream = () => {
       {isLoading &&
         <>
           <ServiceStreamH1>Service Stream</ServiceStreamH1>
-          <CircularProgress
-            sx={{
-              color: "#90929f",
-              marginTop: "3rem"
-            }}
+          <LinearProgress
+              color="primary"
+              fourColor
+              variant="indeterminate"
+              sx={{ width: '95%', height: '8px'}} // Adjust width and height as needed
           />
         </>
       }

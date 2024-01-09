@@ -47,8 +47,7 @@ import SiteView from './components/SiteView';
 import SiteEdit from './components/SiteEdit';
 import SiteCreate from './components/SiteCreate';
 
-import {AuthenticatedTemplate, UnauthenticatedTemplate, useMsal} from '@azure/msal-react';
-import { InteractionStatus } from "@azure/msal-browser";
+import {AuthenticatedTemplate, UnauthenticatedTemplate} from '@azure/msal-react';
 import LoginPage from "./pages/LoginPage";
 
 //export NODE_OPTIONS=--openssl-legacy-provider //use this comment id digital routine unsupport

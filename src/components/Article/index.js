@@ -1,10 +1,25 @@
 import axios from 'axios';
-import React, { useState, useEffect, useRef} from 'react';
-import { useMsal } from '@azure/msal-react';
+import React, {useEffect, useRef, useState} from 'react';
+import {useMsal} from '@azure/msal-react';
 import Cookies from 'js-cookie';
-import { ArticleContainer, ArticleH1 } from './ArticleElements';
-
-import { FilterContainer, SelectDiv, GroupHeader, GroupItems, MapElement, SearchContainer, ColSearchContainer, MapInfoContainer, LoadindContainer, WarningContainer, WarningText, SearchTextField, SMMapElement, LoadingSkeleton} from './ArticleElements';
+import {
+  ArticleContainer,
+  ArticleH1,
+  ColSearchContainer,
+  FilterContainer,
+  GroupHeader,
+  GroupItems,
+  LoadindContainer,
+  LoadingSkeleton,
+  MapElement,
+  MapInfoContainer,
+  SearchContainer,
+  SearchTextField,
+  SelectDiv,
+  SMMapElement,
+  WarningContainer,
+  WarningText
+} from './ArticleElements';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -16,7 +31,7 @@ import Map from '../Map';
 import MapInfo from '../MapInfo';
 import MapFilter from '../MapFilter';
 import ExportCSV from '../ExportCSV';
-import { removeStopwords } from 'stopword';
+import {removeStopwords} from 'stopword';
 
 import ReactLoading from 'react-loading';
 import {SkeletonTheme} from 'react-loading-skeleton';
@@ -269,6 +284,8 @@ const Article = () => {
       setProgramList(tmpActiveProgramList);
       setFilteredPrograms(tmpActiveProgramList); //keeps in artical only
 
+      // console.log(tmpActiveProgramList);
+
       const distinctSites = sites.filter((site, index, self) => {
         return index === self.findIndex((obj) => obj.site_id === site.site_id);
       });
@@ -283,7 +300,11 @@ const Article = () => {
         }
       });
 
-      const tmpFinalActiveSites = tmpSites.filter((site) => (site.status && site.status.toLowerCase() === 'active'));
+      const tmpActiveSites = tmpSites.filter((site) => (site.status && site.status.toLowerCase() === 'active'));
+
+      const tmpFinalActiveSites = tmpActiveSites.filter((site) => {
+        return tmpActiveProgramList.some((program) => program.site_id === site.site_id);
+      });
 
       setSiteList(tmpFinalActiveSites);
       setFilteredSites(tmpFinalActiveSites); //keeps in artical only
@@ -328,8 +349,9 @@ const Article = () => {
 
 
     } catch (error) { //401 404
+      console.log(error);
 
-      if (error.status === 401) {
+      if (error.response && error.response.status === 401) {
 
         // Check if there is an active account
         if (accounts.length > 0) {
@@ -338,9 +360,10 @@ const Article = () => {
             scopes: ['User.Read']
           })
           .then((tokenResponse) => {
-            console.log(tokenResponse);
+            // console.log(tokenResponse);
             document.cookie = `accessToken=${tokenResponse.idToken};`;
-            navigate("/home");
+            navigate("/");
+            getAllData();
           })
           .catch((error) => {
             console.log("error");
@@ -377,16 +400,7 @@ const Article = () => {
 
     } catch (err) {
 
-      if(err.response) {
-
-        // if(err.response.status === 401) {
-        //   navigate("/")
-        //
-        //
-        //
-        // }
-
-      }
+      return [];
     }
   }
 

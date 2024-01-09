@@ -30,3 +30,17 @@ export const HeaderImg = styled.img`
   width: 150px;
   height: auto;
 `;
+
+export const SiteNavContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex: 1;
+`;
+
+export const SiteNavBackgroundFill = styled.div`
+    flex: 1;
+    background-color: transparent;
+    width: 90vw;
+    height: 100vh;
+`;

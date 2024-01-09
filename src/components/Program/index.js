@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
-import CircularProgress from '@mui/material/CircularProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 import { ProgramContainer, ProgramH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './ProgramElements';
 import Cookies from "js-cookie";
 
@@ -106,12 +106,12 @@ const Program = () => {
       {isLoading &&
         <>
           <ProgramH1>Program</ProgramH1>
-          <CircularProgress
-            sx={{
-              color: "#90929f",
-              marginTop: "3rem"
-            }}
-          ></CircularProgress>
+          <LinearProgress
+              color="primary"
+              fourColor
+              variant="indeterminate"
+              sx={{ width: '95%', height: '8px'}} // Adjust width and height as needed
+          />
         </>
       }
       {!isLoading &&

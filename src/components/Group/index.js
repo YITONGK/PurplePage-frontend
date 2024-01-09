@@ -2,9 +2,9 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
-import CircularProgress from '@mui/material/CircularProgress';
 import { GroupContainer, GroupH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './GroupElements';
 import Cookies from "js-cookie";
+import LinearProgress from "@mui/material/LinearProgress";
 
 const Group = () => {
   // useState hooks
@@ -98,11 +98,11 @@ const Group = () => {
       {isLoading &&
         <>
           <GroupH1>Group</GroupH1>
-          <CircularProgress
-            sx={{
-              color: "#90929f",
-              marginTop: "3rem"
-            }}
+          <LinearProgress
+              color="primary"
+              fourColor
+              variant="indeterminate"
+              sx={{ width: '95%', height: '8px'}} // Adjust width and height as needed
           />
         </>
       }

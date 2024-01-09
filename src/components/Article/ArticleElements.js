@@ -161,3 +161,4 @@ export const LoadingSkeleton = styled(Skeleton)`
     width: 75vw;
   }
 `;
+

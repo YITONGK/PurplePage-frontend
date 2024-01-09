@@ -2,9 +2,9 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
-import CircularProgress from '@mui/material/CircularProgress';
 import { DivisionContainer, DivisionH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './DivisionElements';
 import Cookies from "js-cookie";
+import LinearProgress from "@mui/material/LinearProgress";
 
 const Division = () => {
   // useState hooks
@@ -32,7 +32,7 @@ const Division = () => {
           const list = res.data;
           setDivisionList(list);
           setIsLoading(false);
-        })
+    })
   }
 
   const ActionsColumn = {
@@ -85,11 +85,11 @@ const Division = () => {
       {isLoading &&
         <>
           <DivisionH1>Division</DivisionH1>
-          <CircularProgress
-            sx={{
-              color: "#90929f",
-              marginTop: "3rem"
-            }}
+          <LinearProgress
+              color="primary"
+              fourColor
+              variant="indeterminate"
+              sx={{ width: '95%', height: '8px'}} // Adjust width and height as needed
           />
         </>
       }

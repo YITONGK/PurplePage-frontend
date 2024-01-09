@@ -2,8 +2,7 @@
 import React, { useEffect } from 'react';
 import { useMsal } from '@azure/msal-react';
 import { LoginButton, MicrosoftLogo} from './LoginPageElement';
-import '../App.css'
-import {CacheLookupPolicy} from "@azure/msal-browser";
+import '../App.css';
 
 
 function SignInButton() {
