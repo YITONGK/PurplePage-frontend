@@ -87,7 +87,7 @@ const Division = () => {
           <DivisionH1>Division</DivisionH1>
           <LinearProgress
               color="primary"
-              fourColor
+              
               variant="indeterminate"
               sx={{ width: '95%', height: '8px'}} // Adjust width and height as needed
           />

@@ -41,6 +41,7 @@ import MapResultFilter from "../MapResultFilter";
 
 import WarningIcon from '@mui/icons-material/Warning';
 import {useNavigate} from "react-router-dom";
+import {InteractionRequiredAuthError} from "@azure/msal-browser";
 
 const Article = () => {
 
@@ -366,8 +367,13 @@ const Article = () => {
             getAllData();
           })
           .catch((error) => {
-            console.log("error");
-            console.error(error);
+            if (error instanceof InteractionRequiredAuthError) {
+              // fallback to interaction when silent call fails
+              instance.acquireTokenRedirect({
+                account: accounts[0],
+                scopes: ['User.Read']
+              });
+            }
           });
         } else {
           // Handle the case where there is no active account

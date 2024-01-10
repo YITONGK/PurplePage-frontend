@@ -108,7 +108,7 @@ const Program = () => {
           <ProgramH1>Program</ProgramH1>
           <LinearProgress
               color="primary"
-              fourColor
+              
               variant="indeterminate"
               sx={{ width: '95%', height: '8px'}} // Adjust width and height as needed
           />
