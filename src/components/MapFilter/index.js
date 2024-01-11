@@ -1748,14 +1748,12 @@ const MapFilter = ({filteredPrograms,
                         }
                     </SelectDiv>
                 </ProgramDropDownContainer>
-                <ProgramDropDownContainer style={{justifyContent: "center", marginLeft: "0.5vw"}}>
-                        <ButtonContainer>
-                            <ResetButton onClick={clear} style={ (loadingSignal)? {pointerEvents: 'none'} : {}}>
-                                <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
-                                <ButtonLabel style={{color: '#A20066'}}>Reset Filter</ButtonLabel>
-                            </ResetButton>
-                        </ButtonContainer>
-                </ProgramDropDownContainer>
+                <ButtonContainer>
+                    <ResetButton onClick={clear} style={ (loadingSignal)? {pointerEvents: 'none'} : {}}>
+                        <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
+                        <ButtonLabel style={{color: '#A20066'}}>Reset Filter</ButtonLabel>
+                    </ResetButton>
+                </ButtonContainer>
             </FilterContainer>
 
             <AnimatedModalContent

@@ -1,11 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, InfoWindowContainer, InfoWindowH1, InfoWindowP, MarkerAnimation, BasicMarker, InterContainer, InfoWindowContainerRow} from './MapElements';
+import { MapContainer,
+    InfoWindowContainer,
+    InfoWindowH1,
+    InfoWindowP,
+    MarkerAnimation,
+    BasicMarker,
+    InterContainer,
+    InfoWindowContainerRow,
+    AnimatedModalContent,
+    MapPopupContainer,
+    ModalContentContainer,
+    ModalContentHeader,
+    ModalContentHeaderLeft,
+    ModalContentHeaderRight,
+    EMMapContainer
+} from './MapElements';
 import ReactMapGl, { Marker, Popup} from "react-map-gl";
 import mapboxgl from 'mapbox-gl';
 
 import RoomIcon from '@mui/icons-material/Room';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocalTaxiIcon from '@mui/icons-material/LocalTaxi';
+import {CustomClearIcon} from "../MapResultFilter/MapResultFilterElements";
+import Button from "@mui/material/Button";
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
@@ -27,6 +44,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
   const [markersInView, setMarkersInView] = useState([]);
 
   const debounceDelay = 300; //delay amount
+  const [mapInfoPopup, setMapInfoPopup] = useState(false);
 
   const [viewPort, setViewPort] = useState({
     latitude: centerLat || -37.80995133438894,
@@ -112,12 +130,18 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
 
 
   // close popup
-  const closePopup = () => {
-    setPopUpMarker(null);
-  }
+    const closePopup = () => {
+        setPopUpMarker(null);
+    }
 
-  // event on click handle marker on click
-  const markersClick =
+    const closeModalPopup = () => {
+        setMapInfoPopup(false);
+        document.body.style.overflow = 'auto';
+    }
+
+
+    // event on click handle marker on click
+    const markersClick =
     (e, site) => {
         e.stopPropagation();
         e.preventDefault();
@@ -160,8 +184,56 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
         }
     };
 
-  // display all the markers based on lat and lng of each site
-  const Markers = () => {
+    const EMMarkersClick =
+        (e, site) => {
+            e.stopPropagation();
+            e.preventDefault();
+
+
+            setSelectedMarker(site);
+            setPopUpMarker(site);
+
+            // animated modal true
+            setMapInfoPopup(true);
+            document.body.style.overflow = 'hidden';
+
+            if (exportSite) {
+                exportSite(site);
+            }
+
+            if (site.geojson) {
+                if (exportRef.current) {
+                    const map = exportRef.current.getMap();
+                    // if the route already exists on the map, we'll reset it using setData adding routing path to map
+                    if (map.getSource('route')) {
+                        map.getSource('route').setData(site.geojson);
+                    }
+                    // otherwise, we'll make a new request
+                    else {
+                        map.addLayer({
+                            id: 'route',
+                            type: 'line',
+                            source: {
+                                type: 'geojson',
+                                data: site.geojson
+                            },
+                            layout: {
+                                'line-join': 'round',
+                                'line-cap': 'square',
+                            },
+                            paint: {
+                                'line-color': '#A20066',
+                                'line-width': 5,
+                                'line-opacity': 0.75
+                            }
+                        });
+                    }
+                }
+            }
+        };
+
+    // display all the markers based on lat and lng of each site
+    const Markers = () => {
     return (
       <>
         {
@@ -261,6 +333,106 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
     )
   }
 
+    const EMMarkers = () => {
+        return (
+            <>
+                {
+                    markersInView.map((site, index) => (
+                        <Marker
+                            key={index}
+                            latitude={site.lat}
+                            longitude={site.lng}
+                        >
+                            {
+
+                                (selectedMarker) ?
+
+                                    (site.site_id === selectedMarker.site_id) ? (
+                                            <MarkerAnimation
+                                                onClick={(e) => EMMarkersClick(e, site)}
+                                            >
+                                                <img src={require('../../images/marker_2.png')} style= {{width: "30px", height: "auto"}} alt="Marker Icon" />
+                                            </MarkerAnimation> )
+                                        : (
+                                            <BasicMarker
+                                                onClick={(e) => EMMarkersClick(e, site)}
+                                            >
+                                                <img src={require('../../images/marker_2.png')} style= {{width: "30px", height: "auto"}} alt="Marker Icon" />
+                                            </BasicMarker>
+
+                                        ) : (
+
+                                        <BasicMarker
+                                            onClick={(e) => EMMarkersClick(e, site)}
+                                        >
+                                            <img src={require('../../images/marker_2.png')} style= {{width: "30px", height: "auto"}} alt="Marker Icon" />
+                                        </BasicMarker>
+                                    )
+
+                            }
+                        </Marker>
+                    ))
+                }
+                {
+                    (departureLocationMarker) ? (
+                        <Marker
+                            latitude={departureLocationMarker.lat}
+                            longitude={departureLocationMarker.lng}
+                        >
+                            <MarkerAnimation>
+                                <img src={require('../../images/userLocation_2.png')} style= {{width: "40px", height: "auto"}} alt="Marker Icon" />
+                            </MarkerAnimation>
+
+                        </Marker>
+                    ) : null
+                }
+                {popUpMarker? (
+                    <Popup
+                        latitude={popUpMarker.lat}
+                        longitude={popUpMarker.lng}
+                        onClose={closePopup}
+                        anchor={"bottom"}
+                        offset={22}
+                    >
+                        <InfoWindowContainer>
+                            <InfoWindowH1>{popUpMarker.site_id}</InfoWindowH1>
+                            <InfoWindowContainerRow>
+                                <RoomIcon style={{margin: '0', padding: '0'}}></RoomIcon>
+                                <InfoWindowP>
+                                    <strong>
+                                        {popUpMarker.street_nbr && popUpMarker.street_name && popUpMarker.suburb && popUpMarker.state && popUpMarker.postcode ?
+                                            `${popUpMarker.street_nbr} ${popUpMarker.street_name}, ${popUpMarker.suburb}, ${popUpMarker.state}, ${popUpMarker.postcode}` : 'None'
+                                        }
+                                    </strong>
+                                </InfoWindowP>
+                            </InfoWindowContainerRow>
+                            {
+                                (popUpMarker.geojson) ?
+
+                                    <>
+                                        <InfoWindowContainerRow>
+                                            <LocalTaxiIcon></LocalTaxiIcon>
+                                            <InfoWindowP>
+                                                <strong>{`${Math.round((popUpMarker.distance / 1000) * 10) / 10} km`}</strong> Away.
+                                            </InfoWindowP>
+                                        </InfoWindowContainerRow>
+                                        <InfoWindowContainerRow>
+                                            <AccessTimeIcon></AccessTimeIcon>
+                                            <InfoWindowP>
+                                                May Take <strong>{`${timeCalculation(popUpMarker.duration)}`}</strong> To Get There.
+                                            </InfoWindowP>
+                                        </InfoWindowContainerRow>
+                                    </> : null
+
+                            }
+
+                        </InfoWindowContainer>
+                    </Popup>
+                ) : null}
+            </>
+        )
+    }
+
     const timeCalculation = (seconds) => {
 
         const hours = Math.floor(seconds / 3600);
@@ -283,37 +455,104 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
 
     }
 
-  // Return UI
-  return (
-    <InterContainer>
-      <MapContainer style={{width: (mapWidth && mapWidth > 0)? `${mapWidth}vw`: `55vw`, height: (mapHeight && mapHeight > 0)? `${mapHeight}vh` : `64.5vh`}}>
-        <ReactMapGl
-          attributionControl={false}
-          style={{zIndex: '0'}}
-          ref={exportRef}
-          {...viewPort}
-          width={'100%'}
-          height={'100%'}
-          mapboxAccessToken={MAPBOX_TOKEN}
-          mapStyle="mapbox://styles/mapbox/streets-v12"
-          onMove={(evt) => {
-            setViewPort({
-              latitude: evt.viewState.latitude,
-              longitude: evt.viewState.longitude,
-              zoom: evt.viewState.zoom,
-              width: (15 * window.innerWidth) / 100, //vw ro px
-              height: (15 * window.innerWidth) / 100, //vw to px
-              transitionDuration: 200
-            });
-            setMarkersInView([]); // increase the performance when moving the map
-            setDepartureLocationMarker(null);
-          }}
-        >
-          <Markers />
-        </ReactMapGl>
-      </MapContainer>
-    </InterContainer>
-  )
+    // Return UI
+    return (
+        <InterContainer>
+          <MapContainer style={{width: (mapWidth && mapWidth > 0)? `${mapWidth}vw`: `55vw`, height: (mapHeight && mapHeight > 0)? `${mapHeight}vh` : `64.5vh`}}>
+            <ReactMapGl
+              attributionControl={false}
+              style={{zIndex: '0'}}
+              ref={exportRef}
+              {...viewPort}
+              width={'100%'}
+              height={'100%'}
+              mapboxAccessToken={MAPBOX_TOKEN}
+              mapStyle="mapbox://styles/mapbox/streets-v12"
+              onMove={(evt) => {
+                setViewPort({
+                  latitude: evt.viewState.latitude,
+                  longitude: evt.viewState.longitude,
+                  zoom: evt.viewState.zoom,
+                  width: (15 * window.innerWidth) / 100, //vw ro px
+                  height: (15 * window.innerWidth) / 100, //vw to px
+                  transitionDuration: 200
+                });
+                setMarkersInView([]); // increase the performance when moving the map
+                setDepartureLocationMarker(null);
+              }}
+            >
+              <Markers />
+            </ReactMapGl>
+          </MapContainer>
+          <EMMapContainer style={{width: (mapWidth && mapWidth > 0)? `${mapWidth}vw`: `55vw`, height: (mapHeight && mapHeight > 0)? `${mapHeight}vh` : `64.5vh`}}>
+            <ReactMapGl
+                attributionControl={false}
+                style={{zIndex: '0'}}
+                ref={exportRef}
+                {...viewPort}
+                width={'100%'}
+                height={'100%'}
+                mapboxAccessToken={MAPBOX_TOKEN}
+                mapStyle="mapbox://styles/mapbox/streets-v12"
+                onMove={(evt) => {
+                    setViewPort({
+                        latitude: evt.viewState.latitude,
+                        longitude: evt.viewState.longitude,
+                        zoom: evt.viewState.zoom,
+                        width: (15 * window.innerWidth) / 100, //vw ro px
+                        height: (15 * window.innerWidth) / 100, //vw to px
+                        transitionDuration: 200
+                    });
+                    setMarkersInView([]); // increase the performance when moving the map
+                    setDepartureLocationMarker(null);
+                }}
+            >
+                <EMMarkers />
+            </ReactMapGl>
+          </EMMapContainer>
+
+          <MapPopupContainer>
+            <AnimatedModalContent
+            appElement={document.getElementById('root')}
+            isOpen={mapInfoPopup}
+            contentLabel="Map PopUp Modal"
+            style={{
+                overlay: {
+                    backgroundColor: 'rgba(91,91,91,0.28)', // Set the desired overlay background color
+                },
+                content: {
+                    width: '90vw', // Set the desired width
+                    height: '55vh', // Set the desired height
+                    maxHeight: '80vh',
+                    margin: 'auto', // Center the modal horizontally
+                    borderRadius: '15px',
+                    overflowY: 'auto',
+                    overflowX: 'hidden'
+                },
+            }}
+            >
+                <ModalContentContainer>
+                    <ModalContentHeader>
+                        <ModalContentHeaderLeft>
+                            <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Info</h2>
+                        </ModalContentHeaderLeft>
+                        <ModalContentHeaderRight>
+                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeModalPopup}>
+                                <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                            </Button>
+                        </ModalContentHeaderRight>
+                    </ModalContentHeader>
+                </ModalContentContainer>
+
+
+            </AnimatedModalContent>
+
+        </MapPopupContainer>
+
+
+
+        </InterContainer>
+    )
 }
 
 export default Map;

@@ -15,6 +15,14 @@ export const ArticleContainer = styled.div`
     padding-right: 2%;
     margin-bottom: 65px;
   }
+
+  @media (min-width: 667px) and (max-width: 932px) and (min-height: 375px) and (max-height: 430px) {
+    
+    padding-right: 2%;
+    
+  }
+  
+  
 `;
 
 export const ArticleH1 = styled.h1`
@@ -86,6 +94,11 @@ export const MapElement = styled.div`
   @media (min-width: 360px) and (max-width: 450px) {
     display: none;
   }
+  
+  /* Second media query */
+  @media (min-width: 667px) and (max-width: 932px) and (min-height: 375px) and (max-height: 430px) {
+   display: none;
+  }
   //border: 2px solid mediumvioletred;
 `;
 
@@ -97,9 +110,23 @@ export const SMMapElement = styled.div`
     flex-direction: column;
     margin-top: 1rem;
     height: 60vh;
-    flex: 1;;
+    flex: 1;
   }
   //border: 2px solid mediumvioletred;
+`;
+
+export const XMMapElement = styled.div`
+  display: none;
+
+  @media (min-width: 667px) and (max-width: 932px) and (min-height: 375px) and (max-height: 430px) {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    flex: 1;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 15px;
+  }
 `;
 
 export const MapP = styled.p`

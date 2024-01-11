@@ -6,25 +6,25 @@ import Select from '@mui/material/Select';
 import ClearIcon from "@mui/icons-material/Clear";
 
 export const MapFilterRowContainer = styled.div`
-    height: 16rem;
-    display: flex;
-    flex-direction: column;
-    margin-top: 1rem;
-    border: 1px solid #CCC;
-    border-radius: 10px;
-    margin-right: 0.3vw;
-    background-color: #FBF4F8;
-    overflow: hidden;
+  height: 16rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+  border: 1px solid rgba(72, 72, 72, 0.6);
+  border-radius: 10px;
+  margin-right: 0.3vw;
+  background-color: rgb(255, 249, 251);
+  overflow: hidden;
 
-    @media (min-width: 360px) and (max-width: 450px) {
-      
-      height: fit-content;
-      margin-right: 0;
-      border: transparent;
-      background-color: transparent;
-      width: fit-content;
-    }
-  
+  @media (min-width: 360px) and (max-width: 450px) {
+
+    height: fit-content;
+    margin-right: 0;
+    border: transparent;
+    background-color: transparent;
+    width: fit-content;
+  }
+
 `;
 
 export const FilterContainer = styled.div`
@@ -114,12 +114,12 @@ export const FilterLabel = styled(InputLabel)`
   && {
     font-size: 24px;
     font-weight: bold;
-    color: #A20066;
-    
+    color: #ffffff;
+
     @media (min-width: 360px) and (max-width: 450px) {
       font-size: 20px;
     }
-    
+
   }
 `;
 
@@ -137,7 +137,8 @@ export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 20px;
-  margin-bottom: 0.5rem;
+  justify-content: center;
+  align-items: center;
   margin-top: 2rem;
 
   @media (min-width: 360px) and (max-width: 450px) {
@@ -298,9 +299,10 @@ export const LabelContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
+  margin-bottom: 10px;
   align-items: center;
   justify-content: center;
-  background-color: rgb(234, 234, 234);
+  background-color: #A20066;
   padding: 0.5rem;
 
   @media (min-width: 360px) and (max-width: 450px) {

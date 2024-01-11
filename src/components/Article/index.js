@@ -18,7 +18,8 @@ import {
   SelectDiv,
   SMMapElement,
   WarningContainer,
-  WarningText
+  WarningText,
+  XMMapElement
 } from './ArticleElements';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
@@ -88,6 +89,8 @@ const Article = () => {
   const mapRef = useRef();
 
   const navigate = useNavigate();
+
+  const MAX_ATTEMPTS = 2;
 
   // Style
   const searchTextFieldStyle = {
@@ -246,6 +249,7 @@ const Article = () => {
   // Function to obtain all data from db via api call
   const getAllData = async () => {
 
+    let authenticationAttempts = 0;
     setIsLoading(true);
     try {
 
@@ -350,35 +354,39 @@ const Article = () => {
 
 
     } catch (error) { //401 404
-      console.log(error);
 
       if (error.response && error.response.status === 401) {
 
-        // Check if there is an active account
-        if (accounts.length > 0) {
-          instance.acquireTokenSilent({
-            account: accounts[0],
-            scopes: ['User.Read']
-          })
-          .then((tokenResponse) => {
-            // console.log(tokenResponse);
-            document.cookie = `accessToken=${tokenResponse.idToken};`;
-            navigate("/");
-            getAllData();
-          })
-          .catch((error) => {
-            if (error instanceof InteractionRequiredAuthError) {
-              // fallback to interaction when silent call fails
-              instance.acquireTokenRedirect({
-                account: accounts[0],
-                scopes: ['User.Read']
-              });
-            }
-          });
+        if(authenticationAttempts < MAX_ATTEMPTS) {
+          authenticationAttempts++;
+          // Check if there is an active account
+          if (accounts.length > 0) {
+            instance.acquireTokenSilent({
+              account: accounts[0],
+              scopes: ['User.Read']
+            })
+            .then((tokenResponse) => {
+              // console.log(tokenResponse);
+              document.cookie = `accessToken=${tokenResponse.idToken};`;
+              getAllData();
+            })
+            .catch((error) => {
+              console.log(error);
+              if (error instanceof InteractionRequiredAuthError) {
+                // fallback to interaction when silent call fails
+                instance.acquireTokenRedirect({
+                  scopes: ['User.Read']
+                });
+              }
+            });
+          } else {
+            // Handle the case where there is no active account
+            console.error('No active account. Please sign in.');
+          }
         } else {
-          // Handle the case where there is no active account
-          console.error('No active account. Please sign in.');
+          console.error("Max Attempts Reach");
         }
+
         console.log(error);
 
       }
@@ -1050,6 +1058,20 @@ const Article = () => {
         <SMMapElement>
           <MapResultFilter importRef={mapRef} importSite={selectedSite} exportSite={selectingSite} exportDepartureAddress={transferDepartureAddress} advanceFilteredSites={advancefilteredSites} departureLocation={departureAddress} advanceFilteredPrograms={(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms }></MapResultFilter>
         </SMMapElement>
+
+        <XMMapElement>
+          {
+            (addressIsLoading || mapFilterIsLoading) ?
+                // (true)?
+                <LoadindContainer>
+                  <ReactLoading type={'bars'} color={'white'} height={130} width={130}></ReactLoading>
+                </LoadindContainer>
+                :
+                <Map
+                    sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef} importSite={selectedSite} departureLocation={departureAddress} mapWidth={(mapFilterIsCollapse) ? 97.5 : 0} mapHeight = {(mapFilterIsCollapse)? 80 : 0} mapFilterUsed = {mapFilterUsed}
+                />
+          }
+        </XMMapElement>
     </ArticleContainer>
   )
 }
