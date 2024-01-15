@@ -1652,7 +1652,7 @@ const MapFilter = ({filteredPrograms,
     // Main Return of the APP
     return (
         <MapFilterRowContainer>
-            <SMFilterButton disableRipple endIcon={<ArrowForwardIosIcon style={{padding: '0', margin: '0'}}/>} onClick={openFilterPopup}> Search Filter</SMFilterButton>
+            <SMFilterButton style={{ display: setSMFilterPopup ? 'none' : 'block' }} disableRipple endIcon={<ArrowForwardIosIcon style={{padding: '0', margin: '0'}}/>} onClick={openFilterPopup}>Search Filter</SMFilterButton>
             <LabelContainer>
                 <FilterLabel>Map Filter</FilterLabel>
                 {/*<InputLabel style={textStyle}>Map Filter</InputLabel>*/}

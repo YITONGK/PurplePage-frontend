@@ -90,8 +90,6 @@ const Article = () => {
 
   const navigate = useNavigate();
 
-  const MAX_ATTEMPTS = 2;
-
   // Style
   const searchTextFieldStyle = {
     '& .MuiOutlinedInput-root': {
@@ -357,36 +355,30 @@ const Article = () => {
 
       if (error.response && error.response.status === 401) {
 
-        if(authenticationAttempts < MAX_ATTEMPTS) {
-          authenticationAttempts++;
-          // Check if there is an active account
-          if (accounts.length > 0) {
-            instance.acquireTokenSilent({
-              account: accounts[0],
-              scopes: ['User.Read']
-            })
-            .then((tokenResponse) => {
-              // console.log(tokenResponse);
-              document.cookie = `accessToken=${tokenResponse.idToken};`;
-              getAllData();
-            })
-            .catch((error) => {
-              console.log(error);
-              if (error instanceof InteractionRequiredAuthError) {
-                // fallback to interaction when silent call fails
-                instance.acquireTokenRedirect({
-                  scopes: ['User.Read']
-                });
-              }
-            });
-          } else {
-            // Handle the case where there is no active account
-            console.error('No active account. Please sign in.');
-          }
+        // Check if there is an active account
+        if (accounts.length > 0) {
+          instance.acquireTokenSilent({
+            account: accounts[0],
+            scopes: ['User.Read']
+          })
+          .then((tokenResponse) => {
+            // console.log(tokenResponse);
+            document.cookie = `accessToken=${tokenResponse.idToken};`;
+            getAllData();
+          })
+          .catch((error) => {
+            console.log(error);
+            if (error instanceof InteractionRequiredAuthError) {
+              // fallback to interaction when silent call fails
+              instance.acquireTokenRedirect({
+                scopes: ['User.Read']
+              });
+            }
+          });
         } else {
-          console.error("Max Attempts Reach");
+          // Handle the case where there is no active account
+          console.error('No active account. Please sign in.');
         }
-
         console.log(error);
 
       }
