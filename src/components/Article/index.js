@@ -79,6 +79,7 @@ const Article = () => {
 
   const [departureAddress, setDepartureAddress] = useState(null);
 
+
   const [advancefilteredSites, setAdvanceFilteredSites] = useState([]);
   const [advanceFilteredPrograms, setAdvanceFilteredPrograms] = useState([]);
 
@@ -104,15 +105,12 @@ const Article = () => {
   };
 
 
-  // Declare Page Title
+  // Declare Page Title And Get Data
   useEffect(() => {
     document.title = 'Home';
+    authenticateAndGetData()
   }, []);
 
-  // Retrieve All data
-  useEffect(() => {
-    getAllData();
-  }, [])
 
   // Reset Filter Program
   useEffect(() => {
@@ -247,7 +245,6 @@ const Article = () => {
   // Function to obtain all data from db via api call
   const getAllData = async () => {
 
-    let authenticationAttempts = 0;
     setIsLoading(true);
     try {
 
@@ -353,38 +350,36 @@ const Article = () => {
 
     } catch (error) { //401 404
 
-      if (error.response && error.response.status === 401) {
+      console.log(error);
 
-        // Check if there is an active account
-        if (accounts.length > 0) {
-          instance.acquireTokenSilent({
-            account: accounts[0],
-            scopes: ['User.Read']
-          })
-          .then((tokenResponse) => {
-            // console.log(tokenResponse);
-            document.cookie = `accessToken=${tokenResponse.idToken};`;
-            getAllData();
-          })
-          .catch((error) => {
-            console.log(error);
-            if (error instanceof InteractionRequiredAuthError) {
-              // fallback to interaction when silent call fails
-              instance.acquireTokenRedirect({
-                scopes: ['User.Read']
-              });
-            }
-          });
-        } else {
-          // Handle the case where there is no active account
-          console.error('No active account. Please sign in.');
-        }
-        console.log(error);
-
-      }
     }
 
   }
+
+  const authenticateAndGetData =() => {
+    try {
+
+      instance.acquireTokenSilent({
+        account: accounts[0],
+        scopes: ['User.Read']
+      })
+      .then(async (tokenResponse) => {
+        // console.log(tokenResponse);
+        document.cookie = `accessToken=${tokenResponse.idToken};`;
+        await getAllData();
+      });
+    } catch (error) {
+
+      console.log(error);
+      if (error instanceof InteractionRequiredAuthError) {
+        // Fallback to interaction when silent call fails
+        instance.acquireTokenRedirect({
+          scopes: ['User.Read'],
+        });
+      }
+    }
+
+  };
 
   // =============================Data Collect Method From Database====================================
 
@@ -1060,7 +1055,7 @@ const Article = () => {
                 </LoadindContainer>
                 :
                 <Map
-                    sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef} importSite={selectedSite} departureLocation={departureAddress} mapWidth={(mapFilterIsCollapse) ? 97.5 : 0} mapHeight = {(mapFilterIsCollapse)? 80 : 0} mapFilterUsed = {mapFilterUsed}
+                    sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef} importSite={selectedSite} departureLocation={departureAddress} mapWidth={(mapFilterIsCollapse) ? 97.5 : 0} mapHeight = {(mapFilterIsCollapse)? 80 : 0} mapFilterUsed = {mapFilterUsed} advanceFilteredPrograms={(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms}
                 />
           }
         </XMMapElement>

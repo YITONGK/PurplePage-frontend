@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer,
+import {
+    MapContainer,
     InfoWindowContainer,
     InfoWindowH1,
     InfoWindowP,
@@ -13,16 +14,29 @@ import { MapContainer,
     ModalContentHeader,
     ModalContentHeaderLeft,
     ModalContentHeaderRight,
-    EMMapContainer
+    EMMapContainer,
+    ModalContentBodyContainerRow,
+    ModalContentBodyContainerColumn,
+    ModalContentInfoH2,
+    ModalContentInfoContainer,
+    ModalContentInfoP,
+    ModalContentInfoP2,
+    ModalContentInfoRow,
+    ModalContentListItemButton,
+    CustomClearIcon,
+    ModalInfoOfferedProgramsContainer
 } from './MapElements';
 import ReactMapGl, { Marker, Popup} from "react-map-gl";
 import mapboxgl from 'mapbox-gl';
 
+import List from "@mui/material/List";
+import ListItemText from '@mui/material/ListItemText';
+
 import RoomIcon from '@mui/icons-material/Room';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocalTaxiIcon from '@mui/icons-material/LocalTaxi';
-import {CustomClearIcon} from "../MapResultFilter/MapResultFilterElements";
 import Button from "@mui/material/Button";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
@@ -32,7 +46,7 @@ mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoidmhhcnRvbm8iLCJhIjoiY2xoc2l1Z2VzMDd0dTNlcGtwbXYwaGx2cyJ9.C77GVU3YPPgscvXrTGHWfg';
 
-const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom, centerLat, centerLng, departureLocation, mapFilterUsed}) => {
+const Map = ({sites, advanceFilteredPrograms, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom, centerLat, centerLng, departureLocation, mapFilterUsed}) => {
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
   // useState hooks variable initialise
@@ -129,7 +143,7 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
   },[departureLocation]);
 
 
-  // close popup
+    // close popup
     const closePopup = () => {
         setPopUpMarker(null);
     }
@@ -455,6 +469,102 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
 
     }
 
+    const stringFilterPrefix = (string) => {
+
+        if(!string) return 'None';
+
+        // Extract the local part of the email (before '@')
+        const localPart = string.split('@')[0];
+
+        // Replace all '.' with spaces in the local part
+        const result = localPart.replace(/\./g, ' ');
+
+        return result.trim(); // trim() to remove any leading/trailing spaces
+    }
+
+
+    const onClickProgram = (program) => {
+        // setClickedProgram(program);
+        // setPopUpProgram(true);
+    }
+
+    const programNameProcess = (program_nme) => {
+        let nameString = program_nme.split('-');
+        if (nameString.length > 1) {
+            return (
+                <>
+                    {nameString.map((part, index) => (
+                        <React.Fragment key={index}>
+                            {part}
+                            {index < nameString.length - 1 && <>-<br/></>}
+                        </React.Fragment>
+                    ))}
+                </>
+            );
+        } else {
+            return program_nme;
+        }
+    }
+
+    const filterProgramBasedOnSite = (site) => {
+
+
+        if(advanceFilteredPrograms && site) {
+
+            const tmpFilteredProgram = advanceFilteredPrograms.filter((program) => {
+                return program.site_id === site.site_id ;
+            })
+
+            const distinctProgram = tmpFilteredProgram.filter((program, index, self) => {
+                return index === self.findIndex((obj) => obj.program_nme === program.program_nme);
+            });
+
+            if (distinctProgram[0] && distinctProgram[0].program_nme !== null) {
+                distinctProgram.sort((a, b) => {
+                    if (a.program_nme === null && b.program_nme === null) return 0; // both are null, they are equal
+                    if (a.program_nme === null) return -1; // a comes first
+                    if (b.program_nme === null) return 1;  // b comes first
+                    return a.program_nme.localeCompare(b.program_nme);
+                });
+            }
+
+            return distinctProgram;
+        } else {
+            return [];
+        }
+
+    }
+
+    const OfferedPrograms = ({relatedPrograms}) => {
+
+        return (
+            <ModalInfoOfferedProgramsContainer>
+                {
+                    (relatedPrograms && relatedPrograms.length > 0) ?
+                        relatedPrograms.map((program, index) =>{
+                            return (
+                                <React.Fragment key={index}>
+                                    <ModalContentListItemButton key={index} onClick= {() => onClickProgram(program)} >
+                                        <ListItemText primary= {programNameProcess(program.program_nme)}/>
+                                        <ExpandMore style={{transform: 'rotate(-90deg)'}}></ExpandMore>
+                                    </ModalContentListItemButton>
+                                </React.Fragment>
+
+                            )
+                        })
+                        :
+                        <React.Fragment>
+                            <ModalContentListItemButton>
+                                <ListItemText primary= {'No Program'}/>
+                            </ModalContentListItemButton>
+                        </React.Fragment>
+
+                }
+            </ModalInfoOfferedProgramsContainer>
+        )
+
+    }
+
     // Return UI
     return (
         <InterContainer>
@@ -510,44 +620,120 @@ const Map = ({sites, exportSite, exportRef, importSite, mapWidth, mapHeight, map
                 <EMMarkers />
             </ReactMapGl>
           </EMMapContainer>
+          {
+              (popUpMarker) ?
+                  <MapPopupContainer>
+                      <AnimatedModalContent
+                          appElement={document.getElementById('root')}
+                          isOpen={mapInfoPopup}
+                          contentLabel="Map PopUp Modal"
+                          style={{
+                              overlay: {
+                                  backgroundColor: 'rgba(91,91,91,0.28)', // Set the desired overlay background color
+                              },
+                              content: {
+                                  width: '90vw', // Set the desired width
+                                  height: '70vh', // Set the desired height
+                                  maxHeight: '80vh',
+                                  margin: 'auto', // Center the modal horizontally
+                                  borderRadius: '15px',
+                                  overflowY: 'auto',
+                                  overflowX: 'hidden'
+                              },
+                          }}
+                      >
+                          <ModalContentContainer>
+                              <ModalContentHeader>
+                                  <ModalContentHeaderLeft>
+                                      <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Info</h2>
+                                  </ModalContentHeaderLeft>
+                                  <ModalContentHeaderRight>
+                                      <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeModalPopup}>
+                                          <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                                      </Button>
+                                  </ModalContentHeaderRight>
+                              </ModalContentHeader>
+                              <ModalContentInfoH2 style={{alignSelf:"center"}}>Site ID - {stringFilterPrefix(popUpMarker.site_id)}</ModalContentInfoH2>
+                              <ModalContentBodyContainerRow>
 
-          <MapPopupContainer>
-            <AnimatedModalContent
-            appElement={document.getElementById('root')}
-            isOpen={mapInfoPopup}
-            contentLabel="Map PopUp Modal"
-            style={{
-                overlay: {
-                    backgroundColor: 'rgba(91,91,91,0.28)', // Set the desired overlay background color
-                },
-                content: {
-                    width: '90vw', // Set the desired width
-                    height: '55vh', // Set the desired height
-                    maxHeight: '80vh',
-                    margin: 'auto', // Center the modal horizontally
-                    borderRadius: '15px',
-                    overflowY: 'auto',
-                    overflowX: 'hidden'
-                },
-            }}
-            >
-                <ModalContentContainer>
-                    <ModalContentHeader>
-                        <ModalContentHeaderLeft>
-                            <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Info</h2>
-                        </ModalContentHeaderLeft>
-                        <ModalContentHeaderRight>
-                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeModalPopup}>
-                                <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
-                            </Button>
-                        </ModalContentHeaderRight>
-                    </ModalContentHeader>
-                </ModalContentContainer>
+                                  <ModalContentBodyContainerColumn style={{width: '60%'}}>
+                                      <ModalContentInfoContainer>
+                                          <ModalContentInfoP>Address: </ModalContentInfoP>
+                                          <ModalContentInfoP2>
+                                              {popUpMarker.street_nbr && popUpMarker.street_name && popUpMarker.suburb && popUpMarker.state && popUpMarker.postcode ? (
+                                                  <>
+                                                      {popUpMarker.street_nbr} {popUpMarker.street_name},{' '}
+                                                      {popUpMarker.suburb},{' '}
+                                                      {popUpMarker.state} {popUpMarker.postcode}
+                                                  </>
+                                              ) : (
+                                                  'None'
+                                              )}
+                                          </ModalContentInfoP2>
+                                      </ModalContentInfoContainer>
+
+                                      <ModalContentInfoContainer>
+                                          <ModalContentInfoP>Hours (Holiday Open Hours in Brackets): </ModalContentInfoP>
+                                          <ModalContentInfoRow>
+                                              <AccessTimeIcon></AccessTimeIcon>
+                                              <ModalContentInfoP2>
+                                                  Opens {(stringFilterPrefix(popUpMarker.site_open) === 'None') ? 'TBA' : stringFilterPrefix(popUpMarker.site_open)}
+                                                  - {(stringFilterPrefix(popUpMarker.site_close) === 'None') ? 'TBA' : stringFilterPrefix(popUpMarker.site_close)}
+                                              </ModalContentInfoP2>
+                                          </ModalContentInfoRow>
+                                      </ModalContentInfoContainer>
+
+                                      <ModalContentInfoContainer>
+                                          <ModalContentInfoP>Contact Name: </ModalContentInfoP>
+                                          <ModalContentInfoP2>{stringFilterPrefix(popUpMarker.site_contact_name)}</ModalContentInfoP2>
+                                      </ModalContentInfoContainer>
+
+                                      <ModalContentInfoContainer>
+                                          <ModalContentInfoP>Contact Number: </ModalContentInfoP>
+                                          <ModalContentInfoP2>{stringFilterPrefix(popUpMarker.site_contact_nbr)}</ModalContentInfoP2>
+                                      </ModalContentInfoContainer>
+
+                                      <ModalContentInfoContainer>
+                                          <ModalContentInfoP>Accessibility: </ModalContentInfoP>
+                                          <ModalContentInfoP2>
+                                              {(popUpMarker.accessibility && popUpMarker.accessibility.length > 0)
+                                              ? popUpMarker.accessibility.map(site => site.accessibility).join(', ')
+                                              : 'None'}
+                                          </ModalContentInfoP2>
+                                      </ModalContentInfoContainer>
+
+                                      <ModalContentInfoContainer>
+                                          <ModalContentInfoP>Local Government Area: </ModalContentInfoP>
+                                          <ModalContentInfoP2>{stringFilterPrefix(popUpMarker.lga)}</ModalContentInfoP2>
+                                      </ModalContentInfoContainer>
+
+                                      <ModalContentInfoContainer>
+                                          <ModalContentInfoP>Department of Families, <br/>Fairness and Housing: </ModalContentInfoP>
+                                          <ModalContentInfoP2>{stringFilterPrefix(popUpMarker.dffh_area)}</ModalContentInfoP2>
+                                      </ModalContentInfoContainer>
+                                  </ModalContentBodyContainerColumn>
+
+                                  <ModalContentBodyContainerColumn style={{width: '40%'}}>
+                                      <ModalContentInfoContainer>
+                                          <ModalContentInfoP>Offered Programs: </ModalContentInfoP>
+                                          <List>
+                                              <OfferedPrograms relatedPrograms={filterProgramBasedOnSite(popUpMarker)}></OfferedPrograms>
+                                          </List>
+                                      </ModalContentInfoContainer>
+
+                                  </ModalContentBodyContainerColumn>
 
 
-            </AnimatedModalContent>
+                              </ModalContentBodyContainerRow>
 
-        </MapPopupContainer>
+                          </ModalContentContainer>
+
+
+                      </AnimatedModalContent>
+
+                  </MapPopupContainer> : <></>
+          }
+
 
 
 

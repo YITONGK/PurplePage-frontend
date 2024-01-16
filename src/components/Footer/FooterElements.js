@@ -42,3 +42,11 @@ export const FooterText = styled.p`
   margin:0;
   padding: 0;
 `;
+
+export const FooterTextSmall = styled.p`
+  font-size: 12px;
+  font-weight: lighter;
+  color: #fff;
+  margin:0;
+  padding: 0;
+`;

@@ -853,7 +853,6 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
                                 <SiteInfoP>Offered Programs: </SiteInfoP>
                                 <List>
                                     <OfferedPrograms relatedPrograms={filterProgramBasedOnSite(clickedSite)}></OfferedPrograms>
-
                                 </List>
                             </SiteInfoDetailContainer>
 
