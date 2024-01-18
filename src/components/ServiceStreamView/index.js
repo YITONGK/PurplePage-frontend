@@ -82,7 +82,7 @@ const ServiceStreamView = () => {
 
     /* get a service stream from the backend based on the id and display it */
     const getServiceStream = async () => {
-        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         const result = await axios.get(BASE_URL + '/servicestream/' + id, {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -98,7 +98,7 @@ const ServiceStreamView = () => {
     }
 
     const getServiceTypes = async () => {
-        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         let result = await axios.get(BASE_URL + '/servicetype/', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -109,7 +109,7 @@ const ServiceStreamView = () => {
     }
 
     const getProgramTypes = async () => {
-        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         let result = await axios.get(BASE_URL + '/programtype', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -120,7 +120,7 @@ const ServiceStreamView = () => {
     }
 
     const getPrograms = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         let result = await axios.get(BASE_URL + '/program', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -199,7 +199,7 @@ const ServiceStreamView = () => {
 
     // /* delete the service stream */
     // const deleteServiceStream = () => {
-    //   const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+    //   const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
     //   Swal.fire({
     //     title: "Warning!",
     //     text: "Are you sure you want to delete this service stream?",

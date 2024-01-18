@@ -19,7 +19,7 @@ const UserView = () => {
 
     /* get a user from the backend based on the id and display it */
     const getUser = async () => {
-        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         await axios.get(BASE_URL + '/users/' + id, {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -37,7 +37,7 @@ const UserView = () => {
 
     /* delete the user */
     const deleteUser = () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         Swal.fire({
             title: "Warning!",
             text: "Are you sure you want to delete this user?",

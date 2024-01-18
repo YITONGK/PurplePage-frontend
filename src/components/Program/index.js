@@ -23,7 +23,7 @@ const Program = () => {
 
     /* get list of programs from the backend and display them */
     const getPrograms = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         await axios.get(BASE_URL + '/program', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`

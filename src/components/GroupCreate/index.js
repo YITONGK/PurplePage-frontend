@@ -33,7 +33,7 @@ const GroupCreate = () => {
 
     /* get list of divisions from the backend and display them */
     const getDivisions = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         await axios.get(BASE_URL + '/division', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -47,7 +47,7 @@ const GroupCreate = () => {
     // handle submitting the data to the backend
     const onSubmit = async (e) => {
         e.preventDefault();
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         const url = BASE_URL + '/group';
         const {group_name, eo, division_name, status} = values;
         await axios.post(url, {group_name, eo, division_name, status}).then(() => {

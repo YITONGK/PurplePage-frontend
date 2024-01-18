@@ -29,7 +29,7 @@ const DivisionEdit = (props) => {
 
     /* get a division from the backend based on the id and display it */
     const getDivision = async () => {
-        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         await axios.get(BASE_URL + '/division/' + id, {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -63,7 +63,7 @@ const DivisionEdit = (props) => {
      */
     const onSubmit = async (e) => {
         e.preventDefault();
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         const url = BASE_URL + '/division/edit';
         await axios.post(url, {...values}).then(() => {
             Swal.fire({

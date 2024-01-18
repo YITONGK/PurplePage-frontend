@@ -1,5 +1,5 @@
 // LoginPage.js
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useMsal } from '@azure/msal-react';
 import { LoginButton, MicrosoftLogo} from './LoginPageElement';
 import '../App.css';
@@ -34,41 +34,6 @@ function SignInButton() {
 }
 
 function LoginPage() {
-    // const { instance, accounts } = useMsal();
-    //
-    // useEffect(() => {
-    //     const getToken = () => {
-    //         try {
-    //             const loginRequest = {
-    //                 scopes: ['User.Read']
-    //             };
-    //
-    //             // Check if there is an active account
-    //             if (accounts.length > 0) {
-    //                 instance.acquireTokenSilent({
-    //                     account: accounts[0],
-    //                     scopes: loginRequest.scopes
-    //                 })
-    //                 .then((tokenResponse) => {
-    //                     console.log(tokenResponse);
-    //                     document.cookie = `accessToken=${tokenResponse.idToken};`;
-    //                 })
-    //                 .catch((error) => {
-    //                     console.log("error");
-    //                     console.error(error);
-    //                 });
-    //             } else {
-    //                 // Handle the case where there is no active account
-    //                 console.error('No active account. Please sign in.');
-    //             }
-    //
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     };
-    //
-    //     getToken();
-    // }, [instance, accounts]);
 
     return (
 

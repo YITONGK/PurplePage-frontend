@@ -60,7 +60,7 @@ const ProgramView = () => {
 
     /* get a program from the backend based on the id and display it */
     const getProgram = async () => {
-        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         await axios.get(BASE_URL + '/program/' + id, {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`

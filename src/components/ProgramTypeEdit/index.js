@@ -37,7 +37,7 @@ const ProgramTypeEdit = (props) => {
 
     /* get a program type from the backend based on the id and display it */
     const getProgramType = async () => {
-        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         await axios.get(BASE_URL + '/programtype/' + id, {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -56,7 +56,7 @@ const ProgramTypeEdit = (props) => {
 
     /* get list of service types from the backend and display them */
     const getServiceTypes = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         await axios.get(BASE_URL + '/servicetype', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -85,7 +85,7 @@ const ProgramTypeEdit = (props) => {
      */
     const onSubmit = async (e) => {
         e.preventDefault();
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         const url = BASE_URL + '/programtype/edit';
         await axios.post(url, {...values}).then(() => {
             Swal.fire({

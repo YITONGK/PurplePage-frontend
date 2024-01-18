@@ -1,8 +1,5 @@
 import styled, { keyframes }from 'styled-components';
 import Modal from 'react-modal';
-import InputLabel from '@mui/material/InputLabel';
-import Button from '@mui/material/Button';
-import Select from '@mui/material/Select';
 import ClearIcon from "@mui/icons-material/Clear";
 
 export const MapContainer = styled.div`

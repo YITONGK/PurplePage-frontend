@@ -76,7 +76,7 @@ const DivisionView = () => {
 
     /* get a division from the backend based on the id and display it */
     const getDivision = async () => {
-        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         await axios.get(BASE_URL + '/division/' + id, {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -89,7 +89,7 @@ const DivisionView = () => {
 
     /* get list of groups from the backend and display them */
     const getGroups = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         let result = await axios.get(BASE_URL + '/group', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -100,7 +100,7 @@ const DivisionView = () => {
     }
 
     const getPrograms = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         let result = await axios.get(BASE_URL + '/program', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`

@@ -23,7 +23,7 @@ const Site = () => {
 
     /* get list of sites from the backend and display them */
     const getSites = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         await axios.get(BASE_URL + '/site', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`

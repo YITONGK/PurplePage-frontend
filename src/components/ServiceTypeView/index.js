@@ -76,7 +76,7 @@ const ServiceTypeView = () => {
 
     /* get a service type from the backend based on the id and display it */
     const getServiceType = async () => {
-        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         await axios.get(BASE_URL + '/servicetype/' + id, {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -89,7 +89,7 @@ const ServiceTypeView = () => {
     }
 
     const getProgramTypes = async () => {
-        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         let result = await axios.get(BASE_URL + '/programtype', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -100,7 +100,7 @@ const ServiceTypeView = () => {
     }
 
     const getPrograms = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         let result = await axios.get(BASE_URL + '/program', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -179,7 +179,7 @@ const ServiceTypeView = () => {
 
     // /* delete the service type */
     // const deleteServiceType = () => {
-    //   const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+    //   const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
     //   Swal.fire({
     //     title: "Warning!",
     //     text: "Are you sure you want to delete this service type?",

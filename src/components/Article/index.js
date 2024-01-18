@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, {useEffect, useRef, useState} from 'react';
 import {useMsal} from '@azure/msal-react';
 import Cookies from 'js-cookie';
+import {InteractionRequiredAuthError} from "@azure/msal-browser";
 import {
     ArticleContainer,
     ArticleH1,
@@ -25,6 +26,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
+import WarningIcon from '@mui/icons-material/Warning';
 
 import TextField from '@mui/material/TextField';
 
@@ -32,17 +34,14 @@ import Map from '../Map';
 import MapInfo from '../MapInfo';
 import MapFilter from '../MapFilter';
 import ExportCSV from '../ExportCSV';
+import MapResultFilter from "../MapResultFilter";
 import {removeStopwords} from 'stopword';
 
 import ReactLoading from 'react-loading';
 import {SkeletonTheme} from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import '../../App.css';
-import MapResultFilter from "../MapResultFilter";
 
-import WarningIcon from '@mui/icons-material/Warning';
-import {useNavigate} from "react-router-dom";
-import {InteractionRequiredAuthError} from "@azure/msal-browser";
 
 const Article = () => {
 
@@ -88,8 +87,6 @@ const Article = () => {
     const [mapFilterIsCollapse, setMapFilterIsCollapse] = useState(true);
 
     const mapRef = useRef();
-
-    const navigate = useNavigate();
 
     // Style
     const searchTextFieldStyle = {
@@ -387,7 +384,7 @@ const Article = () => {
 
         try {
 
-            const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+            const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
             const result = await axios.get(BASE_URL + '/site', {
                 headers: {
@@ -405,7 +402,7 @@ const Article = () => {
 
     /* get list of site accessibility from the db */
     const getSiteAccessibilities = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         try {
 
             const result = await axios.get(BASE_URL + '/siteaccess', {
@@ -424,7 +421,7 @@ const Article = () => {
 
     /* get list of programs from the backend and display them */
     const getPrograms = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         let result = await axios.get(BASE_URL + '/program', {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -441,7 +438,7 @@ const Article = () => {
 
     /* get list of programs Access Type from the db */
     const getProgramAts = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         try {
             const result = await axios.get(BASE_URL + '/programat', {
                 headers: {
@@ -458,7 +455,7 @@ const Article = () => {
 
     /* get list of programs delivery method from the db */
     const getProgramSdms = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
         try {
             const result = await axios.get(BASE_URL + '/programsdm', {
@@ -477,7 +474,7 @@ const Article = () => {
 
     /* get list of program types from the backend and display them */
     const getProgramTypes = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
         let result = await axios.get(BASE_URL + '/programtype', {
             headers: {
@@ -498,7 +495,7 @@ const Article = () => {
 
     /* get list of groups from the backend and display them */
     const getGroups = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
         let result = await axios.get(BASE_URL + '/group', {
             headers: {
@@ -513,7 +510,7 @@ const Article = () => {
     /* get list of service stream from the backend and display them */
     const getServiceStreams = async () => {
 
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
         let result = await axios.get(BASE_URL + '/servicestream', {
             headers: {
@@ -528,7 +525,7 @@ const Article = () => {
 
     /* get list of divisions from the backend and display them */
     const getDivisions = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
         let result = await axios.get(BASE_URL + '/division', {
             headers: {
@@ -544,7 +541,7 @@ const Article = () => {
 
     /* get list of service type from the backend and display them */
     const getServiceTypes = async () => {
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
         let result = await axios.get(BASE_URL + '/servicetype', {
             headers: {
@@ -561,7 +558,7 @@ const Article = () => {
     // Getting the routing address from the api call base on user current location
     const fetchRouteData = async (site) => {
         try {
-            const direction_url = 'https://api.mapbox.com/directions/v5/mapbox/driving/';
+            const direction_url = process.env.REACT_APP_MAPBOX_DIRECTION_URL;
             const response = await axios.get(
                 direction_url +
                 `${departureAddress.lng},${departureAddress.lat};${site.lng},${site.lat}` +
@@ -626,7 +623,7 @@ const Article = () => {
         for (let i = 0; i < filteredProgramList.length; i++) {
             siteIds.push(filteredProgramList[i].site_id)
         }
-        ;
+
 
         // generate all site that match the results
         const result = [];
@@ -657,7 +654,7 @@ const Article = () => {
         for (let i = 0; i < filteredProgramList.length; i++) {
             siteIds.push(filteredProgramList[i].site_id)
         }
-        ;
+
 
         const result = [];
         for (let i = 0; i < siteList.length; i++) {

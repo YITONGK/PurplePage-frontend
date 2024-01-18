@@ -31,7 +31,7 @@ const DivisionCreate = () => {
     // handle submitting the data to the backend
     const onSubmit = async (e) => {
         e.preventDefault();
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         const url = BASE_URL + '/division';
         const {division_name, gm, status} = values;
         await axios.post(url, {division_name, gm, status}).then(() => {

@@ -33,7 +33,7 @@ const ServiceStreamEdit = (props) => {
 
     /* get a service stream from the backend based on the id and display it */
     const getServiceStream = async () => {
-        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         await axios.get(BASE_URL + '/servicestream/' + id, {
             headers: {
                 'authorization': `Bearer ${Cookies.get('accessToken')}`
@@ -66,7 +66,7 @@ const ServiceStreamEdit = (props) => {
      */
     const onSubmit = async (e) => {
         e.preventDefault();
-        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         const url = BASE_URL + '/servicestream/edit';
         await axios.post(url, {...values}).then(() => {
             Swal.fire({
