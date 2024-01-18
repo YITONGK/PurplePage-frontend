@@ -1,16 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { mkConfig, generateCsv, download } from "export-to-csv";
+import React, {useState, useEffect} from 'react';
+import {mkConfig, generateCsv, download} from "export-to-csv";
 import {ExportInfoContainer, ExportInfoText} from './ExportCSVElements';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
-const ExportCSV = ({advanceFilteredPrograms, advanceFilteredSites, groupsList, divisionList, serviceStreamList, serviceTypeList, programTypeList}) => {
+const ExportCSV = ({
+                       advanceFilteredPrograms,
+                       advanceFilteredSites,
+                       groupsList,
+                       divisionList,
+                       serviceStreamList,
+                       serviceTypeList,
+                       programTypeList
+                   }) => {
 
     const [csvData, setCsvData] = useState([{"Data": 'Unknown'}]);
 
 
     useEffect(() => {
 
-        if(advanceFilteredPrograms.length > 0) {
+        if (advanceFilteredPrograms.length > 0) {
 
 
             const CSVData = advanceFilteredPrograms.map(program => {
@@ -62,7 +70,7 @@ const ExportCSV = ({advanceFilteredPrograms, advanceFilteredSites, groupsList, d
             setCsvData(CSVData);
         }
 
-    },[advanceFilteredPrograms, advanceFilteredSites])
+    }, [advanceFilteredPrograms, advanceFilteredSites])
 
     // mkConfig merges your options with the defaults
     // and returns WithDefaults<ConfigOptions>
@@ -74,7 +82,7 @@ const ExportCSV = ({advanceFilteredPrograms, advanceFilteredSites, groupsList, d
     const formattedDate = `${day}${month}${year}`;
     const fileName = `PurplePage_Filtered_ServiceDirectory_${formattedDate}`;
 
-    const csvConfig = mkConfig({ useKeysAsHeaders: true, filename: fileName });
+    const csvConfig = mkConfig({useKeysAsHeaders: true, filename: fileName});
 
 
     // Converts your Array<Object> to a CsvOutput string based on the configs
@@ -86,10 +94,11 @@ const ExportCSV = ({advanceFilteredPrograms, advanceFilteredSites, groupsList, d
 
     return (
         <ExportInfoContainer>
-            <SaveAltIcon sx={{color: '#3d3d3d'}} />
+            <SaveAltIcon sx={{color: '#3d3d3d'}}/>
             <ExportInfoText>
                 Require to export data?{' '}
-                <span onClick={onClickDownload} style={{ color: '#3d3d3d', textDecoration: 'underline', cursor: 'pointer' }}>
+                <span onClick={onClickDownload}
+                      style={{color: '#3d3d3d', textDecoration: 'underline', cursor: 'pointer'}}>
                     Please click here to export your filtered data to CSV format.
                 </span>
             </ExportInfoText>

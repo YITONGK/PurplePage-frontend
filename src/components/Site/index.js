@@ -1,157 +1,174 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Button from '@mui/material/Button';
-import { DataGrid } from '@mui/x-data-grid';
-import { SiteContainer, SiteH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink } from './SiteElements';
+import {DataGrid} from '@mui/x-data-grid';
+import {SiteContainer, SiteH1, DataGridWrapper, ActionsColumnWrapper, ActionsButtonLink} from './SiteElements';
 import Cookies from "js-cookie";
 import LinearProgress from "@mui/material/LinearProgress";
 
 const Site = () => {
-  // useState hooks
-  const [siteList, setSiteList] = useState([]);
-  const [paginationModel, setPaginationModel] = useState({
-    pageSize: 10, 
-    page: 0
-  });
-  const [isLoading, setIsLoading] = useState(true);
+    // useState hooks
+    const [siteList, setSiteList] = useState([]);
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 10,
+        page: 0
+    });
+    const [isLoading, setIsLoading] = useState(true);
 
-  // load data from the backend when loading the page
-  useEffect(() => {
-    getSites();
-    document.title = 'Site';
-  }, []);
+    // load data from the backend when loading the page
+    useEffect(() => {
+        getSites();
+        document.title = 'Site';
+    }, []);
 
-  /* get list of sites from the backend and display them */
-  const getSites = async () => {
-    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
-    await axios.get(BASE_URL + '/site', {
-      headers : {
-        'authorization': `Bearer ${Cookies.get('accessToken')}`
-      }
-    }).then(res => {
-      let list = res.data;
-      list = list.map ((list) => {
-        return {
-          ...list,
-          accessibility: 'None',
-          hours: 'TBA-TBA',
-        };
-      })
-      setSiteList(list);
-      setIsLoading(false);
-    })
-  }
-
-  const ActionsColumn = {
-    headerClassName: 'header',
-    maxWidth: 200,
-    flex: 1,
-    field:'actions',
-    headerName: 'Actions',
-    filterable: false,
-    renderCell: (cellValues) => {
-      const viewLink = '/site/' + cellValues.id;
-
-      return (
-        <ActionsColumnWrapper>
-          <Button variant="contained" style={{textTransform: "none", marginRight: "5%", backgroundColor: "#a20066"}}>
-            <ActionsButtonLink to={viewLink}>View</ActionsButtonLink>
-          </Button>
-        </ActionsColumnWrapper>
-      );
+    /* get list of sites from the backend and display them */
+    const getSites = async () => {
+        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        await axios.get(BASE_URL + '/site', {
+            headers: {
+                'authorization': `Bearer ${Cookies.get('accessToken')}`
+            }
+        }).then(res => {
+            let list = res.data;
+            list = list.map((list) => {
+                return {
+                    ...list,
+                    accessibility: 'None',
+                    hours: 'TBA-TBA',
+                };
+            })
+            setSiteList(list);
+            setIsLoading(false);
+        })
     }
-  }
 
-  // columns for datagrid
-  const columns = [
-    { field: 'site_id', headerName: 'Site ID', headerClassName: 'header', maxWidth: 140, flex: 1,
-      renderCell: (params) => (
-        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
-      )
-    },
-    { field: 'street_nbr', headerName: 'Street Number', headerClassName: 'header', maxWidth: 130, flex: 1,
-      renderCell: (params) => (
-        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
-      )
-    },
-    { field: 'street_name', headerName: 'Street Name', headerClassName: 'header', minWidth: 200, flex: 1,
-      renderCell: (params) => (
-        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
-      )
-    },
-    { field: 'suburb', headerName: 'Suburb', headerClassName: 'header', maxWidth: 140, flex: 1,
-      renderCell: (params) => (
-        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
-      )
-    },
-    { field: 'state', headerName: 'State', headerClassName: 'header', maxWidth: 120, flex: 1,
-      renderCell: (params) => (
-        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
-      )
-    },
-    { field: 'postcode', headerName: 'Postcode', headerClassName: 'header', maxWidth: 120, flex: 1,
-      renderCell: (params) => (
-        <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
-      )
-    },
-    { field: 'accessibility', headerName: 'Accessibility', headerClassName: 'header', maxWidth: 120, flex: 1,
-      renderCell: (params) => (
-          <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
-      )
-    },
-    { field: 'hours', headerName: 'Hours', headerClassName: 'header', maxWidth: 120, flex: 1,
-      renderCell: (params) => (
-          <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
-      )
-    },
-    { field: 'status', headerName: 'Status', headerClassName: 'header', maxWidth: 120, flex: 1,
-      renderCell: (params) => (
-        <span style={{color: 'green', fontWeight: 'bold', textTransform: 'capitalize', fontSize: '16px' }}>{params.value}</span>
-      )
-    },
-    ActionsColumn
-  ];
+    const ActionsColumn = {
+        headerClassName: 'header',
+        maxWidth: 200,
+        flex: 1,
+        field: 'actions',
+        headerName: 'Actions',
+        filterable: false,
+        renderCell: (cellValues) => {
+            const viewLink = '/site/' + cellValues.id;
 
-  return (
-    <SiteContainer>
-      {isLoading &&
-        <>
-          <SiteH1>Site</SiteH1>
-          <LinearProgress
-              color="primary"
-              
-              variant="indeterminate"
-              sx={{ width: '95%', height: '8px'}} // Adjust width and height as needed
-          />
-        </>
-      }
-      {!isLoading &&
-        <>
-          <SiteH1>Site</SiteH1>
-          <DataGridWrapper>
-            <DataGrid
-              sx={{
-                fontFamily: 'Montserrat',
-                color: '#90929f',
-                '& .header': {
-                  color: '#A60A6C',
-                  backgroundColor: '#FCF0F5',
-                  fontSize: '18px'
-                }
-              }}
-              paginationModel={paginationModel}
-              pageSizeOptions={[10, 25, 50]}
-              onPaginationModelChange={(newPaginationModel => {setPaginationModel(newPaginationModel)})}
-              columns={columns}
-              rows={siteList}
-              getRowId={row => row.id}
-              autoHeight
-            />
-          </DataGridWrapper>
-        </>
-      }
-    </SiteContainer>
-  )
+            return (
+                <ActionsColumnWrapper>
+                    <Button variant="contained"
+                            style={{textTransform: "none", marginRight: "5%", backgroundColor: "#a20066"}}>
+                        <ActionsButtonLink to={viewLink}>View</ActionsButtonLink>
+                    </Button>
+                </ActionsColumnWrapper>
+            );
+        }
+    }
+
+    // columns for datagrid
+    const columns = [
+        {
+            field: 'site_id', headerName: 'Site ID', headerClassName: 'header', maxWidth: 140, flex: 1,
+            renderCell: (params) => (
+                <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+            )
+        },
+        {
+            field: 'street_nbr', headerName: 'Street Number', headerClassName: 'header', maxWidth: 130, flex: 1,
+            renderCell: (params) => (
+                <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+            )
+        },
+        {
+            field: 'street_name', headerName: 'Street Name', headerClassName: 'header', minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+            )
+        },
+        {
+            field: 'suburb', headerName: 'Suburb', headerClassName: 'header', maxWidth: 140, flex: 1,
+            renderCell: (params) => (
+                <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+            )
+        },
+        {
+            field: 'state', headerName: 'State', headerClassName: 'header', maxWidth: 120, flex: 1,
+            renderCell: (params) => (
+                <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+            )
+        },
+        {
+            field: 'postcode', headerName: 'Postcode', headerClassName: 'header', maxWidth: 120, flex: 1,
+            renderCell: (params) => (
+                <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+            )
+        },
+        {
+            field: 'accessibility', headerName: 'Accessibility', headerClassName: 'header', maxWidth: 120, flex: 1,
+            renderCell: (params) => (
+                <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+            )
+        },
+        {
+            field: 'hours', headerName: 'Hours', headerClassName: 'header', maxWidth: 120, flex: 1,
+            renderCell: (params) => (
+                <span style={{fontSize: '16px', color: '#5A5A5A'}}>{params.value}</span>
+            )
+        },
+        {
+            field: 'status', headerName: 'Status', headerClassName: 'header', maxWidth: 120, flex: 1,
+            renderCell: (params) => (
+                <span style={{
+                    color: 'green',
+                    fontWeight: 'bold',
+                    textTransform: 'capitalize',
+                    fontSize: '16px'
+                }}>{params.value}</span>
+            )
+        },
+        ActionsColumn
+    ];
+
+    return (
+        <SiteContainer>
+            {isLoading &&
+                <>
+                    <SiteH1>Site</SiteH1>
+                    <LinearProgress
+                        color="primary"
+
+                        variant="indeterminate"
+                        sx={{width: '95%', height: '8px'}} // Adjust width and height as needed
+                    />
+                </>
+            }
+            {!isLoading &&
+                <>
+                    <SiteH1>Site</SiteH1>
+                    <DataGridWrapper>
+                        <DataGrid
+                            sx={{
+                                fontFamily: 'Montserrat',
+                                color: '#90929f',
+                                '& .header': {
+                                    color: '#A60A6C',
+                                    backgroundColor: '#FCF0F5',
+                                    fontSize: '18px'
+                                }
+                            }}
+                            paginationModel={paginationModel}
+                            pageSizeOptions={[10, 25, 50]}
+                            onPaginationModelChange={(newPaginationModel => {
+                                setPaginationModel(newPaginationModel)
+                            })}
+                            columns={columns}
+                            rows={siteList}
+                            getRowId={row => row.id}
+                            autoHeight
+                        />
+                    </DataGridWrapper>
+                </>
+            }
+        </SiteContainer>
+    )
 }
 
 export default Site;

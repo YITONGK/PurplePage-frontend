@@ -3,18 +3,19 @@ import {FooterContainer, FooterWrapper, FooterText, FooterTextSmall} from './Foo
 
 // footer component
 const Footer = () => {
-  return (
-    <>
-      <FooterContainer>
-        <FooterWrapper>
-          <FooterText>
-            Copyright &copy; 2023 Uniting (Victoria & Tasmania) Limited ABN 81 098 317 125 All rights reserved.
-          </FooterText>
-            <FooterTextSmall>Purple Page rev. 18.01.2024.</FooterTextSmall>
-        </FooterWrapper>
-      </FooterContainer>
-    </>
-  )
+    return (
+        <>
+            <FooterContainer>
+                <FooterWrapper>
+                    <FooterText>
+                        Copyright &copy; 2023 Uniting (Victoria & Tasmania) Limited ABN 81 098 317 125 All rights
+                        reserved.
+                    </FooterText>
+                    <FooterTextSmall>Purple Page rev. 18.01.2024.</FooterTextSmall>
+                </FooterWrapper>
+            </FooterContainer>
+        </>
+    )
 }
 
 export default Footer;

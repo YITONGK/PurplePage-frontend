@@ -1,25 +1,25 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import {
     InfoContainer,
     InfoTitleContainer,
-    InfoH1, 
-    InfoH2, 
-    InfoP, 
+    InfoH1,
+    InfoH2,
+    InfoP,
     ProgramInfoContainer,
-    InfoDetail, 
-    SiteTitle, 
-    SiteContainer, 
-    SiteInfo, 
+    InfoDetail,
+    SiteTitle,
+    SiteContainer,
+    SiteInfo,
     SiteInfoDetailContainer,
     ListItemButton,
     InfoP2,
-    InfoAndPopupContainer, 
+    InfoAndPopupContainer,
     AnimatedModalContent,
     AnimatedModalContent2,
-    ProgramCardContainer, 
-    ProgramCardHeader, 
-    ProgramCardHeaderLeft, 
-    ProgramCardHeaderRight, 
+    ProgramCardContainer,
+    ProgramCardHeader,
+    ProgramCardHeaderLeft,
+    ProgramCardHeaderRight,
     CustomClearIcon,
     ProgramInfoDetail,
     ProgramInfoDetailContainer,
@@ -30,17 +30,17 @@ import {
     ProgramViewCaption,
     ProgramViewP2,
     SiteButtonContainer,
-    SiteViewH1, 
-    SiteViewP, 
-    SiteViewMapAndInfoContainer, 
-    SiteViewInfoContainer, 
-    SiteViewMapContainer, 
-    SiteViewIconContainer, 
-    SiteViewInfoDetailColumn, 
-    SiteViewInfoDetailContainer, 
-    SiteViewInfoDetailRow, 
-    SiteViewH2, 
-    SiteViewP2, 
+    SiteViewH1,
+    SiteViewP,
+    SiteViewMapAndInfoContainer,
+    SiteViewInfoContainer,
+    SiteViewMapContainer,
+    SiteViewIconContainer,
+    SiteViewInfoDetailColumn,
+    SiteViewInfoDetailContainer,
+    SiteViewInfoDetailRow,
+    SiteViewH2,
+    SiteViewP2,
     SperateLine,
     ProgramCardHeader2
 } from './MapInfoElements';
@@ -77,12 +77,12 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
     const mapRef = useRef();
 
     // site program sorting
-    useEffect (() => {
+    useEffect(() => {
 
-        if(advanceFilteredPrograms && site) {
-           
+        if (advanceFilteredPrograms && site) {
+
             const tmpFilteredProgram = advanceFilteredPrograms.filter((program) => {
-                return program.site_id === site.site_id ;
+                return program.site_id === site.site_id;
             })
 
             const distinctProgram = tmpFilteredProgram.filter((program, index, self) => {
@@ -97,7 +97,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                     return a.program_nme.localeCompare(b.program_nme);
                 });
             }
-            
+
             setRelatedPrograms(distinctProgram);
         }
 
@@ -129,11 +129,11 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
             <ProgramInfoContainer>
                 {
                     (relatedPrograms && relatedPrograms.length > 0) ?
-                        relatedPrograms.map((program, index) =>{
+                        relatedPrograms.map((program, index) => {
                             return (
                                 <React.Fragment key={index}>
-                                    <ListItemButton key={index} onClick= {() => onClickProgram(program)}>
-                                        <ListItemText primary= {programNameProcess(program.program_nme)}/>
+                                    <ListItemButton key={index} onClick={() => onClickProgram(program)}>
+                                        <ListItemText primary={programNameProcess(program.program_nme)}/>
                                         <ExpandMore style={{transform: 'rotate(-90deg)'}}></ExpandMore>
                                     </ListItemButton>
                                 </React.Fragment>
@@ -143,7 +143,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                         :
                         <React.Fragment>
                             <ListItemButton>
-                                <ListItemText primary= {'No Program'}/>
+                                <ListItemText primary={'No Program'}/>
                             </ListItemButton>
                         </React.Fragment>
 
@@ -159,14 +159,14 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
         let group_name = '';
         let program_type_name = '';
 
-        if(program) {
-            if(program.prgm_type_id) {
+        if (program) {
+            if (program.prgm_type_id) {
 
                 const tmpFilteredProgramType = programTypeList.filter((programType) => programType.prgm_type_id === program.prgm_type_id);
                 program_type_name = tmpFilteredProgramType[0].prgm_type;
             }
 
-            if(program.group_id) {
+            if (program.group_id) {
 
                 const tmpFilteredGroup = groupList.filter((group) => group.group_id === program.group_id);
                 group_name = tmpFilteredGroup[0].group_name;
@@ -204,7 +204,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
     // String Prefix Checking
     const stringFilterPrefix = (string) => {
 
-        if(!string) return 'None';
+        if (!string) return 'None';
 
         // Extract the local part of the email (before '@')
         const localPart = string.split('@')[0];
@@ -221,85 +221,92 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
         <InfoAndPopupContainer>
             <InfoContainer>
                 <InfoTitleContainer>
-                    <InfoIcon className= "" style={{padding: "0", margin: "0"}} fontSize="large" />
+                    <InfoIcon className="" style={{padding: "0", margin: "0"}} fontSize="large"/>
                     <InfoH1>Site Information</InfoH1>
                 </InfoTitleContainer>
                 <InfoDetail>
                     {site ? (
-                    <SiteContainer>
-                        <SiteTitle>
-                            <InfoH2>
-                                {site.site_id}
-                            </InfoH2>
-                        </SiteTitle>
-                        <SiteInfo>
-                            <SiteInfoDetailContainer>
-                                <InfoP>Address</InfoP>
-                                <InfoP2>
-                                    {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ? (
-                                        <>
-                                            {site.street_nbr} {site.street_name}, <br/>
-                                            {site.suburb}, <br/>
-                                            {site.state} {site.postcode}
-                                        </>
-                                    ) : (
-                                        'None'
-                                    )}
-                                </InfoP2>
-                            </SiteInfoDetailContainer>
-                            <SiteInfoDetailContainer>
-                                <InfoP>Hours (Holiday Open Hours in Brackets)</InfoP>
-                                <SiteViewInfoDetailRow style={{justifyContent: 'start', gap:'0.5rem'}}>
-                                    <AccessTimeIcon></AccessTimeIcon>
+                        <SiteContainer>
+                            <SiteTitle>
+                                <InfoH2>
+                                    {site.site_id}
+                                </InfoH2>
+                            </SiteTitle>
+                            <SiteInfo>
+                                <SiteInfoDetailContainer>
+                                    <InfoP>Address</InfoP>
                                     <InfoP2>
-                                        Opens {(stringFilterPrefix(site.site_open) === 'None') ? 'TBA' : stringFilterPrefix(site.site_open)}
-                                         - {(stringFilterPrefix(site.site_close) === 'None') ? 'TBA' : stringFilterPrefix(site.site_close)}
+                                        {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ? (
+                                            <>
+                                                {site.street_nbr} {site.street_name}, <br/>
+                                                {site.suburb}, <br/>
+                                                {site.state} {site.postcode}
+                                            </>
+                                        ) : (
+                                            'None'
+                                        )}
                                     </InfoP2>
-                                </SiteViewInfoDetailRow>
+                                </SiteInfoDetailContainer>
+                                <SiteInfoDetailContainer>
+                                    <InfoP>Hours (Holiday Open Hours in Brackets)</InfoP>
+                                    <SiteViewInfoDetailRow style={{justifyContent: 'start', gap: '0.5rem'}}>
+                                        <AccessTimeIcon></AccessTimeIcon>
+                                        <InfoP2>
+                                            Opens {(stringFilterPrefix(site.site_open) === 'None') ? 'TBA' : stringFilterPrefix(site.site_open)}
+                                            - {(stringFilterPrefix(site.site_close) === 'None') ? 'TBA' : stringFilterPrefix(site.site_close)}
+                                        </InfoP2>
+                                    </SiteViewInfoDetailRow>
 
-                            </SiteInfoDetailContainer>
-                            <SiteInfoDetailContainer>
-                                <InfoP>Accessibility</InfoP>
-                                <InfoP2>
-                                    {(site.accessibility && site.accessibility.length > 0)
-                                        ? site.accessibility.map(site => site.accessibility).join(', ')
-                                        : 'None'}
-                                </InfoP2>
-                            </SiteInfoDetailContainer>
-                            <SiteInfoDetailContainer>
-                                <InfoP>Contact Name:</InfoP>
-                                <InfoP2>{stringFilterPrefix(site.site_contact_name)}</InfoP2>
-                            </SiteInfoDetailContainer>
-                            <SiteInfoDetailContainer>
-                                <InfoP>Contact Number</InfoP>
-                                <InfoP2>
-                                    {stringFilterPrefix(site.site_contact_nbr)}
-                                </InfoP2>
-                            </SiteInfoDetailContainer>
+                                </SiteInfoDetailContainer>
+                                <SiteInfoDetailContainer>
+                                    <InfoP>Accessibility</InfoP>
+                                    <InfoP2>
+                                        {(site.accessibility && site.accessibility.length > 0)
+                                            ? site.accessibility.map(site => site.accessibility).join(', ')
+                                            : 'None'}
+                                    </InfoP2>
+                                </SiteInfoDetailContainer>
+                                <SiteInfoDetailContainer>
+                                    <InfoP>Contact Name:</InfoP>
+                                    <InfoP2>{stringFilterPrefix(site.site_contact_name)}</InfoP2>
+                                </SiteInfoDetailContainer>
+                                <SiteInfoDetailContainer>
+                                    <InfoP>Contact Number</InfoP>
+                                    <InfoP2>
+                                        {stringFilterPrefix(site.site_contact_nbr)}
+                                    </InfoP2>
+                                </SiteInfoDetailContainer>
 
-                            <SiteInfoDetailContainer>
-                                <InfoP>Program Offer:</InfoP>
-                                <List>
-                                    <ProgramInfo></ProgramInfo>
-                                </List>
-                            </SiteInfoDetailContainer>
+                                <SiteInfoDetailContainer>
+                                    <InfoP>Program Offer:</InfoP>
+                                    <List>
+                                        <ProgramInfo></ProgramInfo>
+                                    </List>
+                                </SiteInfoDetailContainer>
 
-                            <SiteInfoDetailContainer style={{marginTop: '-5px'}}>
-                                <InfoP>Local Government Area:</InfoP>
-                                <InfoP2>{stringFilterPrefix(site.lga)}</InfoP2>
-                            </SiteInfoDetailContainer>
+                                <SiteInfoDetailContainer style={{marginTop: '-5px'}}>
+                                    <InfoP>Local Government Area:</InfoP>
+                                    <InfoP2>{stringFilterPrefix(site.lga)}</InfoP2>
+                                </SiteInfoDetailContainer>
 
-                            <SiteInfoDetailContainer>
-                                <InfoP>Department of Families, <br/>Fairness and Housing:</InfoP>
-                                <InfoP2>{stringFilterPrefix(site.dffh_area)}</InfoP2>
-                            </SiteInfoDetailContainer>
+                                <SiteInfoDetailContainer>
+                                    <InfoP>Department of Families, <br/>Fairness and Housing:</InfoP>
+                                    <InfoP2>{stringFilterPrefix(site.dffh_area)}</InfoP2>
+                                </SiteInfoDetailContainer>
 
-                        </SiteInfo>
+                            </SiteInfo>
 
-                        <SiteButtonContainer>
-                            <Button style={{borderRadius: '20px', marginBottom: '0.2rem',color: 'white', backgroundColor: '#A20066', width: '10rem',fontWeight: 'bold'}} onClick={(e) => onClickSiteDetail(site)}>Show More</Button>
-                        </SiteButtonContainer>
-                    </SiteContainer>
+                            <SiteButtonContainer>
+                                <Button style={{
+                                    borderRadius: '20px',
+                                    marginBottom: '0.2rem',
+                                    color: 'white',
+                                    backgroundColor: '#A20066',
+                                    width: '10rem',
+                                    fontWeight: 'bold'
+                                }} onClick={(e) => onClickSiteDetail(site)}>Show More</Button>
+                            </SiteButtonContainer>
+                        </SiteContainer>
                     ) : (
                         <SiteTitle>
                             <InfoH2>No selected site.</InfoH2>
@@ -328,23 +335,24 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                     <ProgramCardHeader>
                         <ProgramCardHeaderLeft>
                             <h2 style={{margin: '0', padding: '0', color: 'white'}}>Program Info</h2>
-                            </ProgramCardHeaderLeft>
-                            <ProgramCardHeaderRight>
-                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeProgramModal}>
-                                <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                        </ProgramCardHeaderLeft>
+                        <ProgramCardHeaderRight>
+                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}
+                                    disableRipple onClick={closeProgramModal}>
+                                <CustomClearIcon style={{fontSize: '30px'}}></CustomClearIcon>
                             </Button>
                         </ProgramCardHeaderRight>
                     </ProgramCardHeader>
 
                     <ProgramInfoDetailContainer>
                         <ProgramInfoDetail>
-                            <Icon style={{minWidth:'100%'}}>
+                            <Icon style={{minWidth: '100%'}}>
                                 <IconContainer style={{minWidth: '2%'}}>
                                     <CodeIcon style={{fontSize: '40px', margin: '0'}}/>
                                 </IconContainer>
                                 <IconDescriptionContainer>
                                     <ProgramViewCaption>Program ID And Name: </ProgramViewCaption>
-                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                    <IconDescription style={{textAlign: 'justify'}}>
                                         <ProgramViewP2>{stringFilterPrefix(selectedPrograms.title) + " - " + stringFilterPrefix(selectedPrograms.program_nme)}</ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
@@ -352,14 +360,15 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                         </ProgramInfoDetail>
 
                         <ProgramInfoDetail>
-                            <Icon style={{minWidth:'100%', paddingBottom: '10px'}}>
+                            <Icon style={{minWidth: '100%', paddingBottom: '10px'}}>
                                 <IconContainer style={{minWidth: '2%'}}>
                                     <DescriptionIcon style={{fontSize: '40px', margin: '0'}}/>
                                 </IconContainer>
                                 <IconDescriptionContainer style={{maxWidth: '92%'}}>
                                     <ProgramViewCaption>Program Description: </ProgramViewCaption>
-                                    <IconDescription style={{ textAlign: 'justify'}}>
-                                        <ProgramViewP2 style={{lineHeight: '1.5'}}>{stringFilterPrefix(selectedPrograms.service_desc)}.</ProgramViewP2>
+                                    <IconDescription style={{textAlign: 'justify'}}>
+                                        <ProgramViewP2
+                                            style={{lineHeight: '1.5'}}>{stringFilterPrefix(selectedPrograms.service_desc)}.</ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
                             </Icon>
@@ -374,7 +383,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 </IconContainer>
                                 <IconDescriptionContainer>
                                     <ProgramViewCaption>Program Manager: </ProgramViewCaption>
-                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                    <IconDescription style={{textAlign: 'justify'}}>
                                         <ProgramViewP2>{stringFilterPrefix(selectedPrograms.prgm_mgr)}</ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
@@ -386,7 +395,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 </IconContainer>
                                 <IconDescriptionContainer>
                                     <ProgramViewCaption>Program Contact: </ProgramViewCaption>
-                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                    <IconDescription style={{textAlign: 'justify'}}>
                                         <ProgramViewP2>{stringFilterPrefix(selectedPrograms.prgm_cont_no)}</ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
@@ -402,7 +411,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 </IconContainer>
                                 <IconDescriptionContainer>
                                     <ProgramViewCaption>General Manager: </ProgramViewCaption>
-                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                    <IconDescription style={{textAlign: 'justify'}}>
                                         <ProgramViewP2>{stringFilterPrefix(selectedPrograms.gm)}</ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
@@ -414,7 +423,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 </IconContainer>
                                 <IconDescriptionContainer>
                                     <ProgramViewCaption>Executive Officer: </ProgramViewCaption>
-                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                    <IconDescription style={{textAlign: 'justify'}}>
                                         <ProgramViewP2>{stringFilterPrefix(selectedPrograms.eo)}</ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
@@ -429,7 +438,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 </IconContainer>
                                 <IconDescriptionContainer>
                                     <ProgramViewCaption>Program Type: </ProgramViewCaption>
-                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                    <IconDescription style={{textAlign: 'justify'}}>
                                         <ProgramViewP2>{stringFilterPrefix(selectedPrograms.prgm_type)}</ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
@@ -441,11 +450,11 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 </IconContainer>
                                 <IconDescriptionContainer>
                                     <ProgramViewCaption>Access Type: </ProgramViewCaption>
-                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                    <IconDescription style={{textAlign: 'justify'}}>
                                         <ProgramViewP2>
                                             {(selectedPrograms.at && selectedPrograms.at.length > 0)
-                                            ? selectedPrograms.at.map(program => program.at).join(', ')
-                                            : 'None'}
+                                                ? selectedPrograms.at.map(program => program.at).join(', ')
+                                                : 'None'}
                                         </ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
@@ -454,13 +463,13 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                         </ProgramInfoDetail>
                         <ProgramInfoDetail>
 
-                            <Icon style={{minWidth:'100%'}}>
+                            <Icon style={{minWidth: '100%'}}>
                                 <IconContainer style={{minWidth: '2%'}}>
                                     <LocalShippingIcon style={{fontSize: '40px', margin: '0'}}/>
                                 </IconContainer>
                                 <IconDescriptionContainer>
                                     <ProgramViewCaption>Delivery Method: </ProgramViewCaption>
-                                    <IconDescription style={{ textAlign: 'justify'}}>
+                                    <IconDescription style={{textAlign: 'justify'}}>
                                         <ProgramViewP2>
                                             {(selectedPrograms.sdm && selectedPrograms.sdm.length > 0)
                                                 ? selectedPrograms.sdm.map(program => program.sdm).join(', ')
@@ -493,22 +502,28 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                     <ProgramCardHeader2>
                         <ProgramCardHeaderLeft>
                             <h2 style={{margin: '0', padding: '0', color: 'white'}}>Site Detail</h2>
-                            </ProgramCardHeaderLeft>
-                            <ProgramCardHeaderRight>
-                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeSiteModal}>
-                                <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                        </ProgramCardHeaderLeft>
+                        <ProgramCardHeaderRight>
+                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}
+                                    disableRipple onClick={closeSiteModal}>
+                                <CustomClearIcon style={{fontSize: '30px'}}></CustomClearIcon>
                             </Button>
                         </ProgramCardHeaderRight>
                     </ProgramCardHeader2>
 
-                    { (selectedSite) ?
+                    {(selectedSite) ?
 
                         <SiteViewMapAndInfoContainer>
 
                             <SiteViewInfoContainer>
-                                <SiteViewH1>{ selectedSite.site_id}</SiteViewH1>
-                                <SiteViewInfoDetailContainer style={{ width:'42rem', backgroundColor: '#f5f5f5', marginRight: '-10px', justifyContent: '20px'}}>
-                                
+                                <SiteViewH1>{selectedSite.site_id}</SiteViewH1>
+                                <SiteViewInfoDetailContainer style={{
+                                    width: '42rem',
+                                    backgroundColor: '#f5f5f5',
+                                    marginRight: '-10px',
+                                    justifyContent: '20px'
+                                }}>
+
                                     <SiteViewInfoDetailRow style={{maxWidth: '50%'}}>
 
                                         <SiteViewIconContainer>
@@ -517,13 +532,13 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
 
                                         <SiteViewInfoDetailColumn>
                                             <SiteViewP><strong>Site Manager:</strong></SiteViewP>
-                                            <SiteViewP>{ stringFilterPrefix(selectedSite.site_contact_name)}</SiteViewP>
+                                            <SiteViewP>{stringFilterPrefix(selectedSite.site_contact_name)}</SiteViewP>
 
                                         </SiteViewInfoDetailColumn>
 
                                     </SiteViewInfoDetailRow>
 
-                                    <SiteViewInfoDetailRow style={{maxWidth:'50%'}}>
+                                    <SiteViewInfoDetailRow style={{maxWidth: '50%'}}>
 
                                         <SiteViewIconContainer>
                                             <CallIcon style={{fontSize: '55px'}}></CallIcon>
@@ -532,39 +547,25 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                         <SiteViewInfoDetailColumn>
                                             <SiteViewP><strong>Contact Number:</strong></SiteViewP>
 
-                                            <SiteViewP>{ stringFilterPrefix(selectedSite.site_contact_nbr)}</SiteViewP>
+                                            <SiteViewP>{stringFilterPrefix(selectedSite.site_contact_nbr)}</SiteViewP>
                                         </SiteViewInfoDetailColumn>
 
                                     </SiteViewInfoDetailRow>
 
                                 </SiteViewInfoDetailContainer>
-                                
+
                                 <SiteViewH2>National Address:</SiteViewH2>
 
                                 <SiteViewInfoDetailContainer>
 
                                     <SiteViewInfoDetailColumn>
-                                    <SiteViewP2>STREET NUMBER</SiteViewP2>
-                                    <SiteViewP>{ stringFilterPrefix(selectedSite.street_nbr)}</SiteViewP>
+                                        <SiteViewP2>STREET NUMBER</SiteViewP2>
+                                        <SiteViewP>{stringFilterPrefix(selectedSite.street_nbr)}</SiteViewP>
                                     </SiteViewInfoDetailColumn>
 
                                     <SiteViewInfoDetailColumn>
-                                    <SiteViewP2>STREET NAME</SiteViewP2>
-                                    <SiteViewP>{ stringFilterPrefix(selectedSite.street_name)}</SiteViewP>
-                                    </SiteViewInfoDetailColumn>
-
-                                </SiteViewInfoDetailContainer>
-
-                                <SiteViewInfoDetailContainer>
-
-                                    <SiteViewInfoDetailColumn>
-                                    <SiteViewP2>SUBURB</SiteViewP2>
-                                    <SiteViewP>{ stringFilterPrefix(selectedSite.suburb)}</SiteViewP>
-                                    </SiteViewInfoDetailColumn>
-
-                                    <SiteViewInfoDetailColumn>
-                                    <SiteViewP2>STATE</SiteViewP2>
-                                    <SiteViewP>{ stringFilterPrefix(selectedSite.state)}</SiteViewP>
+                                        <SiteViewP2>STREET NAME</SiteViewP2>
+                                        <SiteViewP>{stringFilterPrefix(selectedSite.street_name)}</SiteViewP>
                                     </SiteViewInfoDetailColumn>
 
                                 </SiteViewInfoDetailContainer>
@@ -572,13 +573,13 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 <SiteViewInfoDetailContainer>
 
                                     <SiteViewInfoDetailColumn>
-                                    <SiteViewP2>POSTCODE</SiteViewP2>
-                                    <SiteViewP>{ stringFilterPrefix(selectedSite.postcode+"")}</SiteViewP>
+                                        <SiteViewP2>SUBURB</SiteViewP2>
+                                        <SiteViewP>{stringFilterPrefix(selectedSite.suburb)}</SiteViewP>
                                     </SiteViewInfoDetailColumn>
 
                                     <SiteViewInfoDetailColumn>
-                                    <SiteViewP2>LOCAL GOVERNMENT AREA</SiteViewP2>
-                                    <SiteViewP>{stringFilterPrefix(selectedSite.lga)}</SiteViewP>
+                                        <SiteViewP2>STATE</SiteViewP2>
+                                        <SiteViewP>{stringFilterPrefix(selectedSite.state)}</SiteViewP>
                                     </SiteViewInfoDetailColumn>
 
                                 </SiteViewInfoDetailContainer>
@@ -586,8 +587,22 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 <SiteViewInfoDetailContainer>
 
                                     <SiteViewInfoDetailColumn>
-                                    <SiteViewP2>DEPARTMENT OF FAMILIES, FAIRNESS AND HOUSING</SiteViewP2>
-                                    <SiteViewP>{stringFilterPrefix(selectedSite.dffh_area)}</SiteViewP>
+                                        <SiteViewP2>POSTCODE</SiteViewP2>
+                                        <SiteViewP>{stringFilterPrefix(selectedSite.postcode + "")}</SiteViewP>
+                                    </SiteViewInfoDetailColumn>
+
+                                    <SiteViewInfoDetailColumn>
+                                        <SiteViewP2>LOCAL GOVERNMENT AREA</SiteViewP2>
+                                        <SiteViewP>{stringFilterPrefix(selectedSite.lga)}</SiteViewP>
+                                    </SiteViewInfoDetailColumn>
+
+                                </SiteViewInfoDetailContainer>
+
+                                <SiteViewInfoDetailContainer>
+
+                                    <SiteViewInfoDetailColumn>
+                                        <SiteViewP2>DEPARTMENT OF FAMILIES, FAIRNESS AND HOUSING</SiteViewP2>
+                                        <SiteViewP>{stringFilterPrefix(selectedSite.dffh_area)}</SiteViewP>
                                     </SiteViewInfoDetailColumn>
 
                                 </SiteViewInfoDetailContainer>
@@ -596,7 +611,7 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
 
                                 <SiteViewH2>Full Address:</SiteViewH2>
 
-                                <SiteViewP style={{ paddingLeft: '0.8rem', marginBottom: '0.3rem' }}>
+                                <SiteViewP style={{paddingLeft: '0.8rem', marginBottom: '0.3rem'}}>
                                     {selectedSite.street_nbr && selectedSite.street_name && selectedSite.suburb && selectedSite.state && selectedSite.postcode ?
                                         `${selectedSite.street_nbr} ${selectedSite.street_name}, ${selectedSite.suburb}, ${selectedSite.state}, ${selectedSite.postcode}` : 'None'
                                     }
@@ -605,7 +620,9 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                             </SiteViewInfoContainer>
 
                             <SiteViewMapContainer>
-                                <Map sites={[selectedSite]} exportSite={null} exportRef={mapRef} mapWidth={54} mapHeight={70} mapZoom={15} centerLng={selectedSite.lng} centerLat={selectedSite.lat} departureLocation={departureLocation}/>
+                                <Map sites={[selectedSite]} exportSite={null} exportRef={mapRef} mapWidth={54}
+                                     mapHeight={70} mapZoom={15} centerLng={selectedSite.lng}
+                                     centerLat={selectedSite.lat} departureLocation={departureLocation}/>
                             </SiteViewMapContainer>
 
                         </SiteViewMapAndInfoContainer>

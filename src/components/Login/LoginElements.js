@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link as LinkRouter } from 'react-router-dom';
+import {Link as LinkRouter} from 'react-router-dom';
 
 export const LoginBackground = styled.div`
   width: 100%;
@@ -68,8 +68,8 @@ export const LoginLogo = styled.img`
 
 export const LoginHr = styled.hr`
   border: 0;
-  width: 80%;               
-  background-color:rgba(0, 0, 0, 0.1);
+  width: 80%;
+  background-color: rgba(0, 0, 0, 0.1);
   height: 1px;
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -117,7 +117,7 @@ export const LoginFormButton = styled.button`
     cursor: pointer;
     background: linear-gradient(90deg, rgb(160, 160, 160) 0%, rgb(17, 17, 17) 100%);
     transition: all 0.4s ease-out;
-    }
+  }
 `;
 
 export const LoginFormRegister = styled.span`

@@ -1,7 +1,21 @@
 import axios from "axios";
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { SiteViewContainer, SiteViewH1, SiteViewP, SiteViewMapAndInfoContainer, SiteViewInfoContainer, SiteViewMapContainer, SiteViewIconContainer, SiteViewInfoDetailColumn, SiteViewInfoDetailContainer, SiteViewInfoDetailRow, SiteViewH2, SiteViewP2, SperateLine} from './SiteViewElements';
+import React, {useState, useEffect, useRef} from 'react';
+import {useParams} from 'react-router-dom';
+import {
+    SiteViewContainer,
+    SiteViewH1,
+    SiteViewP,
+    SiteViewMapAndInfoContainer,
+    SiteViewInfoContainer,
+    SiteViewMapContainer,
+    SiteViewIconContainer,
+    SiteViewInfoDetailColumn,
+    SiteViewInfoDetailContainer,
+    SiteViewInfoDetailRow,
+    SiteViewH2,
+    SiteViewP2,
+    SperateLine
+} from './SiteViewElements';
 import Map from '../Map';
 
 import PersonIcon from '@mui/icons-material/Person';
@@ -9,155 +23,161 @@ import CallIcon from '@mui/icons-material/Call';
 import Cookies from "js-cookie";
 
 const SiteView = () => {
-  // useState hooks
-  const [site, setSite] = useState({});
+    // useState hooks
+    const [site, setSite] = useState({});
 
-  const { id } = useParams();
+    const {id} = useParams();
 
-  const mapRef = useRef();
+    const mapRef = useRef();
 
-  useEffect(() => {
-    getSite();
-  }, []);
+    useEffect(() => {
+        getSite();
+    }, []);
 
-  useEffect(() => {
+    useEffect(() => {
 
-    if(mapRef.current && site) {
-        mapRef.current.getMap().flyTo({ center: [site.lng, site.lat], zoom: 14, essential: true });
+        if (mapRef.current && site) {
+            mapRef.current.getMap().flyTo({center: [site.lng, site.lat], zoom: 14, essential: true});
+        }
+
+    }, [mapRef.current, site]);
+
+    /* get a site from the backend based on the id and display it */
+    const getSite = async () => {
+        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        await axios.get(BASE_URL + '/site/' + id, {
+            headers: {
+                'authorization': `Bearer ${Cookies.get('accessToken')}`
+            }
+        }).then(res => {
+            const data = res.data;
+            setSite(data);
+        })
     }
 
-  },[mapRef.current, site]);
+    const stringFilterPrefix = (string) => {
 
-  /* get a site from the backend based on the id and display it */
-  const getSite = async () => {
-    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
-    await axios.get(BASE_URL + '/site/' + id, {
-      headers : {
-        'authorization': `Bearer ${Cookies.get('accessToken')}`
-      }
-    }).then(res => {
-      const data = res.data;
-      setSite(data);
-    })
-  }
+        if (!string) return 'None';
 
-  const stringFilterPrefix = (string) => {
+        // Extract the local part of the email (before '@')
+        const localPart = string.split('@')[0];
 
-    if(!string) return 'None';
+        // Replace all '.' with spaces in the local part
+        const result = localPart.replace(/\./g, ' ');
 
-    // Extract the local part of the email (before '@')
-    const localPart = string.split('@')[0];
+        return result.trim(); // trim() to remove any leading/trailing spaces
+    }
 
-    // Replace all '.' with spaces in the local part
-    const result = localPart.replace(/\./g, ' ');
+    return (
+        <SiteViewContainer>
+            <SiteViewMapAndInfoContainer>
+                <SiteViewInfoContainer>
+                    <SiteViewH1>{site.site_id}</SiteViewH1>
+                    <SiteViewInfoDetailContainer style={{
+                        width: '45rem',
+                        backgroundColor: '#f5f5f5',
+                        marginRight: '-10px',
+                        justifyContent: '20px'
+                    }}>
 
-    return result.trim(); // trim() to remove any leading/trailing spaces
-  }
+                        <SiteViewInfoDetailRow style={{maxWidth: '50%'}}>
 
-  return (
-    <SiteViewContainer>
-      <SiteViewMapAndInfoContainer>
-        <SiteViewInfoContainer>
-          <SiteViewH1>{site.site_id}</SiteViewH1>
-          <SiteViewInfoDetailContainer style={{ width:'45rem', backgroundColor: '#f5f5f5', marginRight: '-10px', justifyContent: '20px'}}>
-          
-            <SiteViewInfoDetailRow style={{maxWidth: '50%'}}>
+                            <SiteViewIconContainer>
+                                <PersonIcon style={{fontSize: '55px'}}></PersonIcon>
+                            </SiteViewIconContainer>
 
-              <SiteViewIconContainer>
-                <PersonIcon style={{fontSize: '55px'}}></PersonIcon>
-              </SiteViewIconContainer>
+                            <SiteViewInfoDetailColumn>
+                                <SiteViewP><strong>Site Manager:</strong></SiteViewP>
+                                <SiteViewP>{stringFilterPrefix(site.site_contact_name)}</SiteViewP>
+                            </SiteViewInfoDetailColumn>
 
-              <SiteViewInfoDetailColumn>
-                <SiteViewP><strong>Site Manager:</strong></SiteViewP>
-                <SiteViewP>{stringFilterPrefix(site.site_contact_name)}</SiteViewP>
-              </SiteViewInfoDetailColumn>
+                        </SiteViewInfoDetailRow>
 
-            </SiteViewInfoDetailRow>
+                        <SiteViewInfoDetailRow style={{maxWidth: '50%'}}>
 
-            <SiteViewInfoDetailRow style={{maxWidth:'50%'}}>
+                            <SiteViewIconContainer>
+                                <CallIcon style={{fontSize: '55px'}}></CallIcon>
+                            </SiteViewIconContainer>
 
-              <SiteViewIconContainer>
-                <CallIcon style={{fontSize: '55px'}}></CallIcon>
-              </SiteViewIconContainer>
+                            <SiteViewInfoDetailColumn>
+                                <SiteViewP><strong>Contact Number:</strong></SiteViewP>
+                                <SiteViewP>
+                                    {
+                                        <SiteViewP>{stringFilterPrefix(site.site_contact_nbr)}</SiteViewP>
+                                    }
+                                </SiteViewP>
+                            </SiteViewInfoDetailColumn>
 
-              <SiteViewInfoDetailColumn>
-                <SiteViewP><strong>Contact Number:</strong></SiteViewP>
-                <SiteViewP>
-                  {
-                    <SiteViewP>{stringFilterPrefix(site.site_contact_nbr)}</SiteViewP>
-                  }
-                </SiteViewP>
-              </SiteViewInfoDetailColumn>
+                        </SiteViewInfoDetailRow>
 
-            </SiteViewInfoDetailRow>
+                    </SiteViewInfoDetailContainer>
 
-          </SiteViewInfoDetailContainer>
-          
-          <SiteViewH2>National Address:</SiteViewH2>
+                    <SiteViewH2>National Address:</SiteViewH2>
 
-          <SiteViewInfoDetailContainer>
+                    <SiteViewInfoDetailContainer>
 
-            <SiteViewInfoDetailColumn>
-              <SiteViewP2>STREET NUMBER</SiteViewP2>
-              <SiteViewP>{stringFilterPrefix(site.street_nbr)}</SiteViewP>
-            </SiteViewInfoDetailColumn>
+                        <SiteViewInfoDetailColumn>
+                            <SiteViewP2>STREET NUMBER</SiteViewP2>
+                            <SiteViewP>{stringFilterPrefix(site.street_nbr)}</SiteViewP>
+                        </SiteViewInfoDetailColumn>
 
-            <SiteViewInfoDetailColumn>
-              <SiteViewP2>STREET NAME</SiteViewP2>
-              <SiteViewP>{stringFilterPrefix(site.street_name)}</SiteViewP>
-            </SiteViewInfoDetailColumn>
+                        <SiteViewInfoDetailColumn>
+                            <SiteViewP2>STREET NAME</SiteViewP2>
+                            <SiteViewP>{stringFilterPrefix(site.street_name)}</SiteViewP>
+                        </SiteViewInfoDetailColumn>
 
-          </SiteViewInfoDetailContainer>
+                    </SiteViewInfoDetailContainer>
 
-          <SiteViewInfoDetailContainer>
+                    <SiteViewInfoDetailContainer>
 
-            <SiteViewInfoDetailColumn>
-              <SiteViewP2>SUBURB</SiteViewP2>
-              <SiteViewP>{stringFilterPrefix(site.suburb)}</SiteViewP>
-            </SiteViewInfoDetailColumn>
+                        <SiteViewInfoDetailColumn>
+                            <SiteViewP2>SUBURB</SiteViewP2>
+                            <SiteViewP>{stringFilterPrefix(site.suburb)}</SiteViewP>
+                        </SiteViewInfoDetailColumn>
 
-            <SiteViewInfoDetailColumn>
-              <SiteViewP2>STATE</SiteViewP2>
-              <SiteViewP>{stringFilterPrefix(site.state)}</SiteViewP>
-            </SiteViewInfoDetailColumn>
+                        <SiteViewInfoDetailColumn>
+                            <SiteViewP2>STATE</SiteViewP2>
+                            <SiteViewP>{stringFilterPrefix(site.state)}</SiteViewP>
+                        </SiteViewInfoDetailColumn>
 
-          </SiteViewInfoDetailContainer>
+                    </SiteViewInfoDetailContainer>
 
-          <SiteViewInfoDetailContainer>
+                    <SiteViewInfoDetailContainer>
 
-            <SiteViewInfoDetailColumn>
-              <SiteViewP2>POSTCODE</SiteViewP2>
-              <SiteViewP>{stringFilterPrefix(site.postcode+'')}</SiteViewP>
-            </SiteViewInfoDetailColumn>
+                        <SiteViewInfoDetailColumn>
+                            <SiteViewP2>POSTCODE</SiteViewP2>
+                            <SiteViewP>{stringFilterPrefix(site.postcode + '')}</SiteViewP>
+                        </SiteViewInfoDetailColumn>
 
-            <SiteViewInfoDetailColumn>
-              <SiteViewP2>LOCAL GOVERNMENT AREA</SiteViewP2>
-              <SiteViewP>{stringFilterPrefix(site.lga)}</SiteViewP>
-            </SiteViewInfoDetailColumn>
+                        <SiteViewInfoDetailColumn>
+                            <SiteViewP2>LOCAL GOVERNMENT AREA</SiteViewP2>
+                            <SiteViewP>{stringFilterPrefix(site.lga)}</SiteViewP>
+                        </SiteViewInfoDetailColumn>
 
-          </SiteViewInfoDetailContainer>
+                    </SiteViewInfoDetailContainer>
 
-          <SiteViewInfoDetailContainer>
+                    <SiteViewInfoDetailContainer>
 
-            <SiteViewInfoDetailColumn>
-              <SiteViewP2>DEPARTMENT OF FAMILIES,FAIRNESS AND HOUSING</SiteViewP2>
-              <SiteViewP>{stringFilterPrefix(site.dffh_area)}</SiteViewP>
-            </SiteViewInfoDetailColumn>
+                        <SiteViewInfoDetailColumn>
+                            <SiteViewP2>DEPARTMENT OF FAMILIES,FAIRNESS AND HOUSING</SiteViewP2>
+                            <SiteViewP>{stringFilterPrefix(site.dffh_area)}</SiteViewP>
+                        </SiteViewInfoDetailColumn>
 
-          </SiteViewInfoDetailContainer>
+                    </SiteViewInfoDetailContainer>
 
-          <SperateLine></SperateLine>
+                    <SperateLine></SperateLine>
 
-          <SiteViewH2>Full Address:</SiteViewH2>
+                    <SiteViewH2>Full Address:</SiteViewH2>
 
-          <SiteViewP style={{paddingLeft: '0.8rem'}}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</SiteViewP>
-        </SiteViewInfoContainer>
-        <SiteViewMapContainer>
-          <Map sites={[site]} exportSite={null} exportRef={mapRef} mapWidth={60} mapHeight={80}/>
-        </SiteViewMapContainer>
-      </SiteViewMapAndInfoContainer>
-    </SiteViewContainer>
-  )
+                    <SiteViewP
+                        style={{paddingLeft: '0.8rem'}}>{site.street_nbr} {site.street_name}, {site.suburb}, {site.state} {site.postcode}</SiteViewP>
+                </SiteViewInfoContainer>
+                <SiteViewMapContainer>
+                    <Map sites={[site]} exportSite={null} exportRef={mapRef} mapWidth={60} mapHeight={80}/>
+                </SiteViewMapContainer>
+            </SiteViewMapAndInfoContainer>
+        </SiteViewContainer>
+    )
 }
 
 export default SiteView;

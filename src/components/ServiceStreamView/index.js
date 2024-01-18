@@ -1,7 +1,17 @@
 import axios from "axios";
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { ServiceStreamViewContainer, ServiceStreamViewH1, ServiceStreamViewP, ServiceStreamViewH2, ActionsButtonLink, LoadingContainer, LoadingCircle, LoadingText, ServiceStreamProgramsContainer } from './ServiceStreamViewElements';
+import React, {useState, useEffect} from 'react';
+import {useParams} from 'react-router-dom';
+import {
+    ServiceStreamViewContainer,
+    ServiceStreamViewH1,
+    ServiceStreamViewP,
+    ServiceStreamViewH2,
+    ActionsButtonLink,
+    LoadingContainer,
+    LoadingCircle,
+    LoadingText,
+    ServiceStreamProgramsContainer
+} from './ServiceStreamViewElements';
 import Button from '@mui/material/Button';
 
 import Table from '@mui/material/Table';
@@ -14,205 +24,229 @@ import Paper from '@mui/material/Paper';
 import Cookies from "js-cookie";
 
 const ServiceStreamView = () => {
-  // useState hooks
-  const [serviceStream, setServiceStream] = useState({});
-  const [relatedPrograms, setRelatedPrograms] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+    // useState hooks
+    const [serviceStream, setServiceStream] = useState({});
+    const [relatedPrograms, setRelatedPrograms] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-  const { id } = useParams();
+    const {id} = useParams();
 
-  const TableTitleStyle = {fontWeight: 'bold', fontSize: '18px', color: '#A60A6C'};
-  const TableContentStyle = {fontSize: '16px', color: 'black'};
+    const TableTitleStyle = {fontWeight: 'bold', fontSize: '18px', color: '#A60A6C'};
+    const TableContentStyle = {fontSize: '16px', color: 'black'};
 
-  useEffect(() => {
+    useEffect(() => {
 
-    getAllData();
-    
-  }, []);
+        getAllData();
 
-  const getAllData = async () => {
+    }, []);
 
-    try {
-      const [serviceStream, serviceTypes, programTypes, programs] = await Promise.all ([
-        getServiceStream(),
-        getServiceTypes(),
-        getProgramTypes(),
-        getPrograms(),
-      ]);
+    const getAllData = async () => {
 
-      setServiceStream(serviceStream);
+        try {
+            const [serviceStream, serviceTypes, programTypes, programs] = await Promise.all([
+                getServiceStream(),
+                getServiceTypes(),
+                getProgramTypes(),
+                getPrograms(),
+            ]);
 
-      const filteringServiceTypes = serviceTypes.filter((type) => {
-        return type.ser_stream === serviceStream.ser_stream;
-      });
+            setServiceStream(serviceStream);
 
-      const serviceTypesIds = filteringServiceTypes.map((type) => type.ser_type_id);
+            const filteringServiceTypes = serviceTypes.filter((type) => {
+                return type.ser_stream === serviceStream.ser_stream;
+            });
 
-      const filteringProgramTypes = programTypes.filter((type) => {
-        return serviceTypesIds.includes(type.ser_type_id);
-      });
+            const serviceTypesIds = filteringServiceTypes.map((type) => type.ser_type_id);
 
-      const programTypesIds = filteringProgramTypes.map((type) => type.prgm_type_id);
+            const filteringProgramTypes = programTypes.filter((type) => {
+                return serviceTypesIds.includes(type.ser_type_id);
+            });
 
-      const filteringPrograms = programs.filter((program) => {
-        return programTypesIds.includes(program.prgm_type_id);
-      });
+            const programTypesIds = filteringProgramTypes.map((type) => type.prgm_type_id);
 
-      setRelatedPrograms(filteringPrograms);
+            const filteringPrograms = programs.filter((program) => {
+                return programTypesIds.includes(program.prgm_type_id);
+            });
 
-      setIsLoading(false);
+            setRelatedPrograms(filteringPrograms);
 
-    } catch (error) {
+            setIsLoading(false);
 
-      console.log(error);
+        } catch (error) {
+
+            console.log(error);
+        }
+
+
     }
-    
 
-  }
+    /* get a service stream from the backend based on the id and display it */
+    const getServiceStream = async () => {
+        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        const result = await axios.get(BASE_URL + '/servicestream/' + id, {
+            headers: {
+                'authorization': `Bearer ${Cookies.get('accessToken')}`
+            }
+        }).then(res => {
+            const data = res.data;
+            return data;
+        })
 
-  /* get a service stream from the backend based on the id and display it */
-  const getServiceStream = async () => {
-    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
-    const result = await axios.get(BASE_URL + '/servicestream/' + id, {
-      headers : {
-        'authorization': `Bearer ${Cookies.get('accessToken')}`
-      }
-    }).then(res => {
-      const data = res.data;
-      return data;
-    })
+        setServiceStream(result);
 
-    setServiceStream(result);
+        return result;
+    }
 
-    return result;
-  }
+    const getServiceTypes = async () => {
+        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        let result = await axios.get(BASE_URL + '/servicetype/', {
+            headers: {
+                'authorization': `Bearer ${Cookies.get('accessToken')}`
+            }
+        });
+        result = result.data[1]; // type id - service stream name
+        return result;
+    }
 
-  const getServiceTypes = async () => {
-    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
-    let result = await axios.get(BASE_URL + '/servicetype/', {
-      headers : {
-        'authorization': `Bearer ${Cookies.get('accessToken')}`
-      }
-    });
-    result = result.data[1]; // type id - service stream name
-    return result;
-  }
+    const getProgramTypes = async () => {
+        const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
+        let result = await axios.get(BASE_URL + '/programtype', {
+            headers: {
+                'authorization': `Bearer ${Cookies.get('accessToken')}`
+            }
+        });
+        result = result.data[0];
+        return result;
+    }
 
-  const getProgramTypes = async () => {
-    const BASE_URL = "https://purplepagesbackend.vt.uniting.org";
-    let result = await axios.get(BASE_URL + '/programtype', {
-      headers : {
-        'authorization': `Bearer ${Cookies.get('accessToken')}`
-      }
-    });
-    result = result.data[0];
-    return result;
-  }
+    const getPrograms = async () => {
+        const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+        let result = await axios.get(BASE_URL + '/program', {
+            headers: {
+                'authorization': `Bearer ${Cookies.get('accessToken')}`
+            }
+        });
+        result = result.data[0];
+        return result;
+    }
 
-  const getPrograms = async () => {
-    const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
-    let result = await axios.get(BASE_URL + '/program', {
-      headers : {
-        'authorization': `Bearer ${Cookies.get('accessToken')}`
-      }
-    });
-    result = result.data[0];
-    return result;
-  }
+    // related programs table element
+    const RelatedProgramsTable = () => {
+        return (
+            <TableContainer component={Paper} style={{
+                width: '95%',
+                border: '1px solid transparent',
+                boxShadow: '0 0 6px rgba(0, 0, 0, 0.4)'
+            }}>
+                <Table>
+                    <TableHead style={{backgroundColor: '#FCF0F5', position: 'sticky', top: 0, zIndex: 1}}>
+                        <TableRow>
+                            <TableCell style={TableTitleStyle}>Program ID</TableCell>
+                            <TableCell style={TableTitleStyle}>Program Title</TableCell>
+                            <TableCell style={TableTitleStyle}>Program Description</TableCell>
+                            <TableCell style={TableTitleStyle}>Program Manager</TableCell>
+                            <TableCell style={TableTitleStyle}>Status</TableCell>
+                            <TableCell style={TableTitleStyle}>Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {relatedPrograms.map((program, index) => (
+                            <TableRow
+                                key={index}
+                            >
+                                <TableCell style={{
+                                    ...TableContentStyle,
+                                    width: '15%',
+                                }}>{(program.title === null) ? `None` : program.title}</TableCell>
+                                <TableCell style={{
+                                    ...TableContentStyle,
+                                    width: '20%',
+                                }}>{(program.program_nme === null) ? `None` : program.program_nme}</TableCell>
+                                <TableCell style={{
+                                    ...TableContentStyle,
+                                    width: '40%',
+                                    textAlign: 'justify'
+                                }}>{(program.service_desc === null) ? `None` : program.service_desc}</TableCell>
+                                <TableCell style={{
+                                    ...TableContentStyle,
+                                    width: '20%'
+                                }}>{(program.prgm_mgr === null) ? `None` : program.prgm_mgr}</TableCell>
+                                <TableCell style={{
+                                    ...TableContentStyle,
+                                    width: '10%',
+                                    color: 'green',
+                                    fontWeight: 'bold',
+                                    textTransform: 'capitalize'
+                                }}>{(program.prgm_status === null) ? `None` : program.prgm_status}</TableCell>
+                                <TableCell style={{width: '5%'}}>
+                                    <Button variant="contained" style={{textTransform: "none", marginRight: "5%"}}>
+                                        <ActionsButtonLink
+                                            to={`/program/${program.program_id}`}>View</ActionsButtonLink>
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        )
+    }
 
-   // related programs table element
-   const RelatedProgramsTable = () => {
+    // /* Handle going to edit page */
+    // const edit = () => {
+    //   window.location = '/servicestream/' + id + '/edit';
+    // }
+
+    // /* delete the service stream */
+    // const deleteServiceStream = () => {
+    //   const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
+    //   Swal.fire({
+    //     title: "Warning!",
+    //     text: "Are you sure you want to delete this service stream?",
+    //     icon: "warning",
+    //     showCancelButton: true,
+    //     confirmButtonColor: '#3085d6',
+    //     cancelButtonColor: '#d33',
+    //     confirmButtonText: 'Yes, delete it!',
+    //     showClass: {
+    //       icon: ''
+    //     }
+    //   }).then(async (result) => {
+    //     if (result.isConfirmed) {
+    //       await axios.delete(BASE_URL + "/servicestream/" + id).then(() => {
+    //         Swal.fire({
+    //           title: "Success!",
+    //           text: "Service stream has been successfully deleted!",
+    //           icon: "success",
+    //           showClass: {
+    //             icon: ''
+    //           }
+    //         });
+    //         setTimeout(() => {
+    //           window.location = '/servicestream';
+    //         }, 1500);
+    //       })
+    //     }
+    //   })
+    // }
+
     return (
-      <TableContainer component={Paper} style={{ width: '95%',  border: '1px solid transparent', boxShadow: '0 0 6px rgba(0, 0, 0, 0.4)'}}>
-        <Table>
-          <TableHead style={{backgroundColor: '#FCF0F5', position: 'sticky', top: 0, zIndex: 1}}>
-            <TableRow>
-              <TableCell style={TableTitleStyle}>Program ID</TableCell>
-              <TableCell style={TableTitleStyle}>Program Title</TableCell>
-              <TableCell style={TableTitleStyle}>Program Description</TableCell>
-              <TableCell style={TableTitleStyle}>Program Manager</TableCell>
-              <TableCell style={TableTitleStyle}>Status</TableCell>
-              <TableCell style={TableTitleStyle}>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {relatedPrograms.map((program, index) => (
-              <TableRow
-                key={index}
-              >
-                <TableCell style={{...TableContentStyle, width: '15%', }}>{(program.title === null)? `None` : program.title}</TableCell>
-                <TableCell style={{...TableContentStyle, width: '20%', }}>{(program.program_nme === null)? `None` : program.program_nme}</TableCell>
-                <TableCell style={{...TableContentStyle, width: '40%', textAlign: 'justify'}}>{(program.service_desc === null)? `None` : program.service_desc}</TableCell>
-                <TableCell style={{...TableContentStyle, width: '20%'}}>{(program.prgm_mgr === null) ? `None` : program.prgm_mgr}</TableCell>
-                <TableCell style={{...TableContentStyle, width: '10%', color: 'green', fontWeight: 'bold', textTransform: 'capitalize' }}>{(program.prgm_status === null) ? `None` : program.prgm_status}</TableCell>
-                <TableCell style={{width: '5%'}}>
-                  <Button variant="contained" style={{textTransform: "none", marginRight: "5%"}}>
-                    <ActionsButtonLink to={`/program/${program.program_id}`}>View</ActionsButtonLink>
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        <ServiceStreamViewContainer>
+            <ServiceStreamViewH1>{serviceStream.ser_stream}</ServiceStreamViewH1>
+            <ServiceStreamViewP>Status: {serviceStream.status}</ServiceStreamViewP>
+            <ServiceStreamViewH2>Related Programs</ServiceStreamViewH2>
+            <ServiceStreamProgramsContainer>
+                {
+                    (isLoading) ?
+                        <LoadingContainer>
+                            <LoadingCircle> </LoadingCircle>
+                            <LoadingText>Loading...</LoadingText>
+                        </LoadingContainer>
+                        : <RelatedProgramsTable></RelatedProgramsTable>
+                }
+            </ServiceStreamProgramsContainer>
+        </ServiceStreamViewContainer>
     )
-  }
-
-  // /* Handle going to edit page */
-  // const edit = () => {
-  //   window.location = '/servicestream/' + id + '/edit';
-  // }
-
-  // /* delete the service stream */
-  // const deleteServiceStream = () => {
-  //   const BASE_URL = 'https://purplepagesbackend.vt.uniting.org';
-  //   Swal.fire({
-  //     title: "Warning!",
-  //     text: "Are you sure you want to delete this service stream?",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: '#3085d6',
-  //     cancelButtonColor: '#d33',
-  //     confirmButtonText: 'Yes, delete it!',
-  //     showClass: {
-  //       icon: ''
-  //     }
-  //   }).then(async (result) => {
-  //     if (result.isConfirmed) {
-  //       await axios.delete(BASE_URL + "/servicestream/" + id).then(() => {
-  //         Swal.fire({
-  //           title: "Success!",
-  //           text: "Service stream has been successfully deleted!",
-  //           icon: "success",
-  //           showClass: {
-  //             icon: ''
-  //           }
-  //         });
-  //         setTimeout(() => {
-  //           window.location = '/servicestream';
-  //         }, 1500);
-  //       })
-  //     }
-  //   })
-  // }
-
-  return (
-    <ServiceStreamViewContainer>
-      <ServiceStreamViewH1>{serviceStream.ser_stream}</ServiceStreamViewH1>
-      <ServiceStreamViewP>Status: {serviceStream.status}</ServiceStreamViewP>
-      <ServiceStreamViewH2>Related Programs</ServiceStreamViewH2>
-      <ServiceStreamProgramsContainer>
-      {
-        (isLoading) ? 
-        <LoadingContainer>
-          <LoadingCircle> </LoadingCircle>
-          <LoadingText>Loading...</LoadingText>
-        </LoadingContainer>
-        : <RelatedProgramsTable></RelatedProgramsTable>
-      }
-      </ServiceStreamProgramsContainer>
-    </ServiceStreamViewContainer>
-  )
 }
 
 export default ServiceStreamView;

@@ -10,7 +10,7 @@ import {
     BreakingLine2,
     Arrow,
     LabelContainer,
-    ResetButton, 
+    ResetButton,
     ButtonLabel,
     SMFilterNavigationContainer,
     SMFilterNavigationButtonDefault,
@@ -34,26 +34,28 @@ import MenuItem from "@mui/material/MenuItem";
 import ClearIcon from '@mui/icons-material/Clear';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-const MapFilter = ({filteredPrograms, 
-    filteredSites, 
-    programTypes,
-    serviceTypes,
-    serviceStreams,
-    groups,
-    divisions,
-    importRef,
-    importSite,
-    exportSite,
-    exportAdvanceFilteredSites,
-    exportAdvanceFilteredPrograms,
-    exportDepartureAddress,
-    loadingChecking,
-    collapseChecking,
-    loadingSignal,
-    mapFilterUsed}) => {
+const MapFilter = ({
+                       filteredPrograms,
+                       filteredSites,
+                       programTypes,
+                       serviceTypes,
+                       serviceStreams,
+                       groups,
+                       divisions,
+                       importRef,
+                       importSite,
+                       exportSite,
+                       exportAdvanceFilteredSites,
+                       exportAdvanceFilteredPrograms,
+                       exportDepartureAddress,
+                       loadingChecking,
+                       collapseChecking,
+                       loadingSignal,
+                       mapFilterUsed
+                   }) => {
 
 
     // user's input value
@@ -88,10 +90,10 @@ const MapFilter = ({filteredPrograms,
     const [smFilterPopup, setSMFilterPopup] = useState(false);
 
     // style
-    const dropDownStyle = { minWidth: '16vw', maxWidth: '16vw', fontSize: '15px'};
+    const dropDownStyle = {minWidth: '16vw', maxWidth: '16vw', fontSize: '15px'};
 
     // Loading all data on the first load
-    useEffect(()=> {
+    useEffect(() => {
 
         setServiceStreamValue('All Service Stream');
         setServiceTypeValue('All Service Type');
@@ -115,67 +117,64 @@ const MapFilter = ({filteredPrograms,
         setFilteredGroups(filteringGroups(filteredPrograms));
 
 
-    },[filteredPrograms])
+    }, [filteredPrograms])
 
 
     useEffect(() => {
 
-        if(filteredServiceStreams.length > 0 &&
-        filteredServiceTypes.length > 0 &&
-        filteredProgramTypes.length > 0 &&
-        filteredDivisions.length > 0 &&
-        filteredGroups.length > 0) {
+        if (filteredServiceStreams.length > 0 &&
+            filteredServiceTypes.length > 0 &&
+            filteredProgramTypes.length > 0 &&
+            filteredDivisions.length > 0 &&
+            filteredGroups.length > 0) {
 
             setIsLoading(false);
             loadingChecking(false);
         }
 
-    } , [filteredServiceStreams, filteredServiceTypes, filteredProgramTypes, filteredDivisions, filteredGroups])
+    }, [filteredServiceStreams, filteredServiceTypes, filteredProgramTypes, filteredDivisions, filteredGroups])
 
 
     // Filtering the Program Based on the filter
     useEffect(() => {
 
-        if( serviceStreamValue === '' || serviceTypeValue === '' || programTypeValue === '' || divisionValue === '' || groupValue === '' ) {
+        if (serviceStreamValue === '' || serviceTypeValue === '' || programTypeValue === '' || divisionValue === '' || groupValue === '') {
             return;
         }
 
         // Upper
         const selectedServiceStreamIds = [];
-        for(let i = 0; i <serviceStreams.length; i++) {
+        for (let i = 0; i < serviceStreams.length; i++) {
             const serviceStream = serviceStreams[i];
-            if(serviceStreamValue !== 'All Service Stream') {
-                if(serviceStream.ser_stream === serviceStreamValue){
+            if (serviceStreamValue !== 'All Service Stream') {
+                if (serviceStream.ser_stream === serviceStreamValue) {
                     selectedServiceStreamIds.push(serviceStream.ser_stream_id);
                 }
-            }
-            else {
+            } else {
                 selectedServiceStreamIds.push(serviceStream.ser_stream_id);
             }
         }
 
         const selectedServiceTypeIds = [];
-        for(let i = 0; i < serviceTypes.length; i++) {
+        for (let i = 0; i < serviceTypes.length; i++) {
             const serviceType = serviceTypes[i];
-            if(serviceTypeValue !== 'All Service Type') {
-                if(serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+            if (serviceTypeValue !== 'All Service Type') {
+                if (serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
                     selectedServiceTypeIds.push(serviceType.ser_type_id);
                 }
-            }
-            else if(serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+            } else if (serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
                 selectedServiceTypeIds.push(serviceType.ser_type_id);
             }
         }
 
         const selectedProgramTypeIds = [];
-        for(let i = 0; i < programTypes.length; i++) {
+        for (let i = 0; i < programTypes.length; i++) {
             const programType = programTypes[i];
-            if(programTypeValue !== 'All Program Type') {
-                if(programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+            if (programTypeValue !== 'All Program Type') {
+                if (programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
                     selectedProgramTypeIds.push(programType.prgm_type_id);
                 }
-            }
-            else if(programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+            } else if (programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
                 selectedProgramTypeIds.push(programType.prgm_type_id);
             }
         }
@@ -184,40 +183,40 @@ const MapFilter = ({filteredPrograms,
 
         const selectedDivisionIds = [];
         for (let i = 0; i < divisions.length; i++) {
-          const division = divisions[i];
-          if (divisionValue !== 'All Divisions') {
-            if (division.division_name === divisionValue) {
-              selectedDivisionIds.push(division.division_id);
+            const division = divisions[i];
+            if (divisionValue !== 'All Divisions') {
+                if (division.division_name === divisionValue) {
+                    selectedDivisionIds.push(division.division_id);
+                }
+            } else {
+                selectedDivisionIds.push(division.division_id);
             }
-          } else {
-            selectedDivisionIds.push(division.division_id);
-          }
         }
 
         const selectedGroupIds = [];
         for (let i = 0; i < groups.length; i++) {
-          const group = groups[i];
-          if (groupValue !== 'All Group') {
-            if (group.group_name === groupValue && selectedDivisionIds.includes(group.division_id)) {
-              selectedGroupIds.push(group.group_id);
+            const group = groups[i];
+            if (groupValue !== 'All Group') {
+                if (group.group_name === groupValue && selectedDivisionIds.includes(group.division_id)) {
+                    selectedGroupIds.push(group.group_id);
+                }
+            } else if (groupValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
+                selectedGroupIds.push(group.group_id);
             }
-          } else if (groupValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
-            selectedGroupIds.push(group.group_id);
-          }
         }
 
         // Combination
 
-        const finalFilteredPrograms = filteredPrograms.filter((program) => 
-            selectedProgramTypeIds.includes(program.prgm_type_id) && 
+        const finalFilteredPrograms = filteredPrograms.filter((program) =>
+            selectedProgramTypeIds.includes(program.prgm_type_id) &&
             selectedGroupIds.includes(program.group_id)
         );
 
         setAdvancedFilteredPrograms(finalFilteredPrograms);
 
-        if(programValue !== 'All Program') {
+        if (programValue !== 'All Program') {
             const tmpProgram = finalFilteredPrograms.filter((program) => program.program_nme === programValue);
-            if(tmpProgram.length <= 0) {
+            if (tmpProgram.length <= 0) {
                 setProgramValue('All Program');
             }
         }
@@ -235,8 +234,7 @@ const MapFilter = ({filteredPrograms,
             programTypeValue === 'All Program Type' &&
             programValue === 'All Program' &&
             divisionValue === 'All Divisions' &&
-            groupValue === 'All Group')
-        {
+            groupValue === 'All Group') {
             mapFilterUsed(false)
 
         } else {
@@ -244,7 +242,7 @@ const MapFilter = ({filteredPrograms,
             mapFilterUsed(true)
         }
 
-    },[serviceStreamValue, serviceTypeValue, programTypeValue, divisionValue, groupValue])
+    }, [serviceStreamValue, serviceTypeValue, programTypeValue, divisionValue, groupValue])
 
 
     useEffect(() => {
@@ -254,10 +252,10 @@ const MapFilter = ({filteredPrograms,
 
     //===================================== Filter Component =====================================================
 
-    const filteringServiceStreams= (programList) => {
+    const filteringServiceStreams = (programList) => {
 
         const tmpProgramTypeIds = []
-        for(let i=0; i< programList.length; i++) {
+        for (let i = 0; i < programList.length; i++) {
             tmpProgramTypeIds.push(programList[i].prgm_type_id)
         }
 
@@ -266,8 +264,7 @@ const MapFilter = ({filteredPrograms,
         });
 
         const tmpFilteredServiceTypeIds = [];
-        for(let i = 0; i < tmpFilteredProgramTypes.length; i++)
-        {
+        for (let i = 0; i < tmpFilteredProgramTypes.length; i++) {
             tmpFilteredServiceTypeIds.push(tmpFilteredProgramTypes[i].ser_type_id);
         }
 
@@ -276,7 +273,7 @@ const MapFilter = ({filteredPrograms,
         })
 
         const tmpFilteredServiceStreamIds = [];
-        for(let i = 0; i < tmpFilteredServiceTypes.length; i++){
+        for (let i = 0; i < tmpFilteredServiceTypes.length; i++) {
             tmpFilteredServiceStreamIds.push(tmpFilteredServiceTypes[i].ser_stream_id);
         }
 
@@ -296,7 +293,7 @@ const MapFilter = ({filteredPrograms,
         });
 
         const tmpFilteredServiceTypeIds = tmpFilteredProgramTypes.map((type) => type.ser_type_id);
-        
+
         const tmpFilteredServiceTypes = serviceTypes.filter((type) => {
             return tmpFilteredServiceTypeIds.includes(type.ser_type_id);
         })
@@ -304,41 +301,41 @@ const MapFilter = ({filteredPrograms,
         return tmpFilteredServiceTypes;
     }
 
-    const filteringProgramTypes = (programsList) =>{
+    const filteringProgramTypes = (programsList) => {
 
         const programTypeIds = programsList.map((program) => program.prgm_type_id);
 
         const tmpFilteredProgramTypes = programTypes.filter((type) => {
             return programTypeIds.includes(type.prgm_type_id);
         });
-        
+
         return tmpFilteredProgramTypes;
     }
 
     const filteringDivisions = (programList) => {
 
         const groupIds = [];
-        for(let i=0; i< programList.length; i++) {
+        for (let i = 0; i < programList.length; i++) {
             groupIds.push(programList[i].group_id);
         }
 
-       const filteredGroups = groups.filter((group) => {
+        const filteredGroups = groups.filter((group) => {
             return groupIds.includes(group.group_id);
-       });
+        });
 
-       const divisionIds = [];
-       for(let i=0; i< filteredGroups.length; i++) {
+        const divisionIds = [];
+        for (let i = 0; i < filteredGroups.length; i++) {
             divisionIds.push(filteredGroups[i].division_id);
-       }
+        }
 
-       const filteredDivisions = divisions.filter((division) => {
+        const filteredDivisions = divisions.filter((division) => {
             return divisionIds.includes(division.division_id);
-       })
+        })
 
-       return filteredDivisions;
+        return filteredDivisions;
     }
 
-    const filteringGroups = (programList) => { 
+    const filteringGroups = (programList) => {
         const groupIds = programList.map((program) => program.group_id);
 
         const tmpFilteredGroups = groups.filter((group) => {
@@ -352,40 +349,41 @@ const MapFilter = ({filteredPrograms,
     const ServiceStreamDropdown = () => {
         return (
 
-            (isLoading === false)?
-        
-            <DropdownSelect
-                name="Service Stream"
-                size='small'
-                value={serviceStreamValue}
-                onChange={onChangeServiceStream}
-                MenuProps={{
-                    anchorOrigin: {
-                        vertical: 2,
-                        horizontal: 0,
-                    },
-                    transformOrigin: {
-                        vertical: -40,
-                        horizontal: 0,
-                    },
-                }}
-            >
-                <MenuItem key={-1} value={'All Service Stream'}> --All Service Stream-- </MenuItem>
-                {
-                    filteredServiceStreams && filteredServiceStreams.map((serviceStream, index) => {
-                    return <MenuItem key={index} value={serviceStream.ser_stream}>{serviceStream.ser_stream} </MenuItem>
-                    })
-                }
+            (isLoading === false) ?
 
-            </DropdownSelect>
+                <DropdownSelect
+                    name="Service Stream"
+                    size='small'
+                    value={serviceStreamValue}
+                    onChange={onChangeServiceStream}
+                    MenuProps={{
+                        anchorOrigin: {
+                            vertical: 2,
+                            horizontal: 0,
+                        },
+                        transformOrigin: {
+                            vertical: -40,
+                            horizontal: 0,
+                        },
+                    }}
+                >
+                    <MenuItem key={-1} value={'All Service Stream'}> --All Service Stream-- </MenuItem>
+                    {
+                        filteredServiceStreams && filteredServiceStreams.map((serviceStream, index) => {
+                            return <MenuItem key={index}
+                                             value={serviceStream.ser_stream}>{serviceStream.ser_stream} </MenuItem>
+                        })
+                    }
 
-            :
+                </DropdownSelect>
 
-            <div>
-                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                    <Skeleton style={dropDownStyle} height={30}/>
-                </SkeletonTheme>
-            </div>
+                :
+
+                <div>
+                    <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                        <Skeleton style={dropDownStyle} height={30}/>
+                    </SkeletonTheme>
+                </div>
 
 
         )
@@ -395,160 +393,161 @@ const MapFilter = ({filteredPrograms,
     const ServiceTypeDropdown = () => {
         return (
 
-            (isLoading === false)?
-            
-            <DropdownSelect
-                name="Service Type"
-                size='small'
-                value={serviceTypeValue}
-                onChange={onChangeServiceType}
-                MenuProps={{
-                    anchorOrigin: {
-                        vertical: 2,
-                        horizontal: 0,
-                    },
-                    transformOrigin: {
-                        vertical: -40,
-                        horizontal: 0,
-                    },
-                }}
-            >
-                <MenuItem key={-1} value={'All Service Type'}> --All Service Type-- </MenuItem>
-                {
-                    filteredServiceTypes && filteredServiceTypes.map((serviceType, index) => {
-                        return <MenuItem key={index} value={serviceType.ser_type}>{serviceType.ser_type} </MenuItem>
-                    })
-                }
+            (isLoading === false) ?
 
-            </DropdownSelect>
+                <DropdownSelect
+                    name="Service Type"
+                    size='small'
+                    value={serviceTypeValue}
+                    onChange={onChangeServiceType}
+                    MenuProps={{
+                        anchorOrigin: {
+                            vertical: 2,
+                            horizontal: 0,
+                        },
+                        transformOrigin: {
+                            vertical: -40,
+                            horizontal: 0,
+                        },
+                    }}
+                >
+                    <MenuItem key={-1} value={'All Service Type'}> --All Service Type-- </MenuItem>
+                    {
+                        filteredServiceTypes && filteredServiceTypes.map((serviceType, index) => {
+                            return <MenuItem key={index} value={serviceType.ser_type}>{serviceType.ser_type} </MenuItem>
+                        })
+                    }
 
-            :
+                </DropdownSelect>
 
-            <div>
-                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                    <Skeleton style={dropDownStyle} height={30}/>
-                </SkeletonTheme>
-            </div>
+                :
+
+                <div>
+                    <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                        <Skeleton style={dropDownStyle} height={30}/>
+                    </SkeletonTheme>
+                </div>
         )
     }
 
     const ProgramTypeDropdown = () => {
         return (
 
-            (isLoading === false)?
+            (isLoading === false) ?
 
-            <DropdownSelect
-                name="Program Type"
-                size='small'
-                value={programTypeValue}
-                onChange={onChangeProgramType}
-                MenuProps={{
-                    anchorOrigin: {
-                        vertical: 2,
-                        horizontal: 0,
-                    },
-                    transformOrigin: {
-                        vertical: -40,
-                        horizontal: 0,
-                    },
-                }}
-            >
-                <MenuItem key={-1} value={'All Program Type'}> --All Program Type-- </MenuItem>
-                {
-                    filteredProgramTypes && filteredProgramTypes.map((programType, index) => {
-                        return <MenuItem key={index} value={programType.prgm_type}>{programType.prgm_type} </MenuItem>
-                    })
-                }
+                <DropdownSelect
+                    name="Program Type"
+                    size='small'
+                    value={programTypeValue}
+                    onChange={onChangeProgramType}
+                    MenuProps={{
+                        anchorOrigin: {
+                            vertical: 2,
+                            horizontal: 0,
+                        },
+                        transformOrigin: {
+                            vertical: -40,
+                            horizontal: 0,
+                        },
+                    }}
+                >
+                    <MenuItem key={-1} value={'All Program Type'}> --All Program Type-- </MenuItem>
+                    {
+                        filteredProgramTypes && filteredProgramTypes.map((programType, index) => {
+                            return <MenuItem key={index} value={programType.prgm_type}>{programType.prgm_type} </MenuItem>
+                        })
+                    }
 
-            </DropdownSelect>
+                </DropdownSelect>
 
-            :
+                :
 
-            <div>
-                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                    <Skeleton style={dropDownStyle} height={30}/>
-                </SkeletonTheme>
-            </div>
+                <div>
+                    <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                        <Skeleton style={dropDownStyle} height={30}/>
+                    </SkeletonTheme>
+                </div>
         )
     }
 
     const ProgramDropdown = () => {
         return (
 
-            (isLoading === false)?
+            (isLoading === false) ?
 
-            <DropdownSelect
-                name="Program"
-                size='small'
-                value={programValue}
-                onChange={onChangeProgram}
-                MenuProps={{
-                    anchorOrigin: {
-                        vertical: 2,
-                        horizontal: 0,
-                    },
-                    transformOrigin: {
-                        vertical: -40,
-                        horizontal: 0,
-                    },
-                }}
-            >
-                <MenuItem key={-1} value={'All Program'}> --All Program-- </MenuItem>
-                {
-                    localFilteredProgram && localFilteredProgram.map((program, index) => {
-                        return <MenuItem key={index} value={program.program_nme}>{program.program_nme} </MenuItem>
-                    })
-                }
+                <DropdownSelect
+                    name="Program"
+                    size='small'
+                    value={programValue}
+                    onChange={onChangeProgram}
+                    MenuProps={{
+                        anchorOrigin: {
+                            vertical: 2,
+                            horizontal: 0,
+                        },
+                        transformOrigin: {
+                            vertical: -40,
+                            horizontal: 0,
+                        },
+                    }}
+                >
+                    <MenuItem key={-1} value={'All Program'}> --All Program-- </MenuItem>
+                    {
+                        localFilteredProgram && localFilteredProgram.map((program, index) => {
+                            return <MenuItem key={index} value={program.program_nme}>{program.program_nme} </MenuItem>
+                        })
+                    }
 
-            </DropdownSelect>
+                </DropdownSelect>
 
-            :
+                :
 
-            <div>
-                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                    <Skeleton style={dropDownStyle} height={30}/>
-                </SkeletonTheme>
-            </div>
+                <div>
+                    <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                        <Skeleton style={dropDownStyle} height={30}/>
+                    </SkeletonTheme>
+                </div>
         )
     }
 
     const DivisionDropdown = () => {
 
         return (
-            (isLoading === false)?
+            (isLoading === false) ?
 
-            <DropdownSelect
-                name="Division"
-                size='small'
-                value={divisionValue}
-                onChange={onChangeDivision}
-                MenuProps={{
-                    anchorOrigin: {
-                        vertical: 2,
-                        horizontal: 0,
-                    },
-                    transformOrigin: {
-                        vertical: -40,
-                        horizontal: 0,
-                    },
-                }}
-            >
-                <MenuItem key={-1} value={'All Divisions'}> --All Divisions-- </MenuItem>
-                {
-                    filteredDivisions && filteredDivisions.map((division, index) => {
-                    return <MenuItem key={index} value={division.division_name}> {division.division_name} </MenuItem>
-                    })
-                }
+                <DropdownSelect
+                    name="Division"
+                    size='small'
+                    value={divisionValue}
+                    onChange={onChangeDivision}
+                    MenuProps={{
+                        anchorOrigin: {
+                            vertical: 2,
+                            horizontal: 0,
+                        },
+                        transformOrigin: {
+                            vertical: -40,
+                            horizontal: 0,
+                        },
+                    }}
+                >
+                    <MenuItem key={-1} value={'All Divisions'}> --All Divisions-- </MenuItem>
+                    {
+                        filteredDivisions && filteredDivisions.map((division, index) => {
+                            return <MenuItem key={index}
+                                             value={division.division_name}> {division.division_name} </MenuItem>
+                        })
+                    }
 
-            </DropdownSelect>
+                </DropdownSelect>
 
-            :
+                :
 
-            <div>
-                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                    <Skeleton style={dropDownStyle} height={30}/>
-                </SkeletonTheme>
-            </div>
+                <div>
+                    <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                        <Skeleton style={dropDownStyle} height={30}/>
+                    </SkeletonTheme>
+                </div>
         )
 
     }
@@ -557,40 +556,40 @@ const MapFilter = ({filteredPrograms,
 
         return (
 
-            (isLoading === false)?
+            (isLoading === false) ?
 
-            <DropdownSelect
-                name="Group"
-                size='small'
-                value={groupValue}
-                onChange={onChangeGroup}
-                MenuProps={{
-                    anchorOrigin: {
-                        vertical: 2,
-                        horizontal: 0,
-                    },
-                    transformOrigin: {
-                        vertical: -40,
-                        horizontal: 0,
-                    },
-                }}
-            >
-                <MenuItem key={-1} value={'All Group'}> --All Group-- </MenuItem>
-                {
-                    filteredGroups && filteredGroups.map((group, index) => {
-                    return <MenuItem key={index} value={group.group_name}> {group.group_name} </MenuItem>
-                    })
-                }
+                <DropdownSelect
+                    name="Group"
+                    size='small'
+                    value={groupValue}
+                    onChange={onChangeGroup}
+                    MenuProps={{
+                        anchorOrigin: {
+                            vertical: 2,
+                            horizontal: 0,
+                        },
+                        transformOrigin: {
+                            vertical: -40,
+                            horizontal: 0,
+                        },
+                    }}
+                >
+                    <MenuItem key={-1} value={'All Group'}> --All Group-- </MenuItem>
+                    {
+                        filteredGroups && filteredGroups.map((group, index) => {
+                            return <MenuItem key={index} value={group.group_name}> {group.group_name} </MenuItem>
+                        })
+                    }
 
-            </DropdownSelect>
+                </DropdownSelect>
 
-            :
+                :
 
-            <div>
-                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                    <Skeleton style={dropDownStyle} height={30} />
-                </SkeletonTheme>
-            </div>
+                <div>
+                    <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                        <Skeleton style={dropDownStyle} height={30}/>
+                    </SkeletonTheme>
+                </div>
         )
 
     }
@@ -604,26 +603,26 @@ const MapFilter = ({filteredPrograms,
 
         const selectedDivisionIds = [];
         for (let i = 0; i < divisions.length; i++) {
-          const division = divisions[i];
-          if (DValue !== 'All Divisions') {
-            if (division.division_name === DValue) {
-              selectedDivisionIds.push(division.division_id);
+            const division = divisions[i];
+            if (DValue !== 'All Divisions') {
+                if (division.division_name === DValue) {
+                    selectedDivisionIds.push(division.division_id);
+                }
+            } else {
+                selectedDivisionIds.push(division.division_id);
             }
-          } else {
-            selectedDivisionIds.push(division.division_id);
-          }
         }
 
         const selectedGroupIds = [];
         for (let i = 0; i < groups.length; i++) {
-          const group = groups[i];
-          if (groupValue !== 'All Group') {
-            if (group.group_name === groupValue && selectedDivisionIds.includes(group.division_id)) {
-              selectedGroupIds.push(group.group_id);
+            const group = groups[i];
+            if (groupValue !== 'All Group') {
+                if (group.group_name === groupValue && selectedDivisionIds.includes(group.division_id)) {
+                    selectedGroupIds.push(group.group_id);
+                }
+            } else if (groupValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
+                selectedGroupIds.push(group.group_id);
             }
-          } else if (groupValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
-            selectedGroupIds.push(group.group_id);
-          }
         }
 
         const DGFilteredProgram = filteredPrograms.filter((program) => {
@@ -635,30 +634,30 @@ const MapFilter = ({filteredPrograms,
 
     }
 
-    const currentGToPG = (GValue) => { 
+    const currentGToPG = (GValue) => {
 
         const selectedDivisionIds = [];
         for (let i = 0; i < divisions.length; i++) {
-          const division = divisions[i];
-          if (divisionValue !== 'All Divisions') {
-            if (division.division_name === divisionValue) {
-              selectedDivisionIds.push(division.division_id);
+            const division = divisions[i];
+            if (divisionValue !== 'All Divisions') {
+                if (division.division_name === divisionValue) {
+                    selectedDivisionIds.push(division.division_id);
+                }
+            } else {
+                selectedDivisionIds.push(division.division_id);
             }
-          } else {
-            selectedDivisionIds.push(division.division_id);
-          }
         }
 
         const selectedGroupIds = [];
         for (let i = 0; i < groups.length; i++) {
-          const group = groups[i];
-          if (GValue !== 'All Group') {
-            if (group.group_name === GValue && selectedDivisionIds.includes(group.division_id)) {
-              selectedGroupIds.push(group.group_id);
+            const group = groups[i];
+            if (GValue !== 'All Group') {
+                if (group.group_name === GValue && selectedDivisionIds.includes(group.division_id)) {
+                    selectedGroupIds.push(group.group_id);
+                }
+            } else if (GValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
+                selectedGroupIds.push(group.group_id);
             }
-          } else if (GValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
-            selectedGroupIds.push(group.group_id);
-          }
         }
 
         const DGFilteredProgram = filteredPrograms.filter((program) => {
@@ -672,26 +671,26 @@ const MapFilter = ({filteredPrograms,
 
         const selectedDivisionIds = [];
         for (let i = 0; i < divisions.length; i++) {
-          const division = divisions[i];
-          if (divisionValue !== 'All Divisions') {
-            if (division.division_name === divisionValue) {
-              selectedDivisionIds.push(division.division_id);
+            const division = divisions[i];
+            if (divisionValue !== 'All Divisions') {
+                if (division.division_name === divisionValue) {
+                    selectedDivisionIds.push(division.division_id);
+                }
+            } else {
+                selectedDivisionIds.push(division.division_id);
             }
-          } else {
-            selectedDivisionIds.push(division.division_id);
-          }
         }
 
         const selectedGroupIds = [];
         for (let i = 0; i < groups.length; i++) {
-          const group = groups[i];
-          if (groupValue !== 'All Group') {
-            if (group.group_name === groupValue && selectedDivisionIds.includes(group.division_id)) {
-              selectedGroupIds.push(group.group_id);
+            const group = groups[i];
+            if (groupValue !== 'All Group') {
+                if (group.group_name === groupValue && selectedDivisionIds.includes(group.division_id)) {
+                    selectedGroupIds.push(group.group_id);
+                }
+            } else if (groupValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
+                selectedGroupIds.push(group.group_id);
             }
-          } else if (groupValue === 'All Group' && selectedDivisionIds.includes(group.division_id)) {
-            selectedGroupIds.push(group.group_id);
-          }
         }
 
         const DGFilteredProgram = filteredPrograms.filter((program) => {
@@ -704,40 +703,37 @@ const MapFilter = ({filteredPrograms,
     const currentSSToPG = (SSValue) => {
 
         const selectedServiceStreamIds = [];
-        for(let i = 0; i <serviceStreams.length; i++) {
+        for (let i = 0; i < serviceStreams.length; i++) {
             const serviceStream = serviceStreams[i];
-            if(SSValue !== 'All Service Stream') {
-                if(serviceStream.ser_stream === SSValue){
+            if (SSValue !== 'All Service Stream') {
+                if (serviceStream.ser_stream === SSValue) {
                     selectedServiceStreamIds.push(serviceStream.ser_stream_id);
                 }
-            }
-            else {
+            } else {
                 selectedServiceStreamIds.push(serviceStream.ser_stream_id);
             }
         }
 
         const selectedServiceTypeIds = [];
-        for(let i = 0; i < serviceTypes.length; i++) {
+        for (let i = 0; i < serviceTypes.length; i++) {
             const serviceType = serviceTypes[i];
-            if(serviceTypeValue !== 'All Service Type') {
-                if(serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+            if (serviceTypeValue !== 'All Service Type') {
+                if (serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
                     selectedServiceTypeIds.push(serviceType.ser_type_id);
                 }
-            }
-            else if(serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+            } else if (serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
                 selectedServiceTypeIds.push(serviceType.ser_type_id);
             }
         }
 
         const selectedProgramTypeIds = [];
-        for(let i = 0; i < programTypes.length; i++) {
+        for (let i = 0; i < programTypes.length; i++) {
             const programType = programTypes[i];
-            if(programTypeValue !== 'All Program Type') {
-                if(programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+            if (programTypeValue !== 'All Program Type') {
+                if (programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
                     selectedProgramTypeIds.push(programType.prgm_type_id);
                 }
-            }
-            else if(programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+            } else if (programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
                 selectedProgramTypeIds.push(programType.prgm_type_id);
             }
         }
@@ -751,40 +747,37 @@ const MapFilter = ({filteredPrograms,
 
     const currentSTToPG = (STValue) => {
         const selectedServiceStreamIds = [];
-        for(let i = 0; i <serviceStreams.length; i++) {
+        for (let i = 0; i < serviceStreams.length; i++) {
             const serviceStream = serviceStreams[i];
-            if(serviceStreamValue !== 'All Service Stream') {
-                if(serviceStream.ser_stream === serviceStreamValue){
+            if (serviceStreamValue !== 'All Service Stream') {
+                if (serviceStream.ser_stream === serviceStreamValue) {
                     selectedServiceStreamIds.push(serviceStream.ser_stream_id);
                 }
-            }
-            else {
+            } else {
                 selectedServiceStreamIds.push(serviceStream.ser_stream_id);
             }
         }
 
         const selectedServiceTypeIds = [];
-        for(let i = 0; i < serviceTypes.length; i++) {
+        for (let i = 0; i < serviceTypes.length; i++) {
             const serviceType = serviceTypes[i];
-            if(STValue !== 'All Service Type') {
-                if(serviceType.ser_type === STValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+            if (STValue !== 'All Service Type') {
+                if (serviceType.ser_type === STValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
                     selectedServiceTypeIds.push(serviceType.ser_type_id);
                 }
-            }
-            else if(STValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+            } else if (STValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
                 selectedServiceTypeIds.push(serviceType.ser_type_id);
             }
         }
 
         const selectedProgramTypeIds = [];
-        for(let i = 0; i < programTypes.length; i++) {
+        for (let i = 0; i < programTypes.length; i++) {
             const programType = programTypes[i];
-            if(programTypeValue !== 'All Program Type') {
-                if(programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+            if (programTypeValue !== 'All Program Type') {
+                if (programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
                     selectedProgramTypeIds.push(programType.prgm_type_id);
                 }
-            }
-            else if(programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+            } else if (programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
                 selectedProgramTypeIds.push(programType.prgm_type_id);
             }
         }
@@ -798,40 +791,37 @@ const MapFilter = ({filteredPrograms,
 
     const currentPTToPG = (PTValue) => {
         const selectedServiceStreamIds = [];
-        for(let i = 0; i <serviceStreams.length; i++) {
+        for (let i = 0; i < serviceStreams.length; i++) {
             const serviceStream = serviceStreams[i];
-            if(serviceStreamValue !== 'All Service Stream') {
-                if(serviceStream.ser_stream === serviceStreamValue){
+            if (serviceStreamValue !== 'All Service Stream') {
+                if (serviceStream.ser_stream === serviceStreamValue) {
                     selectedServiceStreamIds.push(serviceStream.ser_stream_id);
                 }
-            }
-            else {
+            } else {
                 selectedServiceStreamIds.push(serviceStream.ser_stream_id);
             }
         }
 
         const selectedServiceTypeIds = [];
-        for(let i = 0; i < serviceTypes.length; i++) {
+        for (let i = 0; i < serviceTypes.length; i++) {
             const serviceType = serviceTypes[i];
-            if(serviceTypeValue !== 'All Service Type') {
-                if(serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+            if (serviceTypeValue !== 'All Service Type') {
+                if (serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
                     selectedServiceTypeIds.push(serviceType.ser_type_id);
                 }
-            }
-            else if(serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+            } else if (serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
                 selectedServiceTypeIds.push(serviceType.ser_type_id);
             }
         }
 
         const selectedProgramTypeIds = [];
-        for(let i = 0; i < programTypes.length; i++) {
+        for (let i = 0; i < programTypes.length; i++) {
             const programType = programTypes[i];
-            if(PTValue !== 'All Program Type') {
-                if(programType.prgm_type === PTValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+            if (PTValue !== 'All Program Type') {
+                if (programType.prgm_type === PTValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
                     selectedProgramTypeIds.push(programType.prgm_type_id);
                 }
-            }
-            else if(PTValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+            } else if (PTValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
                 selectedProgramTypeIds.push(programType.prgm_type_id);
             }
         }
@@ -845,40 +835,37 @@ const MapFilter = ({filteredPrograms,
 
     const currentPSToPG = () => {
         const selectedServiceStreamIds = [];
-        for(let i = 0; i <serviceStreams.length; i++) {
+        for (let i = 0; i < serviceStreams.length; i++) {
             const serviceStream = serviceStreams[i];
-            if(serviceStreamValue !== 'All Service Stream') {
-                if(serviceStream.ser_stream === serviceStreamValue){
+            if (serviceStreamValue !== 'All Service Stream') {
+                if (serviceStream.ser_stream === serviceStreamValue) {
                     selectedServiceStreamIds.push(serviceStream.ser_stream_id);
                 }
-            }
-            else {
+            } else {
                 selectedServiceStreamIds.push(serviceStream.ser_stream_id);
             }
         }
 
         const selectedServiceTypeIds = [];
-        for(let i = 0; i < serviceTypes.length; i++) {
+        for (let i = 0; i < serviceTypes.length; i++) {
             const serviceType = serviceTypes[i];
-            if(serviceTypeValue !== 'All Service Type') {
-                if(serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+            if (serviceTypeValue !== 'All Service Type') {
+                if (serviceType.ser_type === serviceTypeValue && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
                     selectedServiceTypeIds.push(serviceType.ser_type_id);
                 }
-            }
-            else if(serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
+            } else if (serviceTypeValue === 'All Service Type' && selectedServiceStreamIds.includes(serviceType.ser_stream_id)) {
                 selectedServiceTypeIds.push(serviceType.ser_type_id);
             }
         }
 
         const selectedProgramTypeIds = [];
-        for(let i = 0; i < programTypes.length; i++) {
+        for (let i = 0; i < programTypes.length; i++) {
             const programType = programTypes[i];
-            if(programTypeValue !== 'All Program Type') {
-                if(programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+            if (programTypeValue !== 'All Program Type') {
+                if (programType.prgm_type === programTypeValue && selectedServiceTypeIds.includes(programType.ser_type_id)) {
                     selectedProgramTypeIds.push(programType.prgm_type_id);
                 }
-            }
-            else if(programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
+            } else if (programTypeValue === 'All Program Type' && selectedServiceTypeIds.includes(programType.ser_type_id)) {
                 selectedProgramTypeIds.push(programType.prgm_type_id);
             }
         }
@@ -891,13 +878,13 @@ const MapFilter = ({filteredPrograms,
     }
 
     //================================= End Filter Assistance Method ====================================
-    
+
 
     //============================== Event Trigger Section ==================================
 
     // reset the filters
     const clear = () => {
-        setServiceStreamValue ('All Service Stream');
+        setServiceStreamValue('All Service Stream');
         setServiceTypeValue('All Service Type');
         setProgramTypeValue('All Program Type');
         setProgramValue('All Program');
@@ -916,18 +903,18 @@ const MapFilter = ({filteredPrograms,
 
         exportAdvanceFilteredPrograms(filteredPrograms);
         exportAdvanceFilteredSites(filteredSites);
-        
+
     }
 
     const onChangeServiceStream = (e) => {
 
         setServiceStreamValue(e.target.value);
-       
+
 
         const tmpDGFilteredProgram = currentDGToPG();
         const tmpPSFilteredProgram = currentSSToPG(e.target.value);
 
-        if(e.target.value === 'All Service Stream') {
+        if (e.target.value === 'All Service Stream') {
 
 
             const tmpFilteredServiceTypes = filteringServiceTypes(tmpDGFilteredProgram);
@@ -935,49 +922,49 @@ const MapFilter = ({filteredPrograms,
 
             setFilteredServiceTypes(tmpFilteredServiceTypes);
 
-            if(serviceTypeValue !== 'All Service Type') {
+            if (serviceTypeValue !== 'All Service Type') {
 
                 const selectedServiceTypeIds = [];
 
                 for (let i = 0; i < serviceTypes.length; i++) {
-                  const serviceType = serviceTypes[i];
-                  if (serviceType.ser_type === serviceTypeValue) {
-                    selectedServiceTypeIds.push(serviceType.ser_type_id);
-                  }
+                    const serviceType = serviceTypes[i];
+                    if (serviceType.ser_type === serviceTypeValue) {
+                        selectedServiceTypeIds.push(serviceType.ser_type_id);
+                    }
                 }
 
-                setFilteredProgramTypes(tmpFilteredProgramTypes.filter((programType)=> selectedServiceTypeIds.includes(programType.ser_type_id)));
+                setFilteredProgramTypes(tmpFilteredProgramTypes.filter((programType) => selectedServiceTypeIds.includes(programType.ser_type_id)));
 
             }
 
-            if(serviceTypeValue === 'All Service Type') {
+            if (serviceTypeValue === 'All Service Type') {
 
                 setFilteredProgramTypes(tmpFilteredProgramTypes);
             }
 
-           
+
             const tmpFilteredDivisions = filteringDivisions(tmpPSFilteredProgram);
             let tmpFilteredGroups = filteringGroups(tmpPSFilteredProgram);
 
 
-            if(divisionValue !== 'All Divisions') {
+            if (divisionValue !== 'All Divisions') {
 
                 const tmpDivision = tmpFilteredDivisions.filter((division) => division.division_name === divisionValue);
-                if(tmpDivision.length <= 0) {
+                if (tmpDivision.length <= 0) {
                     setDivisionValue('All Divisions');
                 } else {
-                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);           
+                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);
                     tmpFilteredGroups = tmpFilteredGroups.filter((group) => {
                         return tmpSelectedDivisionIds.includes(group.division_id);
                     });
-    
+
                 }
-    
+
             }
-            
-            if(groupValue !== 'All Group') {
+
+            if (groupValue !== 'All Group') {
                 const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
-                if(tmpGroup.length <= 0) {
+                if (tmpGroup.length <= 0) {
                     setGroupValue('All Group');
                 }
             }
@@ -987,7 +974,7 @@ const MapFilter = ({filteredPrograms,
 
         }
 
-        if(e.target.value !== 'All Service Stream') {
+        if (e.target.value !== 'All Service Stream') {
 
 
             const tmpSelectedServiceStreamIds = [];
@@ -1020,23 +1007,21 @@ const MapFilter = ({filteredPrograms,
 
             let tmpFilteredProgramTypes = filteringProgramTypes(tmpFilteredPrograms);
 
-            if(serviceTypeValue !== 'All Service Type')
-            {
+            if (serviceTypeValue !== 'All Service Type') {
                 const tmpServiceType = tmpFilteredServiceTypes.filter((serviceType) => serviceType.ser_type === serviceTypeValue);
-                if(tmpServiceType.length <= 0) {
+                if (tmpServiceType.length <= 0) {
                     setServiceTypeValue('All Service Type'); // IF THERE IS NO RESULT THEN SET IT TO ALL...
-                }
-                else { 
+                } else {
                     // NO RESULT FILTERING THE PT
-                    const tmpServiceTypeIds = tmpServiceType.map((serviceType) =>  serviceType.ser_type_id); 
+                    const tmpServiceTypeIds = tmpServiceType.map((serviceType) => serviceType.ser_type_id);
                     tmpFilteredProgramTypes = tmpFilteredProgramTypes.filter((programType) => tmpServiceTypeIds.includes(programType.ser_type_id));
                 }
             }
 
-            if(programTypeValue !== 'All Program Type') // SETTING THE THE PT
+            if (programTypeValue !== 'All Program Type') // SETTING THE THE PT
             {
                 const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
-                if(tmpProgramType.length <= 0) {
+                if (tmpProgramType.length <= 0) {
                     setProgramTypeValue('All Program Type');
                 }
             }
@@ -1045,29 +1030,29 @@ const MapFilter = ({filteredPrograms,
             setFilteredProgramTypes(tmpFilteredProgramTypes);
 
             // division and group
-            
+
             const tmpFilteredDivisions = filteringDivisions(tmpFilteredPrograms);
             let tmpFilteredGroups = filteringGroups(tmpFilteredPrograms);
 
 
-            if(divisionValue !== 'All Divisions') {
+            if (divisionValue !== 'All Divisions') {
 
                 const tmpDivision = tmpFilteredDivisions.filter((division) => division.division_name === divisionValue);
-                if(tmpDivision.length <= 0) {
+                if (tmpDivision.length <= 0) {
                     setDivisionValue('All Divisions');
                 } else {
-                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);           
+                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);
                     tmpFilteredGroups = tmpFilteredGroups.filter((group) => {
                         return tmpSelectedDivisionIds.includes(group.division_id);
                     });
-    
+
                 }
-    
+
             }
-            
-            if(groupValue !== 'All Group') {
+
+            if (groupValue !== 'All Group') {
                 const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
-                if(tmpGroup.length <= 0) {
+                if (tmpGroup.length <= 0) {
                     setGroupValue('All Group');
                 }
             }
@@ -1091,16 +1076,16 @@ const MapFilter = ({filteredPrograms,
 
         // else if division and group are not exist then 
 
-        if(e.target.value === 'All Service Type') {
+        if (e.target.value === 'All Service Type') {
 
             //checking whether the division or group is selected...if selected the program should be additional filtered....
 
-            if(serviceStreamValue === 'All Service Stream') {
+            if (serviceStreamValue === 'All Service Stream') {
 
                 setFilteredProgramTypes(filteringProgramTypes(tmpDGFilteredProgram));
             }
 
-            if(serviceStreamValue !== 'All Service Stream') {
+            if (serviceStreamValue !== 'All Service Stream') {
 
                 const serviceStreamIds = [];
                 for (let i = 0; i < serviceStreams.length; i++) {
@@ -1117,45 +1102,45 @@ const MapFilter = ({filteredPrograms,
 
                 const tmpFilteredProgramTypes = programTypes.filter((programType) => serviceTypeIds.includes(programType.ser_type_id));
 
-                const programTypeIds = tmpFilteredProgramTypes.map((programType) =>  programType.prgm_type_id);
-    
+                const programTypeIds = tmpFilteredProgramTypes.map((programType) => programType.prgm_type_id);
+
                 const tmpFilteredPrograms = tmpDGFilteredProgram.filter((program) => programTypeIds.includes(program.prgm_type_id));
 
                 setFilteredProgramTypes(filteringProgramTypes(tmpFilteredPrograms));
             }
 
-            
+
             const tmpFilteredDivisions = filteringDivisions(tmpPSFilteredProgram);
             let tmpFilteredGroups = filteringGroups(tmpPSFilteredProgram);
 
-            if(divisionValue !== 'All Divisions') {
+            if (divisionValue !== 'All Divisions') {
 
                 const tmpDivision = tmpFilteredDivisions.filter((division) => division.division_name === divisionValue);
-                if(tmpDivision.length <= 0) {
+                if (tmpDivision.length <= 0) {
                     setDivisionValue('All Divisions');
                 } else {
-                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);           
+                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);
                     tmpFilteredGroups = tmpFilteredGroups.filter((group) => {
                         return tmpSelectedDivisionIds.includes(group.division_id);
                     });
-    
+
                 }
-    
+
             }
-            
-            if(groupValue !== 'All Group') {
+
+            if (groupValue !== 'All Group') {
                 const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
-                if(tmpGroup.length <= 0) {
+                if (tmpGroup.length <= 0) {
                     setGroupValue('All Group');
                 }
             }
 
             setFilteredDivisions(tmpFilteredDivisions);
             setFilteredGroups(tmpFilteredGroups);
-    
+
         }
 
-        if(e.target.value !== 'All Service Type') {
+        if (e.target.value !== 'All Service Type') {
 
             //change happen
             // the provided options should already be filtered by the division and group
@@ -1165,20 +1150,20 @@ const MapFilter = ({filteredPrograms,
 
             const selectedServiceTypeIds = [];
             for (let i = 0; i < serviceTypes.length; i++) {
-              const serviceType = serviceTypes[i];
-              if (serviceType.ser_type === e.target.value) {
-                selectedServiceTypeIds.push(serviceType.ser_type_id);
-              }
+                const serviceType = serviceTypes[i];
+                if (serviceType.ser_type === e.target.value) {
+                    selectedServiceTypeIds.push(serviceType.ser_type_id);
+                }
             }
-            
+
             const tmpFilteredProgramTypeIds = [];
             for (let i = 0; i < programTypes.length; i++) {
-              const programType = programTypes[i];
-              if (selectedServiceTypeIds.includes(programType.ser_type_id)) {
-                tmpFilteredProgramTypeIds.push(programType.prgm_type_id);
-              }
+                const programType = programTypes[i];
+                if (selectedServiceTypeIds.includes(programType.ser_type_id)) {
+                    tmpFilteredProgramTypeIds.push(programType.prgm_type_id);
+                }
             }
-            
+
 
             const tmpFilteredPrograms = filteredPrograms.filter((program) => {
                 return tmpFilteredProgramTypeIds.includes(program.prgm_type_id);
@@ -1187,10 +1172,9 @@ const MapFilter = ({filteredPrograms,
             // setServiceStreams(filteringServiceStreams(tmpFilteredPrograms)); // more restriction...
             const tmpFilteredProgramTypes = filteringProgramTypes(tmpFilteredPrograms);
 
-            if(programTypeValue !== 'All Program Type')
-            {
+            if (programTypeValue !== 'All Program Type') {
                 const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
-                if(tmpProgramType.length <= 0) {
+                if (tmpProgramType.length <= 0) {
                     setProgramTypeValue('All Program Type');
                 }
             }
@@ -1203,24 +1187,24 @@ const MapFilter = ({filteredPrograms,
             let tmpFilteredGroups = filteringGroups(tmpFilteredPrograms);
 
 
-            if(divisionValue !== 'All Divisions') {
+            if (divisionValue !== 'All Divisions') {
 
                 const tmpDivision = tmpFilteredDivisions.filter((division) => division.division_name === divisionValue);
-                if(tmpDivision.length <= 0) {
+                if (tmpDivision.length <= 0) {
                     setDivisionValue('All Divisions');
                 } else {
-                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);           
+                    const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);
                     tmpFilteredGroups = tmpFilteredGroups.filter((group) => {
                         return tmpSelectedDivisionIds.includes(group.division_id);
                     });
-    
+
                 }
-    
+
             }
-            
-            if(groupValue !== 'All Group') {
+
+            if (groupValue !== 'All Group') {
                 const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
-                if(tmpGroup.length <= 0) {
+                if (tmpGroup.length <= 0) {
                     setGroupValue('All Group');
                 }
             }
@@ -1239,18 +1223,18 @@ const MapFilter = ({filteredPrograms,
 
         const tmpPSFilteredProgram = currentPTToPG(e.target.value);
 
-        
+
         const tmpFilteredDivisions = filteringDivisions(tmpPSFilteredProgram);
         let tmpFilteredGroups = filteringGroups(tmpPSFilteredProgram);
 
 
-        if(divisionValue !== 'All Divisions') {
+        if (divisionValue !== 'All Divisions') {
 
             const tmpDivision = tmpFilteredDivisions.filter((division) => division.division_name === divisionValue);
-            if(tmpDivision.length <= 0) {
+            if (tmpDivision.length <= 0) {
                 setDivisionValue('All Divisions');
             } else {
-                const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);           
+                const tmpSelectedDivisionIds = tmpDivision.map((division) => division.division_id);
                 tmpFilteredGroups = tmpFilteredGroups.filter((group) => {
                     return tmpSelectedDivisionIds.includes(group.division_id);
                 });
@@ -1258,10 +1242,10 @@ const MapFilter = ({filteredPrograms,
             }
 
         }
-        
-        if(groupValue !== 'All Group') {
+
+        if (groupValue !== 'All Group') {
             const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
-            if(tmpGroup.length <= 0) {
+            if (tmpGroup.length <= 0) {
                 setGroupValue('All Group');
             }
         }
@@ -1285,7 +1269,7 @@ const MapFilter = ({filteredPrograms,
         const tmpPSFilteredProgram = currentPSToPG();
         const tmpDGFilteredProgram = currentDToPG(e.target.value);
 
-        if(e.target.value === 'All Divisions') {
+        if (e.target.value === 'All Divisions') {
             const tmpFilteringGroups = filteringGroups(tmpPSFilteredProgram);
             setFilteredGroups(tmpFilteringGroups);
 
@@ -1293,10 +1277,10 @@ const MapFilter = ({filteredPrograms,
             let tmpFilteredServiceTypes = filteringServiceTypes(tmpDGFilteredProgram);
             let tmpFilteredProgramTypes = filteringProgramTypes(tmpDGFilteredProgram);
 
-            if(serviceStreamValue !== 'All Service Stream') {
+            if (serviceStreamValue !== 'All Service Stream') {
 
                 const tmpServiceStream = tmpFilteredServiceStreams.filter((serviceStream) => serviceStream.ser_stream === serviceStreamValue)
-                if(tmpServiceStream.length <= 0) {
+                if (tmpServiceStream.length <= 0) {
                     setServiceStreamValue('All Service Stream');
                 } else {
                     const selectedServiceStreamIds = tmpServiceStream.map((serviceStream) => serviceStream.ser_stream_id);
@@ -1306,9 +1290,9 @@ const MapFilter = ({filteredPrograms,
 
             setFilteredServiceStreams(tmpFilteredServiceStreams);
 
-            if(serviceTypeValue !== 'All Service Type' ){
+            if (serviceTypeValue !== 'All Service Type') {
                 const tmpServiceType = tmpFilteredServiceTypes.filter((serviceType) => serviceType.ser_type === serviceTypeValue);
-                if(tmpServiceType.length <=0) {
+                if (tmpServiceType.length <= 0) {
                     setServiceTypeValue('All Service Type');
                 } else {
                     const selectedServiceTypeIds = tmpServiceType.map((serviceType) => serviceType.ser_type_id);
@@ -1318,9 +1302,9 @@ const MapFilter = ({filteredPrograms,
 
             setFilteredServiceTypes(tmpFilteredServiceTypes);
 
-            if(programTypeValue !== 'All Program Type') {
+            if (programTypeValue !== 'All Program Type') {
                 const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
-                if(tmpProgramType.length <= 0) {
+                if (tmpProgramType.length <= 0) {
                     setProgramTypeValue('All Program Type');
                 }
             }
@@ -1329,20 +1313,20 @@ const MapFilter = ({filteredPrograms,
 
         }
 
-        if(e.target.value !== 'All Divisions') {
-            
+        if (e.target.value !== 'All Divisions') {
+
             const tmpSelectedDivisionIds = [];
-            for(let i = 0; i < divisions.length; i++) {
+            for (let i = 0; i < divisions.length; i++) {
                 const division = divisions[i];
-                if(division.division_name === e.target.value) {
-                    tmpSelectedDivisionIds.push(division.division_id); 
-                }   
+                if (division.division_name === e.target.value) {
+                    tmpSelectedDivisionIds.push(division.division_id);
+                }
             }
 
             const tmpSelectedGroupIds = [];
-            for(let i = 0; i < groups.length; i++) {
+            for (let i = 0; i < groups.length; i++) {
                 const group = groups[i];
-                if(tmpSelectedDivisionIds.includes(group.division_id))  {
+                if (tmpSelectedDivisionIds.includes(group.division_id)) {
                     tmpSelectedGroupIds.push(group.group_id);
                 }
             }
@@ -1351,9 +1335,9 @@ const MapFilter = ({filteredPrograms,
 
             const tmpFilteredGroups = filteringGroups(tmpFilteredPrograms);
 
-            if(groupValue === 'All Group' ) {
+            if (groupValue === 'All Group') {
                 const tmpGroup = tmpFilteredGroups.filter((group) => group.group_name === groupValue);
-                if(tmpGroup.length <= 0) { 
+                if (tmpGroup.length <= 0) {
                     setGroupValue('All Group');
                 }
             }
@@ -1364,10 +1348,10 @@ const MapFilter = ({filteredPrograms,
             let tmpFilteredServiceTypes = filteringServiceTypes(tmpFilteredPrograms);
             let tmpFilteredProgramTypes = filteringProgramTypes(tmpFilteredPrograms);
 
-            if(serviceStreamValue !== 'All Service Stream') {
+            if (serviceStreamValue !== 'All Service Stream') {
 
                 const tmpServiceStream = tmpFilteredServiceStreams.filter((serviceStream) => serviceStream.ser_stream === serviceStreamValue)
-                if(tmpServiceStream.length <= 0) {
+                if (tmpServiceStream.length <= 0) {
                     setServiceStreamValue('All Service Stream');
                 } else {
                     const selectedServiceStreamIds = tmpServiceStream.map((serviceStream) => serviceStream.ser_stream_id);
@@ -1377,9 +1361,9 @@ const MapFilter = ({filteredPrograms,
 
             setFilteredServiceStreams(tmpFilteredServiceStreams);
 
-            if(serviceTypeValue !== 'All Service Type' ){
+            if (serviceTypeValue !== 'All Service Type') {
                 const tmpServiceType = tmpFilteredServiceTypes.filter((serviceType) => serviceType.ser_type === serviceTypeValue);
-                if(tmpServiceType.length <=0) {
+                if (tmpServiceType.length <= 0) {
                     setServiceTypeValue('All Service Type');
                 } else {
                     const selectedServiceTypeIds = tmpServiceType.map((serviceType) => serviceType.ser_type_id);
@@ -1389,9 +1373,9 @@ const MapFilter = ({filteredPrograms,
 
             setFilteredServiceTypes(tmpFilteredServiceTypes);
 
-            if(programTypeValue !== 'All Program Type') {
+            if (programTypeValue !== 'All Program Type') {
                 const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
-                if(tmpProgramType.length <= 0) {
+                if (tmpProgramType.length <= 0) {
                     setProgramTypeValue('All Program Type');
                 }
             }
@@ -1407,16 +1391,16 @@ const MapFilter = ({filteredPrograms,
 
         const tmpDGFilteredProgram = currentGToPG(e.target.value);
 
-        if(e.target.value === 'All Group') {
+        if (e.target.value === 'All Group') {
 
             const tmpFilteredServiceStreams = filteringServiceStreams(tmpDGFilteredProgram);
             let tmpFilteredServiceTypes = filteringServiceTypes(tmpDGFilteredProgram);
             let tmpFilteredProgramTypes = filteringProgramTypes(tmpDGFilteredProgram);
 
-            if(serviceStreamValue !== 'All Service Stream') {
+            if (serviceStreamValue !== 'All Service Stream') {
 
                 const tmpServiceStream = tmpFilteredServiceStreams.filter((serviceStream) => serviceStream.ser_stream === serviceStreamValue)
-                if(tmpServiceStream.length <= 0) {
+                if (tmpServiceStream.length <= 0) {
                     setServiceStreamValue('All Service Stream');
                 } else {
                     const selectedServiceStreamIds = tmpServiceStream.map((serviceStream) => serviceStream.ser_stream_id);
@@ -1426,9 +1410,9 @@ const MapFilter = ({filteredPrograms,
 
             setFilteredServiceStreams(tmpFilteredServiceStreams);
 
-            if(serviceTypeValue !== 'All Service Type' ){
+            if (serviceTypeValue !== 'All Service Type') {
                 const tmpServiceType = tmpFilteredServiceTypes.filter((serviceType) => serviceType.ser_type === serviceTypeValue);
-                if(tmpServiceType.length <=0) {
+                if (tmpServiceType.length <= 0) {
                     setServiceTypeValue('All Service Type');
                 } else {
                     const selectedServiceTypeIds = tmpServiceType.map((serviceType) => serviceType.ser_type_id);
@@ -1438,9 +1422,9 @@ const MapFilter = ({filteredPrograms,
 
             setFilteredServiceTypes(tmpFilteredServiceTypes);
 
-            if(programTypeValue !== 'All Program Type') {
+            if (programTypeValue !== 'All Program Type') {
                 const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
-                if(tmpProgramType.length <= 0) {
+                if (tmpProgramType.length <= 0) {
                     setProgramTypeValue('All Program Type');
                 }
             }
@@ -1448,13 +1432,13 @@ const MapFilter = ({filteredPrograms,
             setFilteredProgramTypes(tmpFilteredProgramTypes);
         }
 
-        if(e.target.value !== 'All Group') {
+        if (e.target.value !== 'All Group') {
 
 
             const tmpSelectedGroupIds = [];
-            for(let i = 0; i < groups.length; i++) {
+            for (let i = 0; i < groups.length; i++) {
                 const group = groups[i];
-                if(group.group_name === e.target.value)  {
+                if (group.group_name === e.target.value) {
                     tmpSelectedGroupIds.push(group.group_id);
                 }
             }
@@ -1465,10 +1449,10 @@ const MapFilter = ({filteredPrograms,
             let tmpFilteredServiceTypes = filteringServiceTypes(tmpFilteredPrograms);
             let tmpFilteredProgramTypes = filteringProgramTypes(tmpFilteredPrograms);
 
-            if(serviceStreamValue !== 'All Service Stream') {
+            if (serviceStreamValue !== 'All Service Stream') {
 
                 const tmpServiceStream = tmpFilteredServiceStreams.filter((serviceStream) => serviceStream.ser_stream === serviceStreamValue)
-                if(tmpServiceStream.length <= 0) {
+                if (tmpServiceStream.length <= 0) {
                     setServiceStreamValue('All Service Stream');
                 } else {
                     const selectedServiceStreamIds = tmpServiceStream.map((serviceStream) => serviceStream.ser_stream_id);
@@ -1478,9 +1462,9 @@ const MapFilter = ({filteredPrograms,
 
             setFilteredServiceStreams(tmpFilteredServiceStreams);
 
-            if(serviceTypeValue !== 'All Service Type' ){
+            if (serviceTypeValue !== 'All Service Type') {
                 const tmpServiceType = tmpFilteredServiceTypes.filter((serviceType) => serviceType.ser_type === serviceTypeValue);
-                if(tmpServiceType.length <=0) {
+                if (tmpServiceType.length <= 0) {
                     setServiceTypeValue('All Service Type');
                 } else {
                     const selectedServiceTypeIds = tmpServiceType.map((serviceType) => serviceType.ser_type_id);
@@ -1490,9 +1474,9 @@ const MapFilter = ({filteredPrograms,
 
             setFilteredServiceTypes(tmpFilteredServiceTypes);
 
-            if(programTypeValue !== 'All Program Type') {
+            if (programTypeValue !== 'All Program Type') {
                 const tmpProgramType = tmpFilteredProgramTypes.filter((programType) => programType.prgm_type === programTypeValue);
-                if(tmpProgramType.length <= 0) {
+                if (tmpProgramType.length <= 0) {
                     setProgramTypeValue('All Program Type');
                 }
             }
@@ -1500,11 +1484,9 @@ const MapFilter = ({filteredPrograms,
             setFilteredProgramTypes(tmpFilteredProgramTypes);
 
 
-
         }
 
     }
-
 
 
     const openFilterPopup = () => {
@@ -1526,21 +1508,21 @@ const MapFilter = ({filteredPrograms,
         let tmpAdvancedFilteredPrograms = advancedFilteredPrograms;
         // console.log(tmpAdvancedFilteredPrograms);
 
-        if(programValue !== 'All Program') {
+        if (programValue !== 'All Program') {
             tmpAdvancedFilteredPrograms = tmpAdvancedFilteredPrograms.filter((program) => program.program_nme === programValue);
         }
 
         const sitesIds = [];
-        for(let i = 0; i < tmpAdvancedFilteredPrograms.length; i++) {
+        for (let i = 0; i < tmpAdvancedFilteredPrograms.length; i++) {
             sitesIds.push(tmpAdvancedFilteredPrograms[i].site_id);
         }
 
         const tmpAdvanceFilteredSites = filteredSites.filter((site) => sitesIds.includes(site.site_id));
 
-        
+
         exportAdvanceFilteredPrograms(tmpAdvancedFilteredPrograms);
         exportAdvanceFilteredSites(tmpAdvanceFilteredSites);
-    
+
 
     }
 
@@ -1555,7 +1537,7 @@ const MapFilter = ({filteredPrograms,
                     {
                         (loadingSignal) ?
                             <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                <Skeleton style={dropDownStyle} height={37} />
+                                <Skeleton style={dropDownStyle} height={37}/>
                             </SkeletonTheme>
                             :
                             <ServiceStreamDropdown></ServiceStreamDropdown>
@@ -1567,7 +1549,7 @@ const MapFilter = ({filteredPrograms,
                     {
                         (loadingSignal) ?
                             <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                <Skeleton style={dropDownStyle} height={37} />
+                                <Skeleton style={dropDownStyle} height={37}/>
                             </SkeletonTheme>
                             :
                             <ServiceTypeDropdown></ServiceTypeDropdown>
@@ -1580,7 +1562,7 @@ const MapFilter = ({filteredPrograms,
                     {
                         (loadingSignal) ?
                             <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                <Skeleton style={dropDownStyle} height={37} />
+                                <Skeleton style={dropDownStyle} height={37}/>
                             </SkeletonTheme>
                             :
                             <ProgramTypeDropdown></ProgramTypeDropdown>
@@ -1592,7 +1574,7 @@ const MapFilter = ({filteredPrograms,
                     {
                         (loadingSignal) ?
                             <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                <Skeleton style={dropDownStyle} height={37} />
+                                <Skeleton style={dropDownStyle} height={37}/>
                             </SkeletonTheme>
                             :
                             <ProgramDropdown></ProgramDropdown>
@@ -1611,11 +1593,11 @@ const MapFilter = ({filteredPrograms,
             <ProgramDropDownContainer>
 
                 <SelectDiv>
-                    <InputLabel style={{fontSize: '16px'}} >Division</InputLabel>
+                    <InputLabel style={{fontSize: '16px'}}>Division</InputLabel>
                     {
                         (loadingSignal) ?
                             <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                <Skeleton style={dropDownStyle} height={37} />
+                                <Skeleton style={dropDownStyle} height={37}/>
                             </SkeletonTheme>
                             :
                             <DivisionDropdown></DivisionDropdown>
@@ -1627,7 +1609,7 @@ const MapFilter = ({filteredPrograms,
                     {
                         (loadingSignal) ?
                             <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                <Skeleton style={dropDownStyle} height={37} />
+                                <Skeleton style={dropDownStyle} height={37}/>
                             </SkeletonTheme>
                             :
                             <GroupDropdown></GroupDropdown>
@@ -1652,7 +1634,9 @@ const MapFilter = ({filteredPrograms,
     // Main Return of the APP
     return (
         <MapFilterRowContainer>
-            <SMFilterButton style={{ display: setSMFilterPopup ? 'none' : 'block' }} disableRipple endIcon={<ArrowForwardIosIcon style={{padding: '0', margin: '0'}}/>} onClick={openFilterPopup}>Search Filter</SMFilterButton>
+            <SMFilterButton style={{display: setSMFilterPopup ? 'none' : 'block'}} disableRipple
+                            endIcon={<ArrowForwardIosIcon style={{padding: '0', margin: '0'}}/>}
+                            onClick={openFilterPopup}>Search Filter</SMFilterButton>
             <LabelContainer>
                 <FilterLabel>Map Filter</FilterLabel>
                 {/*<InputLabel style={textStyle}>Map Filter</InputLabel>*/}
@@ -1664,7 +1648,7 @@ const MapFilter = ({filteredPrograms,
                         {
                             (loadingSignal) ?
                                 <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                    <Skeleton style={dropDownStyle} height={37} />
+                                    <Skeleton style={dropDownStyle} height={37}/>
                                 </SkeletonTheme>
                                 :
                                 <ServiceStreamDropdown></ServiceStreamDropdown>
@@ -1679,23 +1663,23 @@ const MapFilter = ({filteredPrograms,
                         <InputLabel style={{fontSize: '16px'}}>Service Type</InputLabel>
                         {
                             (loadingSignal) ?
-                            <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                <Skeleton style={dropDownStyle} height={37} />
-                            </SkeletonTheme>
-                            :
-                            <ServiceTypeDropdown></ServiceTypeDropdown>
+                                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                    <Skeleton style={dropDownStyle} height={37}/>
+                                </SkeletonTheme>
+                                :
+                                <ServiceTypeDropdown></ServiceTypeDropdown>
 
                         }
                     </SelectDiv>
                     <SelectDiv>
-                        <InputLabel style={{fontSize: '16px'}} >Division</InputLabel>
+                        <InputLabel style={{fontSize: '16px'}}>Division</InputLabel>
                         {
                             (loadingSignal) ?
-                            <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                <Skeleton style={dropDownStyle} height={37} />
-                            </SkeletonTheme>
-                            :
-                            <DivisionDropdown></DivisionDropdown>
+                                <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
+                                    <Skeleton style={dropDownStyle} height={37}/>
+                                </SkeletonTheme>
+                                :
+                                <DivisionDropdown></DivisionDropdown>
                         }
                     </SelectDiv>
                 </ProgramDropDownContainer>
@@ -1709,7 +1693,7 @@ const MapFilter = ({filteredPrograms,
                         {
                             (loadingSignal) ?
                                 <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                    <Skeleton style={dropDownStyle} height={37} />
+                                    <Skeleton style={dropDownStyle} height={37}/>
                                 </SkeletonTheme>
                                 :
                                 <ProgramTypeDropdown></ProgramTypeDropdown>
@@ -1721,7 +1705,7 @@ const MapFilter = ({filteredPrograms,
                         {
                             (loadingSignal) ?
                                 <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                    <Skeleton style={dropDownStyle} height={37} />
+                                    <Skeleton style={dropDownStyle} height={37}/>
                                 </SkeletonTheme>
                                 :
                                 <GroupDropdown></GroupDropdown>
@@ -1740,7 +1724,7 @@ const MapFilter = ({filteredPrograms,
                         {
                             (loadingSignal) ?
                                 <SkeletonTheme baseColor="#d3d3d3" highlightColor="#e8e8e8">
-                                    <Skeleton style={dropDownStyle} height={37} />
+                                    <Skeleton style={dropDownStyle} height={37}/>
                                 </SkeletonTheme>
                                 :
                                 <ProgramDropdown></ProgramDropdown>
@@ -1749,8 +1733,8 @@ const MapFilter = ({filteredPrograms,
                     </SelectDiv>
                 </ProgramDropDownContainer>
                 <ButtonContainer>
-                    <ResetButton onClick={clear} style={ (loadingSignal)? {pointerEvents: 'none'} : {}}>
-                        <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
+                    <ResetButton onClick={clear} style={(loadingSignal) ? {pointerEvents: 'none'} : {}}>
+                        <ClearIcon style={{fontSize: '16px', marginRight: '5px', color: '#A20066'}}></ClearIcon>
                         <ButtonLabel style={{color: '#A20066'}}>Reset Filter</ButtonLabel>
                     </ResetButton>
                 </ButtonContainer>
@@ -1781,8 +1765,9 @@ const MapFilter = ({filteredPrograms,
                             <h2 style={{margin: '0', padding: '0', color: 'white'}}>Search Filter</h2>
                         </SMMapFilterHeaderLeft>
                         <SMMapFilterHeaderRight>
-                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeFilterPopup}>
-                                <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                            <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}
+                                    disableRipple onClick={closeFilterPopup}>
+                                <CustomClearIcon style={{fontSize: '30px'}}></CustomClearIcon>
                             </Button>
                         </SMMapFilterHeaderRight>
                     </SMMapFilterHeader>
@@ -1793,26 +1778,35 @@ const MapFilter = ({filteredPrograms,
                             {
                                 (clickedProgramService === true && clickedGroupDivision === false) ?
                                     <>
-                                        <SMFilterNavigationButtonActive variant="text" disableRipple onClick={onClickProgramServiceNav}> Service / Program </SMFilterNavigationButtonActive>
-                                        <SMFilterNavigationButtonDefault variant="text" disableRipple onClick={onClickGroupDivisionNav}> Group / Division</SMFilterNavigationButtonDefault>
+                                        <SMFilterNavigationButtonActive variant="text" disableRipple
+                                                                        onClick={onClickProgramServiceNav}> Service /
+                                            Program </SMFilterNavigationButtonActive>
+                                        <SMFilterNavigationButtonDefault variant="text" disableRipple
+                                                                         onClick={onClickGroupDivisionNav}> Group /
+                                            Division</SMFilterNavigationButtonDefault>
                                     </>
                                     :
                                     <>
-                                        <SMFilterNavigationButtonDefault variant="text" disableRipple onClick={onClickProgramServiceNav}> Service / Program </SMFilterNavigationButtonDefault>
-                                        <SMFilterNavigationButtonActive variant="text" disableRipple onClick={onClickGroupDivisionNav}> Group / Division</SMFilterNavigationButtonActive>
+                                        <SMFilterNavigationButtonDefault variant="text" disableRipple
+                                                                         onClick={onClickProgramServiceNav}> Service /
+                                            Program </SMFilterNavigationButtonDefault>
+                                        <SMFilterNavigationButtonActive variant="text" disableRipple
+                                                                        onClick={onClickGroupDivisionNav}> Group /
+                                            Division</SMFilterNavigationButtonActive>
                                     </>
                             }
                         </SMFilterNavigationContainer>
                         <SMFilterContainer>
                             {
                                 (clickedProgramService === true && clickedGroupDivision === false) ?
-                                    <ProgramServiceFilter></ProgramServiceFilter> : <GroupDivisionFilter></GroupDivisionFilter>
+                                    <ProgramServiceFilter></ProgramServiceFilter> :
+                                    <GroupDivisionFilter></GroupDivisionFilter>
                             }
                         </SMFilterContainer>
 
                         <ButtonContainer>
-                            <ResetButton onClick={clear} style={ (loadingSignal)? {pointerEvents: 'none'} : {}}>
-                                <ClearIcon style= {{fontSize: '16px', marginRight: '5px', color: '#A20066' }}></ClearIcon>
+                            <ResetButton onClick={clear} style={(loadingSignal) ? {pointerEvents: 'none'} : {}}>
+                                <ClearIcon style={{fontSize: '16px', marginRight: '5px', color: '#A20066'}}></ClearIcon>
                                 <ButtonLabel style={{color: '#A20066'}}>Reset Filter</ButtonLabel>
                             </ResetButton>
                         </ButtonContainer>
@@ -1824,9 +1818,6 @@ const MapFilter = ({filteredPrograms,
 
 
         </MapFilterRowContainer>
-
-
-
 
 
     )
