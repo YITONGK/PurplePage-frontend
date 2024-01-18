@@ -24,7 +24,8 @@ import {
     ModalContentInfoRow,
     ModalContentListItemButton,
     CustomClearIcon,
-    ModalInfoOfferedProgramsContainer
+    ModalInfoOfferedProgramsContainer,
+    AnimatedModalContent2
 } from './MapElements';
 import ReactMapGl, { Marker, Popup} from "react-map-gl";
 import mapboxgl from 'mapbox-gl';
@@ -37,6 +38,13 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocalTaxiIcon from '@mui/icons-material/LocalTaxi';
 import Button from "@mui/material/Button";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import CodeIcon from "@mui/icons-material/Code";
+import DescriptionIcon from "@mui/icons-material/Description";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
+import CategoryIcon from "@mui/icons-material/Category";
+import PersonIcon from "@mui/icons-material/Person";
+import CallIcon from "@mui/icons-material/Call";
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
@@ -46,12 +54,13 @@ mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoidmhhcnRvbm8iLCJhIjoiY2xoc2l1Z2VzMDd0dTNlcGtwbXYwaGx2cyJ9.C77GVU3YPPgscvXrTGHWfg';
 
-const Map = ({sites, advanceFilteredPrograms, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom, centerLat, centerLng, departureLocation, mapFilterUsed}) => {
+const Map = ({sites, advanceFilteredPrograms, programTypeList, exportSite, exportRef, importSite, mapWidth, mapHeight, mapZoom, centerLat, centerLng, departureLocation, mapFilterUsed}) => {
   const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
   // useState hooks variable initialise
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [popUpMarker, setPopUpMarker] = useState(null);
+  const [selectedProgram, setSelectedProgram] = useState(null);
 
   const [departureLocationMarker, setDepartureLocationMarker] = useState(null);
 
@@ -59,6 +68,7 @@ const Map = ({sites, advanceFilteredPrograms, exportSite, exportRef, importSite,
 
   const debounceDelay = 300; //delay amount
   const [mapInfoPopup, setMapInfoPopup] = useState(false);
+  const [programInfoPopup, setProgramInfoPopup] = useState(false);
 
   const [viewPort, setViewPort] = useState({
     latitude: centerLat || -37.80995133438894,
@@ -151,6 +161,29 @@ const Map = ({sites, advanceFilteredPrograms, exportSite, exportRef, importSite,
     const closeModalPopup = () => {
         setMapInfoPopup(false);
         document.body.style.overflow = 'auto';
+    }
+
+    const closeProgramModalPopup = () => {
+        setProgramInfoPopup(null);
+        setProgramInfoPopup(false);
+    }
+
+    const onClickProgram = (program) => {
+
+        let program_type_name = '';
+
+        if(program) {
+            if(program.prgm_type_id) {
+
+                const tmpFilteredProgramType = programTypeList.filter((programType) => programType.prgm_type_id === program.prgm_type_id);
+                program_type_name = tmpFilteredProgramType[0].prgm_type;
+            }
+        }
+
+        const newProgram = {...program, prgm_type: program_type_name};
+        setSelectedProgram(newProgram);
+
+        setProgramInfoPopup(true);
     }
 
 
@@ -483,11 +516,6 @@ const Map = ({sites, advanceFilteredPrograms, exportSite, exportRef, importSite,
     }
 
 
-    const onClickProgram = (program) => {
-        // setClickedProgram(program);
-        // setPopUpProgram(true);
-    }
-
     const programNameProcess = (program_nme) => {
         let nameString = program_nme.split('-');
         if (nameString.length > 1) {
@@ -713,7 +741,7 @@ const Map = ({sites, advanceFilteredPrograms, exportSite, exportRef, importSite,
                                       </ModalContentInfoContainer>
                                   </ModalContentBodyContainerColumn>
 
-                                  <ModalContentBodyContainerColumn style={{width: '40%'}}>
+                                  <ModalContentBodyContainerColumn style={{width: '40%', backgroundColor: 'rgb(227,227,227)', paddingLeft: '0.3rem', paddingTop: '0.3rem', borderRadius: '10px'}}>
                                       <ModalContentInfoContainer>
                                           <ModalContentInfoP>Offered Programs: </ModalContentInfoP>
                                           <List>
@@ -732,6 +760,133 @@ const Map = ({sites, advanceFilteredPrograms, exportSite, exportRef, importSite,
                       </AnimatedModalContent>
 
                   </MapPopupContainer> : <></>
+          }
+          {
+            (selectedProgram) ?
+                <MapPopupContainer>
+                    <AnimatedModalContent2
+                        appElement={document.getElementById('root')}
+                        isOpen={programInfoPopup}
+                        contentLabel="Program PopUp Modal"
+                        style={{
+                            overlay: {
+                                backgroundColor: 'rgba(91,91,91,0.28)', // Set the desired overlay background color
+                            },
+                            content: {
+                                width: '75vw', // Set the desired width
+                                height: '60vh', // Set the desired height
+                                maxHeight: '70vh',
+                                margin: 'auto', // Center the modal horizontally
+                                borderRadius: '15px',
+                                overflowY: 'auto',
+                                overflowX: 'hidden'
+                            },
+                        }}
+                    >
+                        <ModalContentContainer>
+                            <ModalContentHeader>
+                                <ModalContentHeaderLeft>
+                                    <h2 style={{margin: '0', padding: '0', color: 'white'}}>Program Info</h2>
+                                </ModalContentHeaderLeft>
+                                <ModalContentHeaderRight>
+                                    <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}  disableRipple onClick={closeProgramModalPopup}>
+                                        <CustomClearIcon style={{ fontSize: '30px'}}></CustomClearIcon>
+                                    </Button>
+                                </ModalContentHeaderRight>
+                            </ModalContentHeader>
+                            <ModalContentInfoH2 style={{alignSelf:"center"}}>Program ID - {stringFilterPrefix(selectedProgram.title)}</ModalContentInfoH2>
+                            <ModalContentBodyContainerColumn>
+
+                                <ModalContentBodyContainerRow style={{alignItems: 'center'}}>
+                                    <CodeIcon style={{fontSize: '40px', margin: '0'}}></CodeIcon>
+                                    <ModalContentBodyContainerColumn style={{gap: '5px'}}>
+                                        <ModalContentInfoP>Program Name: </ModalContentInfoP>
+                                        <ModalContentInfoP2>{stringFilterPrefix(selectedProgram.program_nme)}</ModalContentInfoP2>
+                                    </ModalContentBodyContainerColumn>
+                                </ModalContentBodyContainerRow>
+
+                                <ModalContentBodyContainerRow style={{alignItems: 'center'}}>
+                                    <DescriptionIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <ModalContentBodyContainerColumn style={{gap: '5px'}}>
+                                        <ModalContentInfoP>Program Description: </ModalContentInfoP>
+                                        <ModalContentInfoP2 style={{textAlign: 'justify'}}>{stringFilterPrefix(selectedProgram.service_desc)}</ModalContentInfoP2>
+                                    </ModalContentBodyContainerColumn>
+                                </ModalContentBodyContainerRow>
+
+                                <ModalContentBodyContainerRow style={{alignItems: 'center'}}>
+                                    <PersonIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <ModalContentBodyContainerColumn style={{gap: '5px'}}>
+                                        <ModalContentInfoP>Program Manager: </ModalContentInfoP>
+                                        <ModalContentInfoP2  style={{textAlign: 'justify'}}>{stringFilterPrefix(selectedProgram.prgm_mgr)}</ModalContentInfoP2>
+                                    </ModalContentBodyContainerColumn>
+                                </ModalContentBodyContainerRow>
+
+                                <ModalContentBodyContainerRow style={{alignItems: 'center'}}>
+                                    <CallIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <ModalContentBodyContainerColumn style={{gap: '5px'}}>
+                                        <ModalContentInfoP>Program Contact: </ModalContentInfoP>
+                                        <ModalContentInfoP2 style={{textAlign: 'justify'}}> {stringFilterPrefix(selectedProgram.prgm_cont_no)}</ModalContentInfoP2>
+                                    </ModalContentBodyContainerColumn>
+                                </ModalContentBodyContainerRow>
+
+                                <ModalContentBodyContainerRow style={{alignItems: 'center'}}>
+                                    <PersonIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <ModalContentBodyContainerColumn style={{gap: '5px'}}>
+                                        <ModalContentInfoP>General Manager: </ModalContentInfoP>
+                                        <ModalContentInfoP2 style={{textAlign: 'justify'}}>{stringFilterPrefix(selectedProgram.gm)}</ModalContentInfoP2>
+                                    </ModalContentBodyContainerColumn>
+                                </ModalContentBodyContainerRow>
+
+                                <ModalContentBodyContainerRow style={{alignItems: 'center'}}>
+                                    <PersonIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <ModalContentBodyContainerColumn style={{gap: '5px'}}>
+                                        <ModalContentInfoP>Executive Officer: </ModalContentInfoP>
+                                        <ModalContentInfoP2 style={{textAlign: 'justify'}}>{stringFilterPrefix(selectedProgram.eo)}</ModalContentInfoP2>
+                                    </ModalContentBodyContainerColumn>
+                                </ModalContentBodyContainerRow>
+
+                                <ModalContentBodyContainerRow style={{alignItems: 'center'}}>
+                                    <CategoryIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <ModalContentBodyContainerColumn style={{gap: '5px'}}>
+                                        <ModalContentInfoP>Program Type: </ModalContentInfoP>
+                                        <ModalContentInfoP2 style={{textAlign: 'justify'}}> {stringFilterPrefix(selectedProgram.prgm_type)}</ModalContentInfoP2>
+                                    </ModalContentBodyContainerColumn>
+                                </ModalContentBodyContainerRow>
+
+                                <ModalContentBodyContainerRow style={{alignItems: 'center'}}>
+                                    <VpnKeyIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <ModalContentBodyContainerColumn style={{gap: '5px'}}>
+                                        <ModalContentInfoP>Access Type: </ModalContentInfoP>
+                                        <ModalContentInfoP2 style={{textAlign: 'justify'}}>
+                                            {(selectedProgram.at && selectedProgram.at.length > 0)
+                                                ? selectedProgram.at.map(program => program.at).join(', ')
+                                                : 'None'}
+                                        </ModalContentInfoP2>
+                                    </ModalContentBodyContainerColumn>
+                                </ModalContentBodyContainerRow>
+
+                                <ModalContentBodyContainerRow style={{alignItems: 'center'}}>
+                                    <LocalShippingIcon style={{fontSize: '40px', margin: '0'}}/>
+                                    <ModalContentBodyContainerColumn style={{gap: '5px'}}>
+                                        <ModalContentInfoP>Delivery Method: </ModalContentInfoP>
+                                        <ModalContentInfoP2 style={{textAlign: 'justify'}}>
+                                            {(selectedProgram.sdm && selectedProgram.sdm.length > 0)
+                                                ? selectedProgram.sdm.map(program => program.sdm).join(', ')
+                                                : 'None'}
+                                        </ModalContentInfoP2>
+                                    </ModalContentBodyContainerColumn>
+                                </ModalContentBodyContainerRow>
+
+
+
+                            </ModalContentBodyContainerColumn>
+
+                        </ModalContentContainer>
+
+
+                    </AnimatedModalContent2>
+
+                </MapPopupContainer> : <></>
           }
 
 

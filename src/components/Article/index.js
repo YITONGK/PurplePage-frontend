@@ -358,7 +358,6 @@ const Article = () => {
 
   const authenticateAndGetData =() => {
     try {
-
       instance.acquireTokenSilent({
         account: accounts[0],
         scopes: ['User.Read']
@@ -370,7 +369,6 @@ const Article = () => {
       });
     } catch (error) {
 
-      console.log(error);
       if (error instanceof InteractionRequiredAuthError) {
         // Fallback to interaction when silent call fails
         instance.acquireTokenRedirect({
@@ -1043,7 +1041,7 @@ const Article = () => {
         </MapElement>
 
         <SMMapElement>
-          <MapResultFilter importRef={mapRef} importSite={selectedSite} exportSite={selectingSite} exportDepartureAddress={transferDepartureAddress} advanceFilteredSites={advancefilteredSites} departureLocation={departureAddress} advanceFilteredPrograms={(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms }></MapResultFilter>
+          <MapResultFilter importRef={mapRef} importSite={selectedSite} advanceFilteredPrograms={(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms } programTypeList={programTypeList} exportSite={selectingSite} exportDepartureAddress={transferDepartureAddress} advanceFilteredSites={advancefilteredSites} departureLocation={departureAddress} ></MapResultFilter>
         </SMMapElement>
 
         <XMMapElement>
@@ -1055,7 +1053,7 @@ const Article = () => {
                 </LoadindContainer>
                 :
                 <Map
-                    sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef} importSite={selectedSite} departureLocation={departureAddress} mapWidth={(mapFilterIsCollapse) ? 97.5 : 0} mapHeight = {(mapFilterIsCollapse)? 80 : 0} mapFilterUsed = {mapFilterUsed} advanceFilteredPrograms={(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms}
+                    sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef} importSite={selectedSite} departureLocation={departureAddress} mapWidth={(mapFilterIsCollapse) ? 97.5 : 0} mapHeight = {(mapFilterIsCollapse)? 80 : 0} mapFilterUsed = {mapFilterUsed} advanceFilteredPrograms={(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms} programTypeList={programTypeList}
                 />
           }
         </XMMapElement>

@@ -65,7 +65,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 
 
-const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddress, advanceFilteredSites, departureLocation, advanceFilteredPrograms}) => {
+const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddress, advanceFilteredSites, departureLocation, advanceFilteredPrograms, programTypeList}) => {
 
     // Variable Declaration
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -297,7 +297,20 @@ const MapResultFilter = ({importRef,importSite ,exportSite, exportDepartureAddre
     }
 
     const smOnClickProgram = (program) => {
-        setClickedProgram(program);
+
+        let program_type_name = '';
+
+        if(program) {
+            if(program.prgm_type_id) {
+
+                const tmpFilteredProgramType = programTypeList.filter((programType) => programType.prgm_type_id === program.prgm_type_id);
+                program_type_name = tmpFilteredProgramType[0].prgm_type;
+            }
+        }
+
+        const newProgram = {...program, prgm_type: program_type_name};
+
+        setClickedProgram(newProgram);
         setPopUpProgram(true);
     }
 

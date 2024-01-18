@@ -138,11 +138,36 @@ const fadeIn = keyframes`
   }
 `;
 
+const fadeIn2 = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(-10%, 0%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0%, 20%);
+  }
+`;
+
 // Create a styled component for the modal content with the animation
 export const AnimatedModalContent = styled(Modal)`
+  
+  
   &.ReactModal__Content {
     animation: ${fadeIn} 0.3s ease-in-out;
     transform: translate(0%, 10%);
+    background-color: white;
+    display: flex;
+    box-shadow: 3px 0px 20px rgba(0, 0, 0, 0.4);
+    outline: none;
+  }
+`;
+
+export const AnimatedModalContent2 = styled(Modal)`
+  
+  &.ReactModal__Content {
+    animation: ${fadeIn2} 0.3s ease-in-out;
+    transform: translate(0%, 20%);
     background-color: white;
     display: flex;
     box-shadow: 3px 0px 20px rgba(0, 0, 0, 0.4);
@@ -207,7 +232,7 @@ export const ModalContentListItemButton = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 0 0 0.3rem 0;
+    margin: 0 0 0 0;
     padding: 0.3rem 0 0 0.3rem;
     min-width: 32vw;
     max-width: 32vw;
@@ -230,8 +255,9 @@ export const ModalInfoOfferedProgramsContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 0;
-  background-color: white;
+  background-color: rgb(227,227,227);
   justify-content: center;
+  gap: 0.3rem;
 `;
 
 

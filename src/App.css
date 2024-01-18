@@ -105,7 +105,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('./images/uniting_png_loading.jpeg'); /* Replace with your image path */
+  background-color: rgba(162, 0, 102, 0.51);
+  background-image: url('./images/uniting_loading_png_5.svg'); /* Replace with your image path */
   background-size: cover; /* This will cover the entire viewport */
   background-position: center; /* This will center the background image */
   opacity: 0.8; /* This will make the image semi-transparent */
