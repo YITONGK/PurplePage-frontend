@@ -87,6 +87,7 @@ const Article = () => {
     const [mapFilterIsCollapse, setMapFilterIsCollapse] = useState(true);
 
     const mapRef = useRef();
+    const xmMapRef = useRef();
 
     // Style
     const searchTextFieldStyle = {
@@ -105,7 +106,7 @@ const Article = () => {
     // Declare Page Title And Get Data
     useEffect(() => {
         document.title = 'Home';
-        authenticateAndGetData()
+        authenticateAndGetData();
     }, []);
 
 
@@ -244,7 +245,6 @@ const Article = () => {
 
         setIsLoading(true);
         try {
-
             // This for the mssql version the actual test db --Important--
             const [programTypes, groups, programs, programAts, programSdms, sites, siteAccessibilities, serviceStreams, serviceTypes, divisions] = await Promise.all([
                 getProgramTypes(),
@@ -359,13 +359,12 @@ const Article = () => {
                 account: accounts[0],
                 scopes: ['User.Read']
             })
-                .then(async (tokenResponse) => {
-                    // console.log(tokenResponse);
-                    document.cookie = `accessToken=${tokenResponse.idToken};`;
-                    await getAllData();
-                });
+            .then(async (tokenResponse) => {
+                // console.log(tokenResponse);
+                document.cookie = `accessToken=${tokenResponse.idToken};`;
+                await getAllData();
+            });
         } catch (error) {
-
             if (error instanceof InteractionRequiredAuthError) {
                 // Fallback to interaction when silent call fails
                 instance.acquireTokenRedirect({
@@ -1074,7 +1073,7 @@ const Article = () => {
                             </LoadindContainer>
                             :
                             <Map
-                                sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef}
+                                sites={advancefilteredSites} exportSite={selectingSite} exportRef={xmMapRef}
                                 importSite={selectedSite} departureLocation={departureAddress}
                                 mapWidth={(mapFilterIsCollapse) ? 97.5 : 0} mapHeight={(mapFilterIsCollapse) ? 80 : 0}
                                 mapFilterUsed={mapFilterUsed}

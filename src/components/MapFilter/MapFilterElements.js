@@ -445,6 +445,13 @@ export const DropdownSelect = styled(Select)`
         max-width: 80vw;
         font-size: 14px;
       }
+
+      @media (min-width: 667px) and (max-width: 932px) and (min-height: 360px) and (max-height: 430px) {
+        
+        min-width: 15vw;
+        max-width: 15vw;
+        font-size: 14px;
+      }
       
     }
 `;

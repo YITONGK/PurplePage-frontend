@@ -5,7 +5,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 export const MapContainer = styled.div`
   display: block;
 
-  @media (min-width: 667px) and (max-width: 932px) and (min-height: 375px) and (max-height: 430px) {
+  @media (min-width: 667px) and (max-width: 932px) and (min-height: 360px) and (max-height: 430px) {
     display: none;
   }
 `;
@@ -13,7 +13,7 @@ export const MapContainer = styled.div`
 export const EMMapContainer = styled.div`
   display: none;
 
-  @media (min-width: 667px) and (max-width: 932px) and (min-height: 375px) and (max-height: 430px) {
+  @media (min-width: 667px) and (max-width: 932px) and (min-height: 360px) and (max-height: 430px) {
     display: block;
   }
   
@@ -82,7 +82,7 @@ export const InterContainer = styled.div`
 export const MapPopupContainer = styled.div`
   display: none;
 
-  @media (min-width: 667px) and (max-width: 932px) and (min-height: 375px) and (max-height: 430px) {
+  @media (min-width: 667px) and (max-width: 932px) and (min-height: 360px) and (max-height: 430px) {
     display: flex;
   }
     
@@ -225,7 +225,7 @@ export const ModalContentInfoRow = styled.div`
 export const ModalContentListItemButton = styled.div`
   display: none;
 
-  @media (min-width: 667px) and (max-width: 932px) and (min-height: 375px) and (max-height: 430px) {
+  @media (min-width: 667px) and (max-width: 932px) and (min-height: 360px) and (max-height: 430px) {
     display: flex;
     flex-direction: row;
     align-items: center;

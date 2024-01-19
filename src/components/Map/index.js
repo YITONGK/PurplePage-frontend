@@ -52,8 +52,6 @@ import CallIcon from "@mui/icons-material/Call";
 // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
 mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
-// mapboxgl.accessToken = 'pk.eyJ1IjoidmhhcnRvbm8iLCJhIjoiY2xoc2l1Z2VzMDd0dTNlcGtwbXYwaGx2cyJ9.C77GVU3YPPgscvXrTGHWfg';
-
 const Map = ({
                  sites,
                  advanceFilteredPrograms,
@@ -112,7 +110,7 @@ const Map = ({
             }
 
             // need to fix 250... not a good practice
-            if (exportRef.current && sites.length <= 250) {
+            if (exportRef && exportRef.current && sites.length <= 250) {
                 exportRef.current.getMap().fitBounds(bounds, {
                     padding: 30, // or your preferred padding
                     maxZoom: 15, // or your preferred max zoom
@@ -214,35 +212,47 @@ const Map = ({
             setSelectedMarker(site);
             setPopUpMarker(site);
 
-            if (site.geojson) {
-                if (exportRef.current) {
-                    const map = exportRef.current.getMap();
-                    // if the route already exists on the map, we'll reset it using setData adding routing path to map
-                    if (map.getSource('route')) {
-                        map.getSource('route').setData(site.geojson);
-                    }
-                    // otherwise, we'll make a new request
-                    else {
-                        map.addLayer({
-                            id: 'route',
-                            type: 'line',
-                            source: {
-                                type: 'geojson',
-                                data: site.geojson
-                            },
-                            layout: {
-                                'line-join': 'round',
-                                'line-cap': 'square',
-                            },
-                            paint: {
-                                'line-color': '#A20066',
-                                'line-width': 5,
-                                'line-opacity': 0.75
-                            }
-                        });
+
+            try {
+                if (site.geojson) {
+                    console.log("in")
+                    if (exportRef.current) {
+                        console.log("in2")
+                        const map = exportRef.current.getMap();
+                        // if the route already exists on the map, we'll reset it using setData adding routing path to map
+                        if (map.getSource('route')) {
+                            map.getSource('route').setData(site.geojson);
+                        }
+                        // otherwise, we'll make a new request
+                        else {
+                            console.log("in3")
+                            map.addLayer({
+                                id: 'route',
+                                type: 'line',
+                                source: {
+                                    type: 'geojson',
+                                    data: site.geojson
+                                },
+                                layout: {
+                                    'line-join': 'round',
+                                    'line-cap': 'square',
+                                },
+                                paint: {
+                                    'line-color': '#A20066',
+                                    'line-width': 5,
+                                    'line-opacity': 0.75
+                                }
+                            });
+                        }
                     }
                 }
+
+            } catch (error) {
+
+                console.log(error);
+
             }
+
         };
 
     const EMMarkersClick =
@@ -658,7 +668,6 @@ const Map = ({
                 <ReactMapGl
                     attributionControl={false}
                     style={{zIndex: '0'}}
-                    ref={exportRef}
                     {...viewPort}
                     width={'100%'}
                     height={'100%'}
@@ -936,11 +945,9 @@ const Map = ({
                                         </ModalContentBodyContainerColumn>
                                     </ModalContentBodyContainerRow>
 
-
                                 </ModalContentBodyContainerColumn>
 
                             </ModalContentContainer>
-
 
                         </AnimatedModalContent2>
 

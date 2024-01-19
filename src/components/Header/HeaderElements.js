@@ -69,5 +69,9 @@ export const SideNavButton = styled(Button)`
     @media (min-width: 360px) and (max-width: 450px) {
       display: none;
     }
+
+    @media (min-width: 667px) and (max-width: 932px) and (min-height: 360px) and (max-height: 430px) {
+      display: none;
+    }
   }
 `;

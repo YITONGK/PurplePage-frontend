@@ -16,7 +16,7 @@ export const ArticleContainer = styled.div`
     margin-bottom: 65px;
   }
 
-  @media (min-width: 667px) and (max-width: 932px) and (min-height: 375px) and (max-height: 430px) {
+  @media (min-width: 667px) and (max-width: 932px) and (min-height: 360px) and (max-height: 430px) {
     
     padding-right: 2%;
     
@@ -96,7 +96,7 @@ export const MapElement = styled.div`
   }
   
   /* Second media query */
-  @media (min-width: 667px) and (max-width: 932px) and (min-height: 375px) and (max-height: 430px) {
+  @media (min-width: 667px) and (max-width: 932px) and (min-height: 360px) and (max-height: 430px) {
    display: none;
   }
   //border: 2px solid mediumvioletred;
@@ -118,7 +118,7 @@ export const SMMapElement = styled.div`
 export const XMMapElement = styled.div`
   display: none;
 
-  @media (min-width: 667px) and (max-width: 932px) and (min-height: 375px) and (max-height: 430px) {
+  @media (min-width: 667px) and (max-width: 932px) and (min-height: 360px) and (max-height: 430px) {
     display: flex;
     flex-direction: row;
     margin-top: 1rem;

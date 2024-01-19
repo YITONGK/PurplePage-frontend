@@ -1,5 +1,5 @@
-import Button from '@mui/material/Button';
 import styled from 'styled-components';
+import Button from '@mui/material/Button';
 import MicrosoftIcon from '@mui/icons-material/Microsoft'
 
 export const LoginButton = styled(Button)`
@@ -16,7 +16,6 @@ export const LoginButton = styled(Button)`
     
   }
   
-    
 `;
 
 export const MicrosoftLogo = styled(MicrosoftIcon)`
