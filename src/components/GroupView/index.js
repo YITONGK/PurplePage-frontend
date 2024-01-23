@@ -92,44 +92,6 @@ const GroupView = () => {
         return result;
     }
 
-    // /* Handle going to edit page */
-    // const edit = () => {
-    //   window.location = '/group/' + id + '/edit';
-    // }
-
-    // /* delete the group */
-    // const deleteGroup = () => {
-    //   const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
-    //   Swal.fire({
-    //     title: "Warning!",
-    //     text: "Are you sure you want to delete this group?",
-    //     icon: "warning",
-    //     showCancelButton: true,
-    //     confirmButtonColor: '#3085d6',
-    //     cancelButtonColor: '#d33',
-    //     confirmButtonText: 'Yes, delete it!',
-    //     showClass: {
-    //       icon: ''
-    //     }
-    //   }).then(async (result) => {
-    //     if (result.isConfirmed) {
-    //       await axios.delete(BASE_URL + "/group/" + id).then(() => {
-    //         Swal.fire({
-    //           title: "Success!",
-    //           text: "Group has been successfully deleted!",
-    //           icon: "success",
-    //           showClass: {
-    //             icon: ''
-    //           }
-    //         });
-    //         setTimeout(() => {
-    //           window.location = '/group';
-    //         }, 1500);
-    //       })
-    //     }
-    //   })
-    // }
-
     // related programs table element
     const RelatedProgramsTable = () => {
         return (

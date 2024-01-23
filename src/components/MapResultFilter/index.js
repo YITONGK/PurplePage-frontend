@@ -247,11 +247,14 @@ const MapResultFilter = ({
     }
 
 
+    // Site is clicked
     const onClickSite = (site) => {
         setClickedSite(site);
+        // changing the map via references
         flyingToLocation(site.lat, site.lng);
         exportSite(site);
 
+        //present the routing path to the map if address is provided
         if (site.geojson) {
             if (importRef.current) {
                 const map = importRef.current.getMap();

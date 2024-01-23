@@ -192,44 +192,6 @@ const ServiceStreamView = () => {
         )
     }
 
-    // /* Handle going to edit page */
-    // const edit = () => {
-    //   window.location = '/servicestream/' + id + '/edit';
-    // }
-
-    // /* delete the service stream */
-    // const deleteServiceStream = () => {
-    //   const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
-    //   Swal.fire({
-    //     title: "Warning!",
-    //     text: "Are you sure you want to delete this service stream?",
-    //     icon: "warning",
-    //     showCancelButton: true,
-    //     confirmButtonColor: '#3085d6',
-    //     cancelButtonColor: '#d33',
-    //     confirmButtonText: 'Yes, delete it!',
-    //     showClass: {
-    //       icon: ''
-    //     }
-    //   }).then(async (result) => {
-    //     if (result.isConfirmed) {
-    //       await axios.delete(BASE_URL + "/servicestream/" + id).then(() => {
-    //         Swal.fire({
-    //           title: "Success!",
-    //           text: "Service stream has been successfully deleted!",
-    //           icon: "success",
-    //           showClass: {
-    //             icon: ''
-    //           }
-    //         });
-    //         setTimeout(() => {
-    //           window.location = '/servicestream';
-    //         }, 1500);
-    //       })
-    //     }
-    //   })
-    // }
-
     return (
         <ServiceStreamViewContainer>
             <ServiceStreamViewH1>{serviceStream.ser_stream}</ServiceStreamViewH1>

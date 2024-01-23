@@ -14,7 +14,7 @@ import {
     ModalContentHeader,
     ModalContentHeaderLeft,
     ModalContentHeaderRight,
-    EMMapContainer,
+    XMMapContainer,
     ModalContentBodyContainerRow,
     ModalContentBodyContainerColumn,
     ModalContentInfoH2,
@@ -215,9 +215,7 @@ const Map = ({
 
             try {
                 if (site.geojson) {
-                    console.log("in")
                     if (exportRef.current) {
-                        console.log("in2")
                         const map = exportRef.current.getMap();
                         // if the route already exists on the map, we'll reset it using setData adding routing path to map
                         if (map.getSource('route')) {
@@ -410,7 +408,7 @@ const Map = ({
         )
     }
 
-    const EMMarkers = () => {
+    const XMMarkers = () => {
         return (
             <>
                 {
@@ -630,6 +628,7 @@ const Map = ({
     }
 
     // Return UI
+    // XM MAP Present For Mobile Horizontal View
     return (
         <InterContainer>
             <MapContainer style={{
@@ -661,7 +660,8 @@ const Map = ({
                     <Markers/>
                 </ReactMapGl>
             </MapContainer>
-            <EMMapContainer style={{
+
+            <XMMapContainer style={{
                 width: (mapWidth && mapWidth > 0) ? `${mapWidth}vw` : `55vw`,
                 height: (mapHeight && mapHeight > 0) ? `${mapHeight}vh` : `64.5vh`
             }}>
@@ -686,9 +686,9 @@ const Map = ({
                         setDepartureLocationMarker(null);
                     }}
                 >
-                    <EMMarkers/>
+                    <XMMarkers/>
                 </ReactMapGl>
-            </EMMapContainer>
+            </XMMapContainer>
             {
                 (popUpMarker) ?
                     <MapPopupContainer>

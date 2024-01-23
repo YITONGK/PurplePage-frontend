@@ -70,6 +70,7 @@ const ProgramTypeView = () => {
         })
     }
 
+    /* get a programs from the backend based on the id and display it */
     const getPrograms = async () => {
         const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
         const result = await axios.get(BASE_URL + '/program', {
@@ -81,44 +82,6 @@ const ProgramTypeView = () => {
         setIsLoading(false);
 
     }
-
-    /* Handle going to edit page */
-    // const edit = () => {
-    //   window.location = '/programtype/' + id + '/edit';
-    // }
-
-    /* delete the program type */
-    // const deleteProgramType = () => {
-    //   const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
-    //   Swal.fire({
-    //     title: "Warning!",
-    //     text: "Are you sure you want to delete this program type?",
-    //     icon: "warning",
-    //     showCancelButton: true,
-    //     confirmButtonColor: '#3085d6',
-    //     cancelButtonColor: '#d33',
-    //     confirmButtonText: 'Yes, delete it!',
-    //     showClass: {
-    //       icon: ''
-    //     }
-    //   }).then(async (result) => {
-    //     if (result.isConfirmed) {
-    //       await axios.delete(BASE_URL + "/programtype/" + id).then(() => {
-    //         Swal.fire({
-    //           title: "Success!",
-    //           text: "Program type has been successfully deleted!",
-    //           icon: "success",
-    //           showClass: {
-    //             icon: ''
-    //           }
-    //         });
-    //         setTimeout(() => {
-    //           window.location = '/programtype';
-    //         }, 1500);
-    //       })
-    //     }
-    //   })
-    // }
 
     // related sites table element
     const RelatedProgramsTable = () => {

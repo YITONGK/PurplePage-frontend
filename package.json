@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "<=18.12.1"
+  },
   "name": "uniting-internship-frontend",
   "version": "0.1.0",
   "private": true,

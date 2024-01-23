@@ -79,7 +79,7 @@ const Article = () => {
     const [departureAddress, setDepartureAddress] = useState(null);
 
 
-    const [advancefilteredSites, setAdvanceFilteredSites] = useState([]);
+    const [advanceFilteredSites, setAdvanceFilteredSites] = useState([]);
     const [advanceFilteredPrograms, setAdvanceFilteredPrograms] = useState([]);
 
     const [searchOptions, setSearchOptions] = useState([]);
@@ -149,7 +149,7 @@ const Article = () => {
 
             setFilteredSites(newFilteredSitesData);
 
-            const tmpFilteredSiteIds = advancefilteredSites.map((site) => site.site_id);
+            const tmpFilteredSiteIds = advanceFilteredSites.map((site) => site.site_id);
             const newAvailableSite = newFilteredSitesData.filter((site) => tmpFilteredSiteIds.includes(site.site_id));
 
             setAdvanceFilteredSites(newAvailableSite);
@@ -176,7 +176,7 @@ const Article = () => {
                     newFilteredSitesData.sort((s1, s2) => s1.distance - s2.distance);
                     setFilteredSites(newFilteredSitesData);
 
-                    const tmpFilteredSiteIds = advancefilteredSites.map((site) => site.site_id);
+                    const tmpFilteredSiteIds = advanceFilteredSites.map((site) => site.site_id);
                     const newAvailableSite = newFilteredSitesData.filter((site) => tmpFilteredSiteIds.includes(site.site_id));
 
                     setAdvanceFilteredSites(newAvailableSite);
@@ -354,6 +354,7 @@ const Article = () => {
     }
 
     const authenticateAndGetData = () => {
+
         try {
             instance.acquireTokenSilent({
                 account: accounts[0],
@@ -365,6 +366,7 @@ const Article = () => {
                 await getAllData();
             });
         } catch (error) {
+            console.log(error);
             if (error instanceof InteractionRequiredAuthError) {
                 // Fallback to interaction when silent call fails
                 instance.acquireTokenRedirect({
@@ -475,35 +477,53 @@ const Article = () => {
     const getProgramTypes = async () => {
         const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
-        let result = await axios.get(BASE_URL + '/programtype', {
-            headers: {
-                'authorization': `Bearer ${Cookies.get('accessToken')}`
-            }
-        });
-        result = result.data[0];
+        try {
+            let result = await axios.get(BASE_URL + '/programtype', {
+                headers: {
+                    'authorization': `Bearer ${Cookies.get('accessToken')}`
+                }
+            });
+            result = result.data[0];
 
-        result.sort((a, b) => {
-            if (a.prgm_type === null && b.prgm_type === null) return 0;
-            if (a.prgm_type === null) return -1;
-            if (b.prgm_type === null) return 1;
-            return a.prgm_type.localeCompare(b.prgm_type);
-        });
+            result.sort((a, b) => {
+                if (a.prgm_type === null && b.prgm_type === null) return 0;
+                if (a.prgm_type === null) return -1;
+                if (b.prgm_type === null) return 1;
+                return a.prgm_type.localeCompare(b.prgm_type);
+            });
 
-        return result;
+            return result;
+
+        } catch (error) {
+
+            console.log(error);
+            return [];
+        }
+
     }
 
     /* get list of groups from the backend and display them */
     const getGroups = async () => {
         const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
-        let result = await axios.get(BASE_URL + '/group', {
-            headers: {
-                'authorization': `Bearer ${Cookies.get('accessToken')}`
-            }
-        });
-        result = result.data[0];
-        result.sort((a, b) => a.group_name.localeCompare(b.group_name));
-        return result;
+        try {
+
+            let result = await axios.get(BASE_URL + '/group', {
+                headers: {
+                    'authorization': `Bearer ${Cookies.get('accessToken')}`
+                }
+            });
+            result = result.data[0];
+            result.sort((a, b) => a.group_name.localeCompare(b.group_name));
+            return result;
+
+        } catch (error) {
+
+            console.log(error);
+            return [];
+
+        }
+
     }
 
     /* get list of service stream from the backend and display them */
@@ -511,30 +531,50 @@ const Article = () => {
 
         const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
-        let result = await axios.get(BASE_URL + '/servicestream', {
-            headers: {
-                'authorization': `Bearer ${Cookies.get('accessToken')}`
-            }
-        });
+        try {
 
-        result = result.data;
-        result.sort((a, b) => a.ser_stream.localeCompare(b.ser_stream));
-        return result;
+
+            let result = await axios.get(BASE_URL + '/servicestream', {
+                headers: {
+                    'authorization': `Bearer ${Cookies.get('accessToken')}`
+                }
+            });
+
+            result = result.data;
+            result.sort((a, b) => a.ser_stream.localeCompare(b.ser_stream));
+            return result;
+
+        } catch (error) {
+
+            console.log(error);
+            return [];
+
+        }
     }
 
     /* get list of divisions from the backend and display them */
     const getDivisions = async () => {
         const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
-        let result = await axios.get(BASE_URL + '/division', {
-            headers: {
-                'authorization': `Bearer ${Cookies.get('accessToken')}`
-            }
-        });
+        try {
 
-        result = result.data;
-        result.sort((a, b) => a.division_name.localeCompare(b.division_name));
-        return result;
+            let result = await axios.get(BASE_URL + '/division', {
+                headers: {
+                    'authorization': `Bearer ${Cookies.get('accessToken')}`
+                }
+            });
+
+            result = result.data;
+            result.sort((a, b) => a.division_name.localeCompare(b.division_name));
+            return result;
+
+        } catch (error) {
+
+            console.log(error);
+            return [];
+
+        }
+
 
     }
 
@@ -542,16 +582,24 @@ const Article = () => {
     const getServiceTypes = async () => {
         const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
 
-        let result = await axios.get(BASE_URL + '/servicetype', {
-            headers: {
-                'authorization': `Bearer ${Cookies.get('accessToken')}`
-            }
-        });
+        try {
+            let result = await axios.get(BASE_URL + '/servicetype', {
+                headers: {
+                    'authorization': `Bearer ${Cookies.get('accessToken')}`
+                }
+            });
 
-        result = result.data[0];
-        result = result.filter(type => type.ser_type !== null);
-        result.sort((a, b) => a.ser_type.localeCompare(b.ser_type));
-        return result;
+            result = result.data[0];
+            result = result.filter(type => type.ser_type !== null);
+            result.sort((a, b) => a.ser_type.localeCompare(b.ser_type));
+            return result;
+
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+
+
     }
 
     // Getting the routing address from the api call base on user current location
@@ -960,6 +1008,7 @@ const Article = () => {
 
 
     //===================== Main Return Features ===========================================
+    /** sm = Mobile Vertical View, xm = Mobile Horizontal View**/
 
     return (
 
@@ -1025,14 +1074,14 @@ const Article = () => {
 
                 <ExportCSV
                     advanceFilteredPrograms={(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms}
-                    advanceFilteredSites={advancefilteredSites}
+                    advanceFilteredSites={advanceFilteredSites}
                     groupsList={groupList} divisionList={divisionList} serviceStreamList={serviceStreamList}
                     serviceTypeList={serviceTypeList} programTypeList={programTypeList}>
                 </ExportCSV>
                 <MapElement>
                     <MapResultFilter importRef={mapRef} importSite={selectedSite} exportSite={selectingSite}
                                      exportDepartureAddress={transferDepartureAddress}
-                                     advanceFilteredSites={advancefilteredSites}></MapResultFilter>
+                                     advanceFilteredSites={advanceFilteredSites}></MapResultFilter>
                     {
                         (addressIsLoading || mapFilterIsLoading) ?
                             // (true)?
@@ -1041,7 +1090,7 @@ const Article = () => {
                             </LoadindContainer>
                             :
                             <Map
-                                sites={advancefilteredSites} exportSite={selectingSite} exportRef={mapRef}
+                                sites={advanceFilteredSites} exportSite={selectingSite} exportRef={mapRef}
                                 importSite={selectedSite} departureLocation={departureAddress}
                                 mapWidth={(mapFilterIsCollapse) ? 59.5 : 0} mapFilterUsed={mapFilterUsed}
                             />
@@ -1060,7 +1109,7 @@ const Article = () => {
                                      advanceFilteredPrograms={(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms}
                                      programTypeList={programTypeList} exportSite={selectingSite}
                                      exportDepartureAddress={transferDepartureAddress}
-                                     advanceFilteredSites={advancefilteredSites}
+                                     advanceFilteredSites={advanceFilteredSites}
                                      departureLocation={departureAddress}></MapResultFilter>
                 </SMMapElement>
 
@@ -1073,7 +1122,7 @@ const Article = () => {
                             </LoadindContainer>
                             :
                             <Map
-                                sites={advancefilteredSites} exportSite={selectingSite} exportRef={xmMapRef}
+                                sites={advanceFilteredSites} exportSite={selectingSite} exportRef={xmMapRef}
                                 importSite={selectedSite} departureLocation={departureAddress}
                                 mapWidth={(mapFilterIsCollapse) ? 97.5 : 0} mapHeight={(mapFilterIsCollapse) ? 80 : 0}
                                 mapFilterUsed={mapFilterUsed}

@@ -22,13 +22,13 @@ export const FooterWrapper = styled.div`
   align-items: center;
   max-width: 1100px;
   margin: 0 auto;
-  padding-bottom: 1%;
+  //padding-bottom: 1%;
   
 
   @media (min-width: 360px) and (max-width: 450px) {
-    padding-top: 0;
     padding-right: 1rem;
     padding-left: 1rem;
+    text-align: center;
   }
   
   
@@ -41,6 +41,10 @@ export const FooterText = styled.p`
   color: #fff;
   margin:0;
   padding: 0;
+
+  @media (min-width: 360px) and (max-width: 450px) {
+    font-size: 12px;
+  }
 `;
 
 export const FooterTextSmall = styled.p`
@@ -49,4 +53,8 @@ export const FooterTextSmall = styled.p`
   color: #fff;
   margin:0;
   padding: 0;
+
+  @media (min-width: 360px) and (max-width: 450px) {
+    font-size: 10px;
+  }
 `;

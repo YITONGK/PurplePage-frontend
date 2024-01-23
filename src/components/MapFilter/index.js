@@ -599,6 +599,7 @@ const MapFilter = ({
 
     //================================= Filter Assistance Method ====================================
 
+    // Specific division to program
     const currentDToPG = (DValue) => {
 
         const selectedDivisionIds = [];
@@ -634,6 +635,7 @@ const MapFilter = ({
 
     }
 
+    // Specific group to program
     const currentGToPG = (GValue) => {
 
         const selectedDivisionIds = [];
@@ -667,6 +669,7 @@ const MapFilter = ({
         return DGFilteredProgram;
     }
 
+    // All Division and Group Link to Program
     const currentDGToPG = () => {
 
         const selectedDivisionIds = [];
@@ -700,6 +703,7 @@ const MapFilter = ({
         return DGFilteredProgram;
     }
 
+    // Specific service stream to program
     const currentSSToPG = (SSValue) => {
 
         const selectedServiceStreamIds = [];
@@ -745,6 +749,7 @@ const MapFilter = ({
         return ssToPG;
     }
 
+    // Specific service type to program
     const currentSTToPG = (STValue) => {
         const selectedServiceStreamIds = [];
         for (let i = 0; i < serviceStreams.length; i++) {
@@ -789,6 +794,7 @@ const MapFilter = ({
         return stToPG;
     }
 
+    // Specific program type to program
     const currentPTToPG = (PTValue) => {
         const selectedServiceStreamIds = [];
         for (let i = 0; i < serviceStreams.length; i++) {
@@ -833,6 +839,7 @@ const MapFilter = ({
         return ptToPG;
     }
 
+    // Upper table all program service link to program
     const currentPSToPG = () => {
         const selectedServiceStreamIds = [];
         for (let i = 0; i < serviceStreams.length; i++) {

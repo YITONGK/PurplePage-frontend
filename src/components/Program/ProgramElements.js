@@ -5,6 +5,7 @@ export const ProgramContainer = styled.div`
   margin-top: 2%;
   margin-bottom: 5%;
   padding-left: 3%;
+  
 `;
 
 export const ProgramH1 = styled.h1`

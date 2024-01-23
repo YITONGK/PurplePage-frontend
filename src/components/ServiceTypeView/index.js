@@ -172,44 +172,6 @@ const ServiceTypeView = () => {
         )
     }
 
-    // /* Handle going to edit page */
-    // const edit = () => {
-    //   window.location = '/servicetype/' + id + '/edit';
-    // }
-
-    // /* delete the service type */
-    // const deleteServiceType = () => {
-    //   const BASE_URL = process.env.REACT_APP_PURPLEPAGE_BACKEND_URL;
-    //   Swal.fire({
-    //     title: "Warning!",
-    //     text: "Are you sure you want to delete this service type?",
-    //     icon: "warning",
-    //     showCancelButton: true,
-    //     confirmButtonColor: '#3085d6',
-    //     cancelButtonColor: '#d33',
-    //     confirmButtonText: 'Yes, delete it!',
-    //     showClass: {
-    //       icon: ''
-    //     }
-    //   }).then(async (result) => {
-    //     if (result.isConfirmed) {
-    //       await axios.delete(BASE_URL + "/servicetype/" + id).then(() => {
-    //         Swal.fire({
-    //           title: "Success!",
-    //           text: "Service type has been successfully deleted!",
-    //           icon: "success",
-    //           showClass: {
-    //             icon: ''
-    //           }
-    //         });
-    //         setTimeout(() => {
-    //           window.location = '/servicetype';
-    //         }, 1500);
-    //       })
-    //     }
-    //   })
-    // }
-
     return (
         <ServiceTypeViewContainer>
             <ServiceTypeViewH1>{serviceType.ser_type}</ServiceTypeViewH1>

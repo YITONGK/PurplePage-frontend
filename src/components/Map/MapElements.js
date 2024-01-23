@@ -10,7 +10,7 @@ export const MapContainer = styled.div`
   }
 `;
 
-export const EMMapContainer = styled.div`
+export const XMMapContainer = styled.div`
   display: none;
 
   @media (min-width: 667px) and (max-width: 932px) and (min-height: 360px) and (max-height: 430px) {
