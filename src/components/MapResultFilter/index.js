@@ -356,8 +356,9 @@ const MapResultFilter = ({
 
                                 <ClickedToolTips
                                     title={<Typography variant='body2' color="inherit" style={{zIndex: 0}}>
-                                        {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
-                                            `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                        {site.street_name && site.suburb && site.state && site.postcode ?
+                                            `${site.street_nbr ? site.street_nbr + ' ' : ''}${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}`
+                                            : 'None'
                                         }
                                     </Typography>}
                                 >
@@ -403,8 +404,9 @@ const MapResultFilter = ({
 
                                         </SiteOptionRoutingContainer>
                                         <Typography variant='caption' style={captionStyle}>
-                                            {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
-                                                `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                            {site.street_name && site.suburb && site.state && site.postcode ?
+                                                `${site.street_nbr ? site.street_nbr + ' ' : ''}${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}`
+                                                : 'None'
                                             }
                                         </Typography>
                                     </SiteOption>
@@ -414,8 +416,9 @@ const MapResultFilter = ({
 
                                 <OriginalToolTips
                                     title={<Typography variant='body2' color="inherit" style={{zIndex: 0}}>
-                                        {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
-                                            `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                        {site.street_name && site.suburb && site.state && site.postcode ?
+                                            `${site.street_nbr ? site.street_nbr + ' ' : ''}${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}`
+                                            : 'None'
                                         }
                                     </Typography>}
                                 >
@@ -463,8 +466,9 @@ const MapResultFilter = ({
 
                                         </SiteOptionRoutingContainer>
                                         <Typography variant='caption' style={captionStyle}>
-                                            {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
-                                                `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                            {site.street_name && site.suburb && site.state && site.postcode ?
+                                                `${site.street_nbr ? site.street_nbr + ' ' : ''}${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}`
+                                                : 'None'
                                             }
                                         </Typography>
                                     </SiteOption>
@@ -486,8 +490,9 @@ const MapResultFilter = ({
 
                                 <ClickedToolTips
                                     title={<Typography variant='body2' color="inherit" style={{zIndex: 0}}>
-                                        {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
-                                            `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                        {site.street_name && site.suburb && site.state && site.postcode ?
+                                            `${site.street_nbr ? site.street_nbr + ' ' : ''}${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}`
+                                            : 'None'
                                         }
                                     </Typography>}
                                 >
@@ -535,8 +540,9 @@ const MapResultFilter = ({
 
                                         </SiteOptionRoutingContainer>
                                         <Typography variant='body2' style={captionStyle}>
-                                            {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
-                                                `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                            {site.street_name && site.suburb && site.state && site.postcode ?
+                                                `${site.street_nbr ? site.street_nbr + ' ' : ''}${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}`
+                                                : 'None'
                                             }
                                         </Typography>
                                     </SiteOption>
@@ -546,8 +552,9 @@ const MapResultFilter = ({
 
                                 <OriginalToolTips
                                     title={<Typography variant='body2' color="inherit" style={{zIndex: 0}}>
-                                        {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
-                                            `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                        {site.street_name && site.suburb && site.state && site.postcode ?
+                                            `${site.street_nbr ? site.street_nbr + ' ' : ''}${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}`
+                                            : 'None'
                                         }
                                     </Typography>}
                                 >
@@ -595,8 +602,9 @@ const MapResultFilter = ({
 
                                         </SiteOptionRoutingContainer>
                                         <Typography variant='body2' style={captionStyle}>
-                                            {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ?
-                                                `${site.street_nbr} ${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}` : 'None'
+                                            {site.street_name && site.suburb && site.state && site.postcode ?
+                                                `${site.street_nbr ? site.street_nbr + ' ' : ''}${site.street_name}, ${site.suburb}, ${site.state}, ${site.postcode}`
+                                                : 'None'
                                             }
                                         </Typography>
                                     </SiteOption>
@@ -863,9 +871,9 @@ const MapResultFilter = ({
                                 <SiteInfoDetailContainer>
                                     <SiteInfoP>Address: </SiteInfoP>
                                     <SiteInfoP2>
-                                        {clickedSite.street_nbr && clickedSite.street_name && clickedSite.suburb && clickedSite.state && clickedSite.postcode ? (
+                                        {clickedSite.street_name && clickedSite.suburb && clickedSite.state && clickedSite.postcode ? (
                                             <>
-                                                {clickedSite.street_nbr} {clickedSite.street_name},
+                                                {clickedSite.street_nbr ? `${clickedSite.street_nbr} ` : ''}{clickedSite.street_name},
                                                 {clickedSite.suburb},
                                                 {clickedSite.state} {clickedSite.postcode}
                                             </>

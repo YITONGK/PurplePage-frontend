@@ -373,8 +373,8 @@ const Map = ({
                                 <RoomIcon style={{margin: '0', padding: '0'}}></RoomIcon>
                                 <InfoWindowP>
                                     <strong>
-                                        {popUpMarker.street_nbr && popUpMarker.street_name && popUpMarker.suburb && popUpMarker.state && popUpMarker.postcode ?
-                                            `${popUpMarker.street_nbr} ${popUpMarker.street_name}, ${popUpMarker.suburb}, ${popUpMarker.state}, ${popUpMarker.postcode}` : 'None'
+                                        {popUpMarker.street_name && popUpMarker.suburb && popUpMarker.state && popUpMarker.postcode ?
+                                            `${popUpMarker.street_nbr ? popUpMarker.street_nbr + ' ' : ''}${popUpMarker.street_name}, ${popUpMarker.suburb}, ${popUpMarker.state}, ${popUpMarker.postcode}` : 'None'
                                         }
                                     </strong>
                                 </InfoWindowP>
@@ -479,8 +479,8 @@ const Map = ({
                                 <RoomIcon style={{margin: '0', padding: '0'}}></RoomIcon>
                                 <InfoWindowP>
                                     <strong>
-                                        {popUpMarker.street_nbr && popUpMarker.street_name && popUpMarker.suburb && popUpMarker.state && popUpMarker.postcode ?
-                                            `${popUpMarker.street_nbr} ${popUpMarker.street_name}, ${popUpMarker.suburb}, ${popUpMarker.state}, ${popUpMarker.postcode}` : 'None'
+                                        {popUpMarker.street_name && popUpMarker.suburb && popUpMarker.state && popUpMarker.postcode ?
+                                            `${popUpMarker.street_nbr ? popUpMarker.street_nbr + ' ' : ''}${popUpMarker.street_name}, ${popUpMarker.suburb}, ${popUpMarker.state}, ${popUpMarker.postcode}` : 'None'
                                         }
                                     </strong>
                                 </InfoWindowP>
@@ -735,15 +735,17 @@ const Map = ({
                                         <ModalContentInfoContainer>
                                             <ModalContentInfoP>Address: </ModalContentInfoP>
                                             <ModalContentInfoP2>
-                                                {popUpMarker.street_nbr && popUpMarker.street_name && popUpMarker.suburb && popUpMarker.state && popUpMarker.postcode ? (
-                                                    <>
-                                                        {popUpMarker.street_nbr} {popUpMarker.street_name},{' '}
-                                                        {popUpMarker.suburb},{' '}
-                                                        {popUpMarker.state} {popUpMarker.postcode}
-                                                    </>
-                                                ) : (
-                                                    'None'
-                                                )}
+                                                {
+                                                    popUpMarker.street_name && popUpMarker.suburb && popUpMarker.state && popUpMarker.postcode ? (
+                                                        <>
+                                                            {popUpMarker.street_nbr ? `${popUpMarker.street_nbr} ` : ''}{popUpMarker.street_name},{' '}
+                                                            {popUpMarker.suburb},{' '}
+                                                            {popUpMarker.state} {popUpMarker.postcode}
+                                                        </>
+                                                    ) : (
+                                                        'None'
+                                                    )
+                                                }
                                             </ModalContentInfoP2>
                                         </ModalContentInfoContainer>
 

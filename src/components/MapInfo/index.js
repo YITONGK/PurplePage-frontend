@@ -236,9 +236,9 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                 <SiteInfoDetailContainer>
                                     <InfoP>Address</InfoP>
                                     <InfoP2>
-                                        {site.street_nbr && site.street_name && site.suburb && site.state && site.postcode ? (
+                                        {site.street_name && site.suburb && site.state && site.postcode ? (
                                             <>
-                                                {site.street_nbr} {site.street_name}, <br/>
+                                                {site.street_nbr ? `${site.street_nbr} ` : ''}{site.street_name}, <br/>
                                                 {site.suburb}, <br/>
                                                 {site.state} {site.postcode}
                                             </>
@@ -611,9 +611,10 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
 
                                 <SiteViewH2>Full Address:</SiteViewH2>
 
-                                <SiteViewP style={{paddingLeft: '0.8rem', marginBottom: '0.3rem'}}>
-                                    {selectedSite.street_nbr && selectedSite.street_name && selectedSite.suburb && selectedSite.state && selectedSite.postcode ?
-                                        `${selectedSite.street_nbr} ${selectedSite.street_name}, ${selectedSite.suburb}, ${selectedSite.state}, ${selectedSite.postcode}` : 'None'
+                                <SiteViewP style={{ paddingLeft: '0.8rem', marginBottom: '0.3rem' }}>
+                                    {selectedSite.street_name && selectedSite.suburb && selectedSite.state && selectedSite.postcode ?
+                                        `${selectedSite.street_nbr ? selectedSite.street_nbr + ' ' : ''}${selectedSite.street_name}, ${selectedSite.suburb}, ${selectedSite.state}, ${selectedSite.postcode}`
+                                        : 'None'
                                     }
                                 </SiteViewP>
 
