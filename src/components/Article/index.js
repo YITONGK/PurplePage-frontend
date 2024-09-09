@@ -41,6 +41,7 @@ import ReactLoading from 'react-loading';
 import {SkeletonTheme} from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import '../../App.css';
+import ChatButton from '../ChatBox/ChatButton';
 
 
 const Article = () => {
@@ -81,6 +82,8 @@ const Article = () => {
 
     const [advanceFilteredSites, setAdvanceFilteredSites] = useState([]);
     const [advanceFilteredPrograms, setAdvanceFilteredPrograms] = useState([]);
+    const [clear, setClear] = useState(false);
+    const [markersByChatbot, setMarkersByChatbot] = useState([]);
 
     const [searchOptions, setSearchOptions] = useState([]);
 
@@ -989,6 +992,14 @@ const Article = () => {
         setAdvanceFilteredPrograms(programs);
     }
 
+    const sendClear = (flag) => {
+        setClear(!clear);
+    }
+
+    const sendMarkersByChatbot = (markersByChatbot) => {
+        setMarkersByChatbot(markersByChatbot);
+    }
+
     const transferDepartureAddress = (address) => {
         setDepartureAddress(address);
         setSelectedSite(null);
@@ -1064,6 +1075,7 @@ const Article = () => {
                         exportSite={selectingSite}
                         exportAdvanceFilteredSites={applyFilter}
                         exportAdvanceFilteredPrograms={sendAdvanceFilteredPrograms}
+                        exportClear={sendClear}
                         exportDepartureAddress={transferDepartureAddress}
                         loadingChecking={mapFilterLoadingCheck}
                         collapseChecking={reportingMapFilterIsCollapse}
@@ -1090,17 +1102,24 @@ const Article = () => {
                             </LoadindContainer>
                             :
                             <Map
-                                sites={advanceFilteredSites} exportSite={selectingSite} exportRef={mapRef}
+                                sites={advanceFilteredSites} 
+                                importClear={clear}
+                                exportSite={selectingSite} exportRef={mapRef}
                                 importSite={selectedSite} departureLocation={departureAddress}
                                 mapWidth={(mapFilterIsCollapse) ? 59.5 : 0} mapFilterUsed={mapFilterUsed}
+                                importSitesFromChat={markersByChatbot}
+                                exportSitesFromChat={sendMarkersByChatbot}
                             />
                     }
 
                     <MapInfoContainer>
                         <MapInfo site={selectedSite}
                                  advanceFilteredPrograms={(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms}
-                                 groupList={groupList} programTypeList={programTypeList}
-                                 departureLocation={departureAddress}/>
+                                 groupList={groupList}
+                                 departureLocation={departureAddress}
+                                 programTypeList={programTypeList}
+                                 serviceTypes={serviceTypeList}
+                                 serviceStreams={serviceStreamList}/>
                     </MapInfoContainer>
                 </MapElement>
 
@@ -1123,14 +1142,19 @@ const Article = () => {
                             :
                             <Map
                                 sites={advanceFilteredSites} exportSite={selectingSite} exportRef={xmMapRef}
-                                importSite={selectedSite} departureLocation={departureAddress}
+                                importSite={selectedSite} 
+                                importClear={clear}
+                                departureLocation={departureAddress}
                                 mapWidth={(mapFilterIsCollapse) ? 97.5 : 0} mapHeight={(mapFilterIsCollapse) ? 80 : 0}
                                 mapFilterUsed={mapFilterUsed}
                                 advanceFilteredPrograms={(advanceFilteredPrograms.length > 0) ? advanceFilteredPrograms : filteredPrograms}
                                 programTypeList={programTypeList}
+                                importSitesFromChat={markersByChatbot}
+                                exportSitesFromChat={sendMarkersByChatbot}
                             />
                     }
                 </XMMapElement>
+                <ChatButton siteList={siteList} exportSites={sendMarkersByChatbot}/>
             </ArticleContainer>
     )
 }

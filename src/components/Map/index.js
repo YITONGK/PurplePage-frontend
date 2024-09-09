@@ -27,8 +27,9 @@ import {
     ModalInfoOfferedProgramsContainer,
     AnimatedModalContent2
 } from './MapElements';
-import ReactMapGl, {Marker, Popup} from "react-map-gl";
+import ReactMapGl, {Marker, Popup, Source, Layer} from "react-map-gl";
 import mapboxgl from 'mapbox-gl';
+import * as turf from '@turf/turf';
 
 import List from "@mui/material/List";
 import ListItemText from '@mui/material/ListItemText';
@@ -59,13 +60,16 @@ const Map = ({
                  exportSite,
                  exportRef,
                  importSite,
+                 importClear,
                  mapWidth,
                  mapHeight,
                  mapZoom,
                  centerLat,
                  centerLng,
                  departureLocation,
-                 mapFilterUsed
+                 mapFilterUsed,
+                 importSitesFromChat,
+                 exportSitesFromChat
              }) => {
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
@@ -77,7 +81,7 @@ const Map = ({
     const [departureLocationMarker, setDepartureLocationMarker] = useState(null);
 
     const [markersInView, setMarkersInView] = useState([]);
-
+    const [markersSelected, setMarkersSelected] = useState([]);
     const debounceDelay = 300; //delay amount
     const [mapInfoPopup, setMapInfoPopup] = useState(false);
     const [programInfoPopup, setProgramInfoPopup] = useState(false);
@@ -91,6 +95,155 @@ const Map = ({
         transitionDuration: 200
     });
 
+    const [polygons, setPolygons] = useState(null);
+    const [polygon, setPolygon] = useState(null);
+    const [highlightedPolygon, setHighlightedPolygon] = useState(null);
+    const [tempMarkers, setTempMarkers] = useState([]);
+
+    // load geojson file
+    useEffect(() => {
+        fetch('/DHHS.geojson')
+            .then((response) => response.json())
+            .then((data) => {
+                // const validPolygons = data.features.map(validateAndFixPolygon).filter(Boolean);
+                // setPolygons(validPolygons);
+                setPolygons(data.features); 
+                setPolygon(null);
+            })
+            .catch((error) => {
+                console.error('Error loading json data:', error);
+            })
+    }, [])
+
+    // listening on the change of selected state
+    useEffect(() => {
+
+        setPolygon(null);
+        // Check if polygons is not null and is an array
+        if (polygons && Array.isArray(polygons) && importSite) {
+            let i;
+            for (i = 0; i < polygons.length; i++) {
+                let serviceArea = polygons[i].properties.ServiceArea               
+                if (serviceArea === importSite.dffh_area) {
+                    setPolygon(polygons[i]);
+                    setHighlightedPolygon(null);
+                    break;
+                } else {
+                    setPolygon(null);
+                }
+            }
+            if (polygon === null) {
+                console.log("DHHS not found");
+            }
+        }
+        
+    }, [importSite, importClear, polygons]);
+
+
+    useEffect(() => {
+        if (importSitesFromChat != null) {
+            setMarkersInView(importSitesFromChat);
+            setTempMarkers(importSitesFromChat);
+            setPolygon(null);
+            setHighlightedPolygon(null);
+    
+            // Assuming importSitesFromChat is an array of site objects with lat and lng properties
+            const bounds = getBoundsFromMarkers(importSitesFromChat.map(site => ({ lat: site.lat, lng: site.lng })));
+    
+            // Check if map is loaded and adjust view
+            if (exportRef.current) {
+                exportRef.current.getMap().fitBounds(bounds, {
+                    padding: 20 // Adjust padding as needed
+                });
+            }
+        }
+    }, [importSitesFromChat, exportRef]);
+    
+
+    useEffect(() => {
+        exportSitesFromChat(null);
+    }, [markersInView])
+
+    const getBoundsFromMarkers = (markers) => {
+        const bounds = new mapboxgl.LngLatBounds();
+        markers.forEach(marker => {
+            bounds.extend([marker.lng, marker.lat]);
+        });
+        return bounds;
+    };    
+    
+    const filterMarkersByPolygon = (polygon) => {
+        const serviceArea = polygon.properties.ServiceArea;
+        const filteredMarkers = sites.filter(site => site.dffh_area === serviceArea);
+        setMarkersInView(filteredMarkers);
+        setTempMarkers(filteredMarkers);
+    };    
+
+    const handleMapClick = (e) => {
+        const clickedPoint = [e.lngLat.lng, e.lngLat.lat];
+
+        let pointInVictoria = false;
+        let matchingPolygon = null;
+    
+        polygons.forEach((polygonFeature) => {
+            const type = polygonFeature.geometry.type;
+            const coordinates = polygonFeature.geometry.coordinates;
+    
+            try {
+                let geoObject;
+                if (type === "Polygon") {
+                    geoObject = turf.polygon(coordinates);
+                } else if (type === "MultiPolygon") {
+                    geoObject = turf.multiPolygon(coordinates);
+                }
+    
+                const point = turf.point(clickedPoint);
+
+                if (turf.booleanPointInPolygon(point, geoObject)) {
+                    pointInVictoria = true;
+                    matchingPolygon = polygonFeature;
+                }
+            } catch (error) {
+                console.error("Invalid geometry encountered:", error);
+            }
+        });
+    
+        if (pointInVictoria && matchingPolygon) {
+            setHighlightedPolygon(matchingPolygon);
+            console.log(matchingPolygon);
+            filterMarkersByPolygon(matchingPolygon);
+            setPolygon(null);
+        } 
+        // else {
+        //     setHighlightedPolygon(null);
+        //     setMarkersInView([]);
+        // }
+    };
+    
+    useEffect(() => {
+        setHighlightedPolygon(null);
+        closePopup();
+        closeModalPopup();
+        closeProgramModalPopup();
+        setSelectedMarker(null);
+        setTempMarkers([]);
+        const zoom = viewPort.zoom;
+        const width = viewPort.width;
+        const height = viewPort.height;
+        const latitudeDelta = (height / width) * (360 / (2 ** zoom));
+        const longitudeDelta = (360 / width) * (360 / (2 ** zoom));
+        const markersWithinViewport = sites.filter((site) => {
+            return (
+                site.lat >= viewPort.latitude - latitudeDelta / 1.1 && // left edge to center
+                site.lat <= viewPort.latitude + latitudeDelta / 1.1 && // right edge to center
+                site.lng >= viewPort.longitude - longitudeDelta / 1.1 && // bottom edge to center
+                site.lng <= viewPort.longitude + longitudeDelta / 1.1 // top edge to center
+            );
+        });
+        setMarkersInView(markersWithinViewport);
+    }, [importClear])
+    
+    
     // Set the marker to null when the sites refresh
     useEffect(() => {
 
@@ -124,25 +277,30 @@ const Map = ({
     //performance increase only show marker that in the viewport if needed...
     useEffect(() => {
         const timerId = setTimeout(() => {
-            const zoom = viewPort.zoom;
-            const width = viewPort.width;
-            const height = viewPort.height;
+            if (tempMarkers.length > 0) {
+                setMarkersInView(tempMarkers);                
+            } else {
+                const zoom = viewPort.zoom;
+                const width = viewPort.width;
+                const height = viewPort.height;
 
-            const latitudeDelta = (height / width) * (360 / (2 ** zoom));
-            const longitudeDelta = (360 / width) * (360 / (2 ** zoom));
+                const latitudeDelta = (height / width) * (360 / (2 ** zoom));
+                const longitudeDelta = (360 / width) * (360 / (2 ** zoom));
 
-            // Filter the markers that are within the current viewport
-            const markersWithinViewport = sites.filter((site) => {
-                return (
-                    site.lat >= viewPort.latitude - latitudeDelta / 1.1 && // left edge to center
-                    site.lat <= viewPort.latitude + latitudeDelta / 1.1 && // right edge to center
-                    site.lng >= viewPort.longitude - longitudeDelta / 1.1 && // bottom edge to center
-                    site.lng <= viewPort.longitude + longitudeDelta / 1.1 // top edge to center
-                );
-            });
+                // Filter the markers that are within the current viewport
+                const markersWithinViewport = sites.filter((site) => {
+                    return (
+                        site.lat >= viewPort.latitude - latitudeDelta / 1.1 && // left edge to center
+                        site.lat <= viewPort.latitude + latitudeDelta / 1.1 && // right edge to center
+                        site.lng >= viewPort.longitude - longitudeDelta / 1.1 && // bottom edge to center
+                        site.lng <= viewPort.longitude + longitudeDelta / 1.1 // top edge to center
+                    );
+                });
 
-            // Update the markersInView state with the filtered markers
-            setMarkersInView(markersWithinViewport);
+                // Update the markersInView state with the filtered markers
+                setMarkersInView(markersWithinViewport);
+            }
+            
             setDepartureLocationMarker(departureLocation);
         }, debounceDelay);
 
@@ -656,8 +814,38 @@ const Map = ({
                         setMarkersInView([]); // increase the performance when moving the map
                         setDepartureLocationMarker(null);
                     }}
+                    onClick={handleMapClick}
                 >
                     <Markers/>
+                    
+                    {polygon && (
+                        <Source id="polygon-data" type="geojson" data={polygon}>
+                        <Layer
+                            id="polygon"
+                            type="fill"
+                            source="polygon-data"
+                            layout={{}}
+                            paint={{
+                            'fill-color': '#FFFF00',
+                            'fill-opacity': 0.8
+                            }}
+                        />
+                        </Source>
+                    )}
+                    {highlightedPolygon && (
+                        <Source id="highlighted-polygon-data" type="geojson" data={highlightedPolygon}>
+                            <Layer
+                                id="highlighted-polygon"
+                                type="fill"
+                                source="highlighted-polygon-data"
+                                layout={{}}
+                                paint={{
+                                    'fill-color': '#FF0000',
+                                    'fill-opacity': 0.5
+                                }}
+                            />
+                        </Source>
+                    )}
                 </ReactMapGl>
             </MapContainer>
 
@@ -685,8 +873,37 @@ const Map = ({
                         setMarkersInView([]); // increase the performance when moving the map
                         setDepartureLocationMarker(null);
                     }}
+                    onClick={handleMapClick}
                 >
                     <XMMarkers/>
+                    {polygon && (
+                        <Source id="polygon-data" type="geojson" data={polygon}>
+                        <Layer
+                            id="polygon"
+                            type="fill"
+                            source="polygon-data"
+                            layout={{}}
+                            paint={{
+                            'fill-color': '#FFFF00',
+                            'fill-opacity': 0.8
+                            }}
+                        />
+                        </Source>
+                    )}
+                    {highlightedPolygon && (
+                        <Source id="highlighted-polygon-data" type="geojson" data={highlightedPolygon}>
+                            <Layer
+                                id="highlighted-polygon"
+                                type="fill"
+                                source="highlighted-polygon-data"
+                                layout={{}}
+                                paint={{
+                                    'fill-color': '#FF0000',
+                                    'fill-opacity': 0.5
+                                }}
+                            />
+                        </Source>
+                    )}
                 </ReactMapGl>
             </XMMapContainer>
             {

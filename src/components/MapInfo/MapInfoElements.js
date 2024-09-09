@@ -320,7 +320,7 @@ export const ProgramCardHeaderLeft = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   ${'' /* border: 1px solid yellow; */}
-  width: 50%;
+  width: 95%;
 `;
 
 export const ProgramCardHeaderRight = styled.div`
@@ -328,7 +328,7 @@ export const ProgramCardHeaderRight = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  width: 50%;
+  width: 5%;
   ${'' /* border: 1px solid red; */}
 `;
 

@@ -50,6 +50,7 @@ const MapFilter = ({
                        exportSite,
                        exportAdvanceFilteredSites,
                        exportAdvanceFilteredPrograms,
+                       exportClear,
                        exportDepartureAddress,
                        loadingChecking,
                        collapseChecking,
@@ -910,7 +911,7 @@ const MapFilter = ({
 
         exportAdvanceFilteredPrograms(filteredPrograms);
         exportAdvanceFilteredSites(filteredSites);
-
+        exportClear(true);
     }
 
     const onChangeServiceStream = (e) => {

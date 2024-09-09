@@ -62,7 +62,13 @@ import Map from '../Map';
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 
-const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, departureLocation}) => {
+const MapInfo = ({site, 
+    advanceFilteredPrograms, 
+    groupList, programTypeList, 
+    departureLocation,
+    serviceTypes,
+    serviceStreams,
+}) => {
 
     // Initialise Variable
     const [relatedPrograms, setRelatedPrograms] = useState([]);
@@ -74,7 +80,61 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
     const [sitePopUpOpen, setSitePopUpOpen] = useState(false);
     const [selectedSite, setSelectedSite] = useState({});
 
+    const [programInfo, setProgramInfo] = useState("");
+
     const mapRef = useRef();
+
+    //===================================== get content for display ==============================================
+
+    const getProgramType = (prgm_type_id) => {
+        const programType = programTypeList.find(pt => pt.prgm_type_id === prgm_type_id);
+        if (programType) {
+            return {
+                prgm_type: programType.prgm_type,
+                ser_type_id: programType.ser_type_id
+            }
+        } 
+        else {
+            return {
+                prgm_type: 'no prgm_type',
+                ser_type_id: null
+            }
+        }
+    };
+
+    const getServiceType = (ser_type_id) => {
+        const serviceType = serviceTypes.find(st => st.ser_type_id === ser_type_id);
+        if (serviceType) {
+            return {
+                ser_type: serviceType.ser_type,
+                ser_stream_id: serviceType.ser_stream_id
+            }
+        } else {
+            return {
+                ser_type: 'no ser_type',
+                ser_stream_id: null
+            }
+        }
+    };
+
+    const getServiceStream = (ser_stream_id) => {
+        const serviceStream = serviceStreams.find(ss => ss.ser_stream_id === ser_stream_id);
+        if (serviceStream) {
+            return serviceStream.ser_stream;
+        } else {
+            return 'no ser_stream';
+        }
+    };
+
+    useEffect(() => {
+        if (selectedPrograms) {      
+            const prgm_type = getProgramType(selectedPrograms.prgm_type_id);
+            const ser_type = getServiceType(prgm_type.ser_type_id);
+            const ser_stream = getServiceStream(ser_type.ser_stream_id);
+            const displayText = `${ser_stream} | ${ser_type.ser_type} | ${prgm_type.prgm_type}`;
+            setProgramInfo(displayText);
+        }
+    }, [selectedPrograms])
 
     // site program sorting
     useEffect(() => {
@@ -284,6 +344,13 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                     </List>
                                 </SiteInfoDetailContainer>
 
+                                <SiteInfoDetailContainer>
+                                    <InfoP>Facility Manager</InfoP>
+                                    <InfoP2>
+                                        {stringFilterPrefix(site.facility_mgr)}
+                                    </InfoP2>
+                                </SiteInfoDetailContainer>
+
                                 <SiteInfoDetailContainer style={{marginTop: '-5px'}}>
                                     <InfoP>Local Government Area:</InfoP>
                                     <InfoP2>{stringFilterPrefix(site.lga)}</InfoP2>
@@ -334,7 +401,9 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                 <ProgramCardContainer>
                     <ProgramCardHeader>
                         <ProgramCardHeaderLeft>
-                            <h2 style={{margin: '0', padding: '0', color: 'white'}}>Program Info</h2>
+                            <h2 style={{margin: '0', padding: '0', color: 'white'}}>
+                                Program Info: {programInfo}
+                            </h2>
                         </ProgramCardHeaderLeft>
                         <ProgramCardHeaderRight>
                             <Button style={{minWidth: 'unset', background: 'none', border: 'none', cursor: 'pointer'}}
@@ -437,12 +506,27 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                     <CategoryIcon style={{fontSize: '40px', margin: '0'}}/>
                                 </IconContainer>
                                 <IconDescriptionContainer>
+                                    <ProgramViewCaption>Senior Manager: </ProgramViewCaption>
+                                    <IconDescription style={{textAlign: 'justify'}}>
+                                        <ProgramViewP2>{stringFilterPrefix(selectedPrograms.sr_mgr)}</ProgramViewP2>
+                                    </IconDescription>
+                                </IconDescriptionContainer>
+                            </Icon>
+
+                            <Icon>
+                                <IconContainer style={{minWidth: '2%'}}>
+                                    <CategoryIcon style={{fontSize: '40px', margin: '0'}}/>
+                                </IconContainer>
+                                <IconDescriptionContainer>
                                     <ProgramViewCaption>Program Type: </ProgramViewCaption>
                                     <IconDescription style={{textAlign: 'justify'}}>
                                         <ProgramViewP2>{stringFilterPrefix(selectedPrograms.prgm_type)}</ProgramViewP2>
                                     </IconDescription>
                                 </IconDescriptionContainer>
                             </Icon>
+
+                        </ProgramInfoDetail>
+                        <ProgramInfoDetail>
 
                             <Icon>
                                 <IconContainer style={{minWidth: '2%'}}>
@@ -459,9 +543,6 @@ const MapInfo = ({site, advanceFilteredPrograms, groupList, programTypeList, dep
                                     </IconDescription>
                                 </IconDescriptionContainer>
                             </Icon>
-
-                        </ProgramInfoDetail>
-                        <ProgramInfoDetail>
 
                             <Icon style={{minWidth: '100%'}}>
                                 <IconContainer style={{minWidth: '2%'}}>
