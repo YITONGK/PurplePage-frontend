@@ -5,13 +5,20 @@ export const ChatButtonContainer = styled.div`
     position: fixed;
     right: 0px;
     bottom: 0px;
+    width: 20vw;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     z-index: 1000;
     background-color: white;
 `;
 
 export const ChatBoxContainer = styled.div`
-    width: 300px;
-    height: 400px;
+    width: 20vw;
+    height: 50vh;
+    right: 0px;
+    bottom: 0px;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 8px;

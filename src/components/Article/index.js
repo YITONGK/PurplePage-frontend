@@ -89,6 +89,8 @@ const Article = () => {
 
     const [mapFilterIsCollapse, setMapFilterIsCollapse] = useState(true);
 
+    const [fromMapResultFilter, setFromMapResultFilter] = useState(false);
+
     const mapRef = useRef();
     const xmMapRef = useRef();
 
@@ -1093,7 +1095,7 @@ const Article = () => {
                 <MapElement>
                     <MapResultFilter importRef={mapRef} importSite={selectedSite} exportSite={selectingSite}
                                      exportDepartureAddress={transferDepartureAddress}
-                                     advanceFilteredSites={advanceFilteredSites}></MapResultFilter>
+                                     advanceFilteredSites={advanceFilteredSites} onSiteChange={setFromMapResultFilter}></MapResultFilter>
                     {
                         (addressIsLoading || mapFilterIsLoading) ?
                             // (true)?
@@ -1109,6 +1111,7 @@ const Article = () => {
                                 mapWidth={(mapFilterIsCollapse) ? 59.5 : 0} mapFilterUsed={mapFilterUsed}
                                 importSitesFromChat={markersByChatbot}
                                 exportSitesFromChat={sendMarkersByChatbot}
+                                fromMapResultFilter={fromMapResultFilter}
                             />
                     }
 
@@ -1129,7 +1132,7 @@ const Article = () => {
                                      programTypeList={programTypeList} exportSite={selectingSite}
                                      exportDepartureAddress={transferDepartureAddress}
                                      advanceFilteredSites={advanceFilteredSites}
-                                     departureLocation={departureAddress}></MapResultFilter>
+                                     departureLocation={departureAddress} onSiteChange={setFromMapResultFilter}></MapResultFilter>
                 </SMMapElement>
 
                 <XMMapElement>
@@ -1151,6 +1154,7 @@ const Article = () => {
                                 programTypeList={programTypeList}
                                 importSitesFromChat={markersByChatbot}
                                 exportSitesFromChat={sendMarkersByChatbot}
+                                fromMapResultFilter={fromMapResultFilter}
                             />
                     }
                 </XMMapElement>

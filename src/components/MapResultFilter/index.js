@@ -72,7 +72,8 @@ const MapResultFilter = ({
                              advanceFilteredSites,
                              departureLocation,
                              advanceFilteredPrograms,
-                             programTypeList
+                             programTypeList,
+                             onSiteChange
                          }) => {
 
     // Variable Declaration
@@ -253,6 +254,7 @@ const MapResultFilter = ({
         // changing the map via references
         flyingToLocation(site.lat, site.lng);
         exportSite(site);
+        onSiteChange(prevValue => !prevValue);
 
         //present the routing path to the map if address is provided
         if (site.geojson) {

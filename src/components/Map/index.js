@@ -69,7 +69,8 @@ const Map = ({
                  departureLocation,
                  mapFilterUsed,
                  importSitesFromChat,
-                 exportSitesFromChat
+                 exportSitesFromChat,
+                 fromMapResultFilter
              }) => {
     const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
@@ -311,11 +312,22 @@ const Map = ({
     // If site is selected outside the map, the map should show the same result
     useEffect(() => {
         if (importSite) {
+            // setTempMarkers([importSite]);
+            // setMarkersInView([importSite]);
             setSelectedMarker(importSite);
             setPopUpMarker(importSite);
         }
 
     }, [importSite])
+
+    useEffect(() => {
+        if (importSite) {
+            setTempMarkers([importSite]);
+            setMarkersInView([importSite]);
+            setSelectedMarker(importSite);
+            setPopUpMarker(importSite);
+        }
+    }, [fromMapResultFilter])
 
     // Add marker to user current location
     useEffect(() => {
