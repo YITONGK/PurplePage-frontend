@@ -838,8 +838,8 @@ const Map = ({
                             source="polygon-data"
                             layout={{}}
                             paint={{
-                            'fill-color': '#FFFF00',
-                            'fill-opacity': 0.8
+                            'fill-color': '#FF0000',
+                            'fill-opacity': 0.5
                             }}
                         />
                         </Source>
@@ -896,8 +896,8 @@ const Map = ({
                             source="polygon-data"
                             layout={{}}
                             paint={{
-                            'fill-color': '#FFFF00',
-                            'fill-opacity': 0.8
+                            'fill-color': '#FF0000',
+                            'fill-opacity': 0.5
                             }}
                         />
                         </Source>

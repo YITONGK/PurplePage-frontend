@@ -3,15 +3,11 @@ import IconButton from '@mui/material/IconButton';
 
 export const ChatButtonContainer = styled.div`
     position: fixed;
-    right: 0px;
-    bottom: 0px;
-    width: 20vw;
+    right: 10px;
+    bottom: 70px;
     height: auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 1000;
-    background-color: white;
 `;
 
 export const ChatBoxContainer = styled.div`

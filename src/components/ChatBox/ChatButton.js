@@ -26,6 +26,8 @@ const ChatButton = ({siteList, exportSites}) => {
     const [open, setOpen] = useState(false);
     const [tooltipOpen, setTooltipOpen] = useState(true);
     const [messages, setMessages] = useState([]);
+    const [isHovered, setIsHovered] = useState(false);
+
 
     const toggleChatBox = () => {
         setOpen(!open);
@@ -40,16 +42,22 @@ const ChatButton = ({siteList, exportSites}) => {
     return (
         <ChatButtonContainer>
             {!open && (
-                <Tooltip title="Ask Chatbot" open={tooltipOpen} placement="top" arrow>
-                    <IconButton onClick={toggleChatBox} color="primary"
-                    sx={{
-                        color: '#A20066', // Changes the icon color to purple
-                        fontSize: '4rem', // Makes the icon larger
-                        '& svg': { fontSize: '3rem' } // Ensures the SVG icon inside the button also scales up
-                    }}>
-                        <ChatIcon />
-                    </IconButton>
-                </Tooltip>
+                // <Tooltip title="Ask Chatbot" open={tooltipOpen} placement="top" arrow>
+                    <img
+                        src="/chat_button.png"
+                        alt="Chat Button"
+                        onClick={toggleChatBox}
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                        style={{
+                            cursor: 'pointer',
+                            width: '5rem',
+                            height: '5rem',
+                            opacity: isHovered ? 0.8 : 1,
+                            transition: 'opacity 0.3s',
+                        }}
+                    />
+                // </Tooltip>
             )}
             {open && <ChatBox messages={messages} setMessages={setMessages} onClose={handleClose} siteList={siteList} setSites={exportSites}/>}
         </ChatButtonContainer>
