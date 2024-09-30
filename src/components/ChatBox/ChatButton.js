@@ -110,7 +110,7 @@ const ChatBox = ({ messages, setMessages, onClose, siteList, setSites }) => {
         setIsAwaitingReply(true);
 
         try {
-            const response = await fetch('http://chatbot.hhzhu.art/api/chat', {
+            const response = await fetch('https://sd-api.wernmachine.art/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -207,7 +207,7 @@ const ChatBox = ({ messages, setMessages, onClose, siteList, setSites }) => {
                 value={message}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                placeholder="Type a message..."
+                placeholder="Type a question..."
                 />
                 <SendButton onClick={handleSend}>Send</SendButton>
             </InputArea>
