@@ -42,7 +42,11 @@ const ChatButton = ({siteList, exportSites}) => {
     return (
         <ChatButtonContainer>
             {!open && (
-                // <Tooltip title="Ask Chatbot" open={tooltipOpen} placement="top" arrow>
+                <Tooltip
+                title={<span style={{ fontSize: '1rem' }}>Ask Me a Question</span>}
+                open={tooltipOpen}
+                placement="top"
+                arrow>
                     <img
                         src="/chat_button.png"
                         alt="Chat Button"
@@ -57,7 +61,7 @@ const ChatButton = ({siteList, exportSites}) => {
                             transition: 'opacity 0.3s',
                         }}
                     />
-                // </Tooltip>
+                </Tooltip>
             )}
             {open && <ChatBox messages={messages} setMessages={setMessages} onClose={handleClose} siteList={siteList} setSites={exportSites}/>}
         </ChatButtonContainer>
